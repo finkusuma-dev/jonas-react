@@ -14,6 +14,12 @@ pnpm install
 pnpm run dev
 ```
 
+To run npm script:
+
+```bash
+pnpm run [script_name]
+```
+
 ---
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
