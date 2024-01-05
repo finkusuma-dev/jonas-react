@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 const tempMovieData = [
@@ -63,12 +64,17 @@ export default function App() {
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
 
-  fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=home`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log('movie data', data);
-      setMovies(data.Search);
-    });
+  useEffect(function(){
+
+    fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=home`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('movie data', data);
+        setMovies(data.Search);
+      });
+
+  }, []);
+
 
   return (
     <>
