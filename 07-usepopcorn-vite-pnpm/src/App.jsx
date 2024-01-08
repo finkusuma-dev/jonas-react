@@ -63,7 +63,8 @@ export default function App() {
   const [error, setError] = useState('');
 
   useEffect(function () {
-    async function fetchData() {
+    async function fetchData() {      
+
       setError('');
       setIsLoading(true);
       try {
@@ -93,8 +94,12 @@ export default function App() {
       }
     }
 
+    if (query.length <= 3)
+      return;
+
     fetchData();
-  }, []);
+
+  }, [query]);
 
   return (
     <>
