@@ -64,6 +64,9 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  function handleQuery(searchQuery) {
+    setQuery(searchQuery);    
+  }
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
   }
@@ -118,8 +121,8 @@ export default function App() {
       }
 
       if (query.length < 3) return;
-
-      //const controller =
+      
+      handleCloseMovieDetails();
       fetchData();
 
       return async function () {
@@ -133,7 +136,7 @@ export default function App() {
   return (
     <>
       <Nav>
-        <Search onChange={setQuery} />
+        <Search onChange={handleQuery} />
         <NumResult movies={movies} />
       </Nav>
 
