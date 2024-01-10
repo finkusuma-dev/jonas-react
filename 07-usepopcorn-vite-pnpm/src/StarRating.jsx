@@ -148,13 +148,13 @@ function Star({
   );
 }
 
-const buttonStyle = {
-  // width: '260px',
-  padding: "7px 0",
-  borderRadius: "30px",
-  border: "1px solid gray",
-};
+// const buttonStyle = {
+//   // width: '260px',
+//   padding: "7px 0",
+//   borderRadius: "30px",
+//   border: "1px solid gray",
+// };
 
-function ButtonAdd() {
-  return <button style={buttonStyle}>Add to List</button>;
-}
+// function ButtonAdd() {
+//   return <button style={buttonStyle}>Add to List</button>;
+//}
