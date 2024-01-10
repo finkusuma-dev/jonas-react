@@ -83,8 +83,7 @@ export default function App() {
 
   useEffect( /// fetch movie data from search query & setMovies.
     function () {
-      const controller = new AbortController();
-      const signal = controller.signal;
+      const controller = new AbortController();      
 
       async function fetchData() {
         setError('');
@@ -93,7 +92,7 @@ export default function App() {
 
           console.log('fetch data...');
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, {signal}
+            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, {signal: controller.signal}
           );
 
           if (!res.ok) {
