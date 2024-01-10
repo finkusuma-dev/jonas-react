@@ -81,18 +81,19 @@ export default function App() {
     setSelectedId(null);
   }
 
-  useEffect( /// fetch movie data from search query & setMovies.
+  useEffect(
+    /// fetch movie data from search query & setMovies.
     function () {
-      const controller = new AbortController();      
+      const controller = new AbortController();
 
       async function fetchData() {
         setError('');
         setIsLoading(true);
         try {
-
           console.log('fetch data...');
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, {signal: controller.signal}
+            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
+            { signal: controller.signal }
           );
 
           if (!res.ok) {
@@ -108,11 +109,9 @@ export default function App() {
           } else {
             setMovies(data.Search);
           }
-          
         } catch (err) {
           console.error('error', err.name);
-          if (err.name !== 'AbortError')
-            setError(err.message);
+          if (err.name !== 'AbortError') setError(err.message);
         } finally {
           setIsLoading(false);
         }
@@ -120,13 +119,13 @@ export default function App() {
 
       if (query.length < 3) return;
 
-      //const controller = 
-      fetchData();      
+      //const controller =
+      fetchData();
 
-      return async function(){    
+      return async function () {
         controller.abort();
         console.log(`cleanup for query ${query}`);
-      }
+      };
     },
     [query]
   );
@@ -163,10 +162,10 @@ export default function App() {
               onClose={handleCloseMovieDetails}
             />
           ) : (
-            <MoviesWatched 
-              watched={watched} 
-              onSelect={handleSelectMovie} 
-              onRemove={handleRemoveFromWatched}  
+            <MoviesWatched
+              watched={watched}
+              onSelect={handleSelectMovie}
+              onRemove={handleRemoveFromWatched}
             />
           )}
         </Box>
@@ -196,27 +195,26 @@ Search.propTypes = {
   onChange: PropTypes.func,
 };
 
-function Search({onChange }) {
+function Search({ onChange }) {
   const [thisQuery, setThisQuery] = useState('');
 
-  useEffect( /// call onChange on setInterval
-    function(){
-      if (thisQuery?.length<3) 
-        return;
+  useEffect(
+    /// call onChange on setInterval
+    function () {
+      if (thisQuery?.length < 3) return;
 
-      const intervalID = setInterval(
-        function(){
-          console.log(`interval execute query: ${thisQuery}`)
-          onChange(thisQuery);
-        }, 1000
-      )
+      const intervalID = setInterval(function () {
+        console.log(`interval execute query: ${thisQuery}`);
+        onChange(thisQuery);
+      }, 1000);
 
-      return function() {
+      return function () {
         console.log(`cleanup for query: ${thisQuery} `);
-        clearInterval(intervalID)
+        clearInterval(intervalID);
       };
-    }, [thisQuery, onChange]
-  )
+    },
+    [thisQuery, onChange]
+  );
 
   return (
     <input
@@ -224,8 +222,8 @@ function Search({onChange }) {
       type="text"
       placeholder="Search movies..."
       value={thisQuery}
-      onChange={(e)=>setThisQuery(e.target.value)}
-      //onKeyUp={handleKeyUp}      
+      onChange={(e) => setThisQuery(e.target.value)}
+      //onKeyUp={handleKeyUp}
     />
   );
 }
@@ -308,7 +306,8 @@ function MovieDetails({
   console.log('userRating', userRating);
   console.log('rating', rating);
 
-  useEffect( /// setMovie
+  useEffect(
+    /// setMovie
     function () {
       async function fetchData() {
         setIsLoading(true);
@@ -330,20 +329,21 @@ function MovieDetails({
       }
 
       if (selectedId !== null) fetchData();
-
     },
     [selectedId]
   );
 
-  useEffect( /// set document.title
-    function(){
+  useEffect(
+    /// set document.title
+    function () {
       if (!movie.Title) return;
       document.title = `Movie | ${movie.Title}`;
 
-      return function(){
+      return function () {
         document.title = 'UsePopcorn';
-      }
-    },[movie.Title]
+      };
+    },
+    [movie.Title]
   );
 
   function handleAdd() {
@@ -455,7 +455,7 @@ function MoviesWatched({ watched, onSelect, onRemove }) {
   ).toFixed(1);
   const avgRuntime = average(watched.map((movie) => movie.runtime)).toFixed(1);
 
-  function handleRemoveMovie(e, id){
+  function handleRemoveMovie(e, id) {
     e.stopPropagation();
     onRemove(id);
   }
