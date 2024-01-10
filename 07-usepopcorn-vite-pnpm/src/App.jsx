@@ -83,13 +83,17 @@ export default function App() {
 
   useEffect( /// fetch movie data from search query & setMovies.
     function () {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
       async function fetchData() {
         setError('');
         setIsLoading(true);
         try {
+
           console.log('fetch data...');
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, {signal}
           );
 
           if (!res.ok) {
@@ -105,9 +109,11 @@ export default function App() {
           } else {
             setMovies(data.Search);
           }
+          
         } catch (err) {
-          console.error('error', err);
-          setError(err.message);
+          console.error('error', err.name);
+          if (err.name !== 'AbortError')
+            setError(err.message);
         } finally {
           setIsLoading(false);
         }
@@ -115,7 +121,13 @@ export default function App() {
 
       if (query.length <= 3) return;
 
-      fetchData();
+      //const controller = 
+      fetchData();      
+
+      return async function(){    
+        controller.abort();
+        console.log(`cleanup for query ${query}`);
+      }
     },
     [query]
   );
@@ -192,7 +204,7 @@ function Search({ query, onChange }) {
       type="text"
       placeholder="Search movies..."
       value={query}
-      onChange={onChange}
+      onChange={onChange}      
     />
   );
 }
@@ -297,6 +309,7 @@ function MovieDetails({
       }
 
       if (selectedId !== null) fetchData();
+
     },
     [selectedId]
   );
@@ -305,6 +318,10 @@ function MovieDetails({
     function(){
       if (!movie.Title) return;
       document.title = `Movie | ${movie.Title}`;
+
+      return function(){
+        document.title = 'UsePopcorn';
+      }
     },[movie.Title]
   );
 
