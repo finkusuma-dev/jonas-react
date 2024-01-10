@@ -56,7 +56,7 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [query, setQuery] = useState('inception');
+  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -119,7 +119,7 @@ export default function App() {
         }
       }
 
-      if (query.length <= 3) return;
+      if (query.length < 3) return;
 
       //const controller = 
       fetchData();      
@@ -135,7 +135,7 @@ export default function App() {
   return (
     <>
       <Nav>
-        <Search query={query} onChange={(e) => setQuery(e.target.value)} />
+        <Search onChange={setQuery} />
         <NumResult movies={movies} />
       </Nav>
 
@@ -193,18 +193,40 @@ function Nav({ children }) {
 }
 
 Search.propTypes = {
-  query: PropTypes.string,
+  // query: PropTypes.string,
   onChange: PropTypes.func,
 };
 
-function Search({ query, onChange }) {
+function Search({onChange }) {
+  const [thisQuery, setThisQuery] = useState('');
+
+  useEffect( /// call onChange on setInterval
+    function(){
+      if (thisQuery?.length<3) 
+        return;
+
+      const intervalID = setInterval(
+        function(){
+          console.log(`interval execute query: ${thisQuery}`)
+          onChange(thisQuery);
+        }, 1000
+      )
+
+      return function() {
+        console.log(`cleanup for query: ${thisQuery} `);
+        clearInterval(intervalID)
+      };
+    }, [thisQuery, onChange]
+  )
+
   return (
     <input
       className="search"
       type="text"
       placeholder="Search movies..."
-      value={query}
-      onChange={onChange}      
+      value={thisQuery}
+      onChange={(e)=>setThisQuery(e.target.value)}
+      //onKeyUp={handleKeyUp}      
     />
   );
 }
