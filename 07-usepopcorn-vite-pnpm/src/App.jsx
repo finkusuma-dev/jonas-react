@@ -306,6 +306,27 @@ function MovieDetails({
   console.log('userRating', userRating);
   console.log('rating', rating);
 
+
+  useEffect(
+    /// listen for document keyup event to close movie details on ESC
+    function () {
+      function handleKeyup(e) {
+        console.log('keyup', e);
+
+        if (e.keyCode === 27) {
+          onClose();
+        }
+      }
+      document.addEventListener('keyup', handleKeyup);
+
+      return function () {
+        document.removeEventListener('keyup', handleKeyup);
+      };
+    },
+    [onClose]
+  );
+
+
   useEffect(
     /// setMovie
     function () {
