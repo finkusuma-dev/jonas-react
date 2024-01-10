@@ -420,18 +420,7 @@ function MovieDetails({
                 defaultRating={rating}
                 onSetRating={setRating}
               />
-              {/* {
-               userRating === 0 ? (
-                <button className="btn-add" onClick={handleAdd}>
-                  + Add to list
-                </button>
-              ) : (
-                <button className="btn-add" onClick={handleRemove}>
-                  - Remove from list
-                </button>
-              )
-              } */}
-
+                           
               {(() => {
                 if (userRating === 0) {
                   if (rating > 0)
@@ -453,8 +442,8 @@ function MovieDetails({
             <p>
               <em>{movie.Plot}</em>
             </p>
-            <p>Actors: {movie.Actors}</p>
-            <p>Directed by: {movie.Director}</p>
+            <p><strong>Actors:</strong> {movie.Actors}</p>
+            <p><strong>Directed by:</strong> {movie.Director}</p>
           </section>
         </>
       )}
