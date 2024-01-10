@@ -420,7 +420,7 @@ function MovieDetails({
                 defaultRating={rating}
                 onSetRating={setRating}
               />
-                           
+
               {(() => {
                 if (userRating === 0) {
                   if (rating > 0)
@@ -502,7 +502,7 @@ function MoviesWatched({ watched, onSelect, onRemove }) {
             </div>
           </div>
 
-          <ul className="list">
+          <ul className="list list-movies">
             {watched.map((movie) => (
               <li key={movie.imdbID} onClick={() => onSelect(movie.imdbID)}>
                 <img src={movie.Poster} alt={`${movie.Title} poster`} />
