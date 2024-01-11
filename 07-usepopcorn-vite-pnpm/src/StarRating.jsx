@@ -60,8 +60,9 @@ function StarRating({
 
   function handleRate(rating) {
     if (isReadOnly) return;
-    
+
     setRating(rating);
+    setTmpRating(0);
     onSetRating && onSetRating(rating);
   }
   function handleHoverIn(rating){

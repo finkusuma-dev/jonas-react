@@ -58,31 +58,45 @@ const average = (arr) =>
 export default function App() {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(function () {
+    const serWatched = localStorage.getItem('watched');
+    if (serWatched.length) {
+      return JSON.parse(serWatched);
+    }
+    return [];
+  });
   const [selectedId, setSelectedId] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   function handleQuery(searchQuery) {
-    setQuery(searchQuery);    
+    setQuery(searchQuery);
   }
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
   }
   function handleAddToWatched(movie) {
     setWatched((watched) => [...watched, movie]);
-    setSelectedId(null);
+    // setSelectedId(null);
   }
   function handleRemoveFromWatched(id) {
     setWatched((watched) => [
       ...watched.filter((movie) => movie.imdbID !== id),
     ]);
-    setSelectedId(null);
+    //setSelectedId(null);
   }
   function handleCloseMovieDetails() {
     setSelectedId(null);
   }
+
+  useEffect(
+    /// put watched to localstorage
+    function () {
+      localStorage.setItem('watched', JSON.stringify(watched));
+    },
+    [watched]
+  );
 
   useEffect(
     /// fetch movie data from search query & setMovies.
@@ -309,7 +323,6 @@ function MovieDetails({
   console.log('userRating', userRating);
   console.log('rating', rating);
 
-
   useEffect(
     /// listen for document keyup event to close movie details on ESC
     function () {
@@ -328,7 +341,6 @@ function MovieDetails({
     },
     [onClose]
   );
-
 
   useEffect(
     /// request movie details data
@@ -373,6 +385,7 @@ function MovieDetails({
   function handleAdd() {
     const movieAdded = {
       imdbID: selectedId,
+      Title: movie.Title,
       imdbRating: Number(movie.imdbRating),
       userRating: rating,
       runtime: Number(movie.Runtime.split(' ').at(0)),
@@ -386,6 +399,7 @@ function MovieDetails({
 
   function handleRemove() {
     onRemoveFromWatched(selectedId);
+    // setRating(0);
   }
 
   return (
@@ -443,8 +457,12 @@ function MovieDetails({
             <p>
               <em>{movie.Plot}</em>
             </p>
-            <p><strong>Actors:</strong> {movie.Actors}</p>
-            <p><strong>Directed by:</strong> {movie.Director}</p>
+            <p>
+              <strong>Actors:</strong> {movie.Actors}
+            </p>
+            <p>
+              <strong>Directed by:</strong> {movie.Director}
+            </p>
           </section>
         </>
       )}
@@ -452,7 +470,7 @@ function MovieDetails({
   );
 }
 
-MoviesWatched.propTypes = {
+MoviesWatched.propTypes = {  
   watched: PropTypes.any,
   onSelect: PropTypes.func,
   onRemove: PropTypes.func,
