@@ -31,6 +31,7 @@ StarRating.propTypes = {
   className: PropTypes.string,
   messages: PropTypes.array,
   defaultRating: PropTypes.number,
+  isReadOnly: PropTypes.bool,
   onSetRating: PropTypes.func
 }
 
@@ -41,6 +42,7 @@ function StarRating({
   className = "",
   messages = [],
   defaultRating = 0,
+  isReadOnly = false,
   onSetRating,
 }) {
   const [rating, setRating] = useState(defaultRating);
@@ -57,8 +59,18 @@ function StarRating({
   // console.log("rating", rating);
 
   function handleRate(rating) {
+    if (isReadOnly) return;
+    
     setRating(rating);
     onSetRating && onSetRating(rating);
+  }
+  function handleHoverIn(rating){
+    if (isReadOnly) return;
+    setTmpRating(rating);
+  }
+  function handleHoverOut(rating){
+    if (isReadOnly) return;
+    setTmpRating(rating);
   }
 
   return (    
@@ -71,8 +83,8 @@ function StarRating({
               color={color}
               fullStar={tmpRating ? i <= tmpRating - 1 : i <= rating - 1}
               onRate={() => handleRate(i + 1)}
-              onHoverIn={() => setTmpRating(i + 1)}
-              onHoverOut={() => setTmpRating(0)}
+              onHoverIn={() => handleHoverIn(i + 1)}
+              onHoverOut={() => handleHoverOut(0)}
             />
           ))}
         </div>

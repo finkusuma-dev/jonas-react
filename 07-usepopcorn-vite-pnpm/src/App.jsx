@@ -331,7 +331,7 @@ function MovieDetails({
 
 
   useEffect(
-    /// setMovie
+    /// request movie details data
     function () {
       async function fetchData() {
         setIsLoading(true);
@@ -418,6 +418,7 @@ function MovieDetails({
                 maxRating={10}
                 size={24}
                 defaultRating={rating}
+                isReadOnly={userRating > 0}
                 onSetRating={setRating}
               />
 
