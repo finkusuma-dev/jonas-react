@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import StarRating from './StarRating';
+import { useRef } from 'react';
 
 const tempMovieData = [
   {
@@ -214,6 +215,32 @@ Search.propTypes = {
 
 function Search({ onChange }) {
   const [thisQuery, setThisQuery] = useState('');
+  const inputEl = useRef(null);
+
+  useEffect(/// focus on input element
+    function(){ 
+    inputEl.current.focus();
+  },[inputEl]);
+
+  useEffect(/// on Enter keyup clear search
+    function(){
+      function handleKeyup(e){
+        // console.log('search, document keyup',e);
+        if (document.activeElement === inputEl.current)
+          return;
+
+        if (e.key === 'Enter'){
+          inputEl.current.focus();
+          setThisQuery('');
+          onChange('');          
+        }
+      }
+      document.addEventListener('keyup', handleKeyup);
+
+      return function(){
+        document.removeEventListener('keyup', handleKeyup);
+      }
+  },[onChange]);
 
   useEffect(
     /// call onChange on setInterval
@@ -241,6 +268,7 @@ function Search({ onChange }) {
       value={thisQuery}
       onChange={(e) => setThisQuery(e.target.value)}
       //onKeyUp={handleKeyUp}
+      ref={inputEl}
     />
   );
 }
