@@ -345,11 +345,12 @@ function MovieDetails({
   onRemoveFromWatched,
 }) {
   const [movie, setMovie] = useState({});
-  const [rating, setRating] = useState(userRating);
+  const [thisUserRating, setThisUserRating] = useState(userRating);
   const [isLoading, setIsLoading] = useState(false);
+  const countRef = useRef(0);
 
   console.log('userRating', userRating);
-  console.log('rating', rating);
+  console.log('rating', thisUserRating);
 
   useEffect(
     /// listen for document keyup event to close movie details on ESC
@@ -397,6 +398,11 @@ function MovieDetails({
     [selectedId]
   );
 
+  useEffect(function(){ /// increase countRef
+    if (thisUserRating) countRef.current++;
+
+  },[thisUserRating]);
+
   useEffect(
     /// set document.title
     function () {
@@ -415,9 +421,10 @@ function MovieDetails({
       imdbID: selectedId,
       Title: movie.Title,
       imdbRating: Number(movie.imdbRating),
-      userRating: rating,
+      userRating: thisUserRating,
       runtime: Number(movie.Runtime.split(' ').at(0)),
       Poster: movie.Poster,
+      countRatingDecision: countRef.current
     };
 
     console.log('movieAdded', movieAdded);
@@ -459,14 +466,14 @@ function MovieDetails({
               <StarRating
                 maxRating={10}
                 size={24}
-                defaultRating={rating}
+                defaultRating={thisUserRating}
                 isReadOnly={userRating > 0}
-                onSetRating={setRating}
+                onSetRating={setThisUserRating}
               />
 
               {(() => {
                 if (userRating === 0) {
-                  if (rating > 0)
+                  if (thisUserRating > 0)
                     return (
                       <button className="btn-add" onClick={handleAdd}>
                         + Add to list
@@ -505,7 +512,7 @@ MoviesWatched.propTypes = {
 };
 
 function MoviesWatched({ watched, onSelect, onRemove }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);  
 
   const avgImdbRating = average(
     watched.map((movie) => movie.imdbRating)
