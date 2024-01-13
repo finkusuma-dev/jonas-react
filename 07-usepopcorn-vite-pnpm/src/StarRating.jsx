@@ -109,7 +109,7 @@ Star.propTypes = {
   onRate: PropTypes.func,
   onHoverIn: PropTypes.func,
   onHoverOut: PropTypes.func,
-  size: PropTypes.string,
+  size: PropTypes.number,
   fullStar: PropTypes.bool,
   color: PropTypes.string
 }
