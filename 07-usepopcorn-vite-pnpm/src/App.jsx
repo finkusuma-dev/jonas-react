@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import StarRating from './StarRating';
 import { useRef } from 'react';
 import { useMovies } from './useMovies';
+import { useLocalStorageState } from './useLocalStorageState';
 
 const tempMovieData = [
   {
@@ -59,18 +60,12 @@ const average = (arr) =>
 
 export default function App() {
   const [query, setQuery] = useState('');
-  const [watched, setWatched] = useState(function () {
-    const serWatched = localStorage.getItem('watched');
-    if (serWatched.length) {
-      return JSON.parse(serWatched);
-    }
-    return [];
-  });
+
   const [selectedId, setSelectedId] = useState(null);
 
-  const { movies, isLoading, error } = useMovies(
-    query
-  );
+  const { movies, isLoading, error } = useMovies(query);
+
+  const [ watched, setWatched ] = useLocalStorageState([], 'watched');
 
   function handleQuery(searchQuery) {
     setQuery(searchQuery);
@@ -91,14 +86,6 @@ export default function App() {
   function handleCloseMovieDetails() {
     setSelectedId(null);
   }
-
-  useEffect(
-    /// put watched to localstorage
-    function () {
-      localStorage.setItem('watched', JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   return (
     <>
