@@ -5,6 +5,7 @@ import StarRating from './StarRating';
 import { useRef } from 'react';
 import { useMovies } from './useMovies';
 import { useLocalStorageState } from './useLocalStorageState';
+import { useKey } from './useKey';
 
 const tempMovieData = [
   {
@@ -164,27 +165,13 @@ function Search({ onChange }) {
     [inputEl]
   );
 
-  useEffect(
-    /// on Enter keyup clear search
-    function () {
-      function handleKeyup(e) {
-        // console.log('search, document keyup',e);
-        if (document.activeElement === inputEl.current) return;
-
-        if (e.key === 'Enter') {
-          inputEl.current.focus();
-          setThisQuery('');
-          onChange('');
-        }
-      }
-      document.addEventListener('keyup', handleKeyup);
-
-      return function () {
-        document.removeEventListener('keyup', handleKeyup);
-      };
-    },
-    [onChange]
-  );
+  useKey('Enter', function(){
+    if (document.activeElement === inputEl.current) 
+      return;
+    inputEl.current.focus();
+    setThisQuery('');
+    onChange('');
+  });
 
   useEffect(
     /// call onChange on setInterval
@@ -296,24 +283,7 @@ function MovieDetails({
   console.log('userRating', userRating);
   console.log('rating', thisUserRating);
 
-  useEffect(
-    /// listen for document keyup event to close movie details on ESC
-    function () {
-      function handleKeyup(e) {
-        console.log('keyup', e);
-
-        if (e.keyCode === 27) {
-          onClose();
-        }
-      }
-      document.addEventListener('keyup', handleKeyup);
-
-      return function () {
-        document.removeEventListener('keyup', handleKeyup);
-      };
-    },
-    [onClose]
-  );
+  useKey('Escape', onClose);
 
   useEffect(
     /// request movie details data
