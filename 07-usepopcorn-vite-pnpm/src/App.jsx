@@ -3,6 +3,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import StarRating from './StarRating';
 import { useRef } from 'react';
+import { useMovies } from './useMovies';
 
 const tempMovieData = [
   {
@@ -58,7 +59,6 @@ const average = (arr) =>
 
 export default function App() {
   const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(function () {
     const serWatched = localStorage.getItem('watched');
     if (serWatched.length) {
@@ -68,8 +68,9 @@ export default function App() {
   });
   const [selectedId, setSelectedId] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { movies, isLoading, error } = useMovies(
+    query
+  );
 
   function handleQuery(searchQuery) {
     setQuery(searchQuery);
@@ -97,55 +98,6 @@ export default function App() {
       localStorage.setItem('watched', JSON.stringify(watched));
     },
     [watched]
-  );
-
-  useEffect(
-    /// fetch movie data from search query & setMovies.
-    function () {
-      const controller = new AbortController();
-
-      async function fetchData() {
-        setError('');
-        setIsLoading(true);
-        try {
-          console.log('fetch data...');
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-
-          if (!res.ok) {
-            throw new Error('Something went wrong when fetching movies');
-          }
-
-          const data = await res.json();
-
-          console.log('movie data', data);
-
-          if (data.Response === 'False') {
-            throw new Error('Movie not found');
-          } else {
-            setMovies(data.Search);
-          }
-        } catch (err) {
-          console.error('error', err.name);
-          if (err.name !== 'AbortError') setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (query.length < 3) return;
-      
-      handleCloseMovieDetails();
-      fetchData();
-
-      return async function () {
-        controller.abort();
-        console.log(`cleanup for query ${query}`);
-      };
-    },
-    [query]
   );
 
   return (
@@ -217,30 +169,35 @@ function Search({ onChange }) {
   const [thisQuery, setThisQuery] = useState('');
   const inputEl = useRef(null);
 
-  useEffect(/// focus on input element
-    function(){ 
-    inputEl.current.focus();
-  },[inputEl]);
+  useEffect(
+    /// focus on input element
+    function () {
+      inputEl.current.focus();
+    },
+    [inputEl]
+  );
 
-  useEffect(/// on Enter keyup clear search
-    function(){
-      function handleKeyup(e){
+  useEffect(
+    /// on Enter keyup clear search
+    function () {
+      function handleKeyup(e) {
         // console.log('search, document keyup',e);
-        if (document.activeElement === inputEl.current)
-          return;
+        if (document.activeElement === inputEl.current) return;
 
-        if (e.key === 'Enter'){
+        if (e.key === 'Enter') {
           inputEl.current.focus();
           setThisQuery('');
-          onChange('');          
+          onChange('');
         }
       }
       document.addEventListener('keyup', handleKeyup);
 
-      return function(){
+      return function () {
         document.removeEventListener('keyup', handleKeyup);
-      }
-  },[onChange]);
+      };
+    },
+    [onChange]
+  );
 
   useEffect(
     /// call onChange on setInterval
@@ -253,7 +210,7 @@ function Search({ onChange }) {
       }, 1000);
 
       return function () {
-        console.log(`cleanup for query: ${thisQuery} `);
+        // console.log(`cleanup for query: ${thisQuery} `);
         clearInterval(intervalID);
       };
     },
@@ -398,10 +355,13 @@ function MovieDetails({
     [selectedId]
   );
 
-  useEffect(function(){ /// increase countRef
-    if (thisUserRating) countRef.current++;
-
-  },[thisUserRating]);
+  useEffect(
+    function () {
+      /// increase countRef
+      if (thisUserRating) countRef.current++;
+    },
+    [thisUserRating]
+  );
 
   useEffect(
     /// set document.title
@@ -424,7 +384,7 @@ function MovieDetails({
       userRating: thisUserRating,
       runtime: Number(movie.Runtime.split(' ').at(0)),
       Poster: movie.Poster,
-      countRatingDecision: countRef.current
+      countRatingDecision: countRef.current,
     };
 
     console.log('movieAdded', movieAdded);
@@ -505,14 +465,14 @@ function MovieDetails({
   );
 }
 
-MoviesWatched.propTypes = {  
+MoviesWatched.propTypes = {
   watched: PropTypes.any,
   onSelect: PropTypes.func,
   onRemove: PropTypes.func,
 };
 
 function MoviesWatched({ watched, onSelect, onRemove }) {
-  const [isOpen, setIsOpen] = useState(true);  
+  const [isOpen, setIsOpen] = useState(true);
 
   const avgImdbRating = average(
     watched.map((movie) => movie.imdbRating)
