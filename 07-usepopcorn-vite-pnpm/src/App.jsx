@@ -2,6 +2,10 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import StarRating from './StarRating';
+import { useRef } from 'react';
+import { useMovies } from './useMovies';
+import { useLocalStorageState } from './useLocalStorageState';
+import { useKey } from './useKey';
 
 const tempMovieData = [
   {
@@ -57,81 +61,32 @@ const average = (arr) =>
 
 export default function App() {
   const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+
   const [selectedId, setSelectedId] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { movies, isLoading, error } = useMovies(query);
+
+  const [ watched, setWatched ] = useLocalStorageState([], 'watched');
 
   function handleQuery(searchQuery) {
-    setQuery(searchQuery);    
+    setQuery(searchQuery);
   }
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
   }
   function handleAddToWatched(movie) {
     setWatched((watched) => [...watched, movie]);
-    setSelectedId(null);
+    // setSelectedId(null);
   }
   function handleRemoveFromWatched(id) {
     setWatched((watched) => [
       ...watched.filter((movie) => movie.imdbID !== id),
     ]);
-    setSelectedId(null);
+    //setSelectedId(null);
   }
   function handleCloseMovieDetails() {
     setSelectedId(null);
   }
-
-  useEffect(
-    /// fetch movie data from search query & setMovies.
-    function () {
-      const controller = new AbortController();
-
-      async function fetchData() {
-        setError('');
-        setIsLoading(true);
-        try {
-          console.log('fetch data...');
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-
-          if (!res.ok) {
-            throw new Error('Something went wrong when fetching movies');
-          }
-
-          const data = await res.json();
-
-          console.log('movie data', data);
-
-          if (data.Response === 'False') {
-            throw new Error('Movie not found');
-          } else {
-            setMovies(data.Search);
-          }
-        } catch (err) {
-          console.error('error', err.name);
-          if (err.name !== 'AbortError') setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (query.length < 3) return;
-      
-      handleCloseMovieDetails();
-      fetchData();
-
-      return async function () {
-        controller.abort();
-        console.log(`cleanup for query ${query}`);
-      };
-    },
-    [query]
-  );
 
   return (
     <>
@@ -200,6 +155,23 @@ Search.propTypes = {
 
 function Search({ onChange }) {
   const [thisQuery, setThisQuery] = useState('');
+  const inputEl = useRef(null);
+
+  useEffect(
+    /// focus on input element
+    function () {
+      inputEl.current.focus();
+    },
+    [inputEl]
+  );
+
+  useKey('Enter', function(){
+    if (document.activeElement === inputEl.current) 
+      return;
+    inputEl.current.focus();
+    setThisQuery('');
+    onChange('');
+  });
 
   useEffect(
     /// call onChange on setInterval
@@ -212,7 +184,7 @@ function Search({ onChange }) {
       }, 1000);
 
       return function () {
-        console.log(`cleanup for query: ${thisQuery} `);
+        // console.log(`cleanup for query: ${thisQuery} `);
         clearInterval(intervalID);
       };
     },
@@ -227,6 +199,7 @@ function Search({ onChange }) {
       value={thisQuery}
       onChange={(e) => setThisQuery(e.target.value)}
       //onKeyUp={handleKeyUp}
+      ref={inputEl}
     />
   );
 }
@@ -303,32 +276,14 @@ function MovieDetails({
   onRemoveFromWatched,
 }) {
   const [movie, setMovie] = useState({});
-  const [rating, setRating] = useState(userRating);
+  const [thisUserRating, setThisUserRating] = useState(userRating);
   const [isLoading, setIsLoading] = useState(false);
+  const countRef = useRef(0);
 
   console.log('userRating', userRating);
-  console.log('rating', rating);
+  console.log('rating', thisUserRating);
 
-
-  useEffect(
-    /// listen for document keyup event to close movie details on ESC
-    function () {
-      function handleKeyup(e) {
-        console.log('keyup', e);
-
-        if (e.keyCode === 27) {
-          onClose();
-        }
-      }
-      document.addEventListener('keyup', handleKeyup);
-
-      return function () {
-        document.removeEventListener('keyup', handleKeyup);
-      };
-    },
-    [onClose]
-  );
-
+  useKey('Escape', onClose);
 
   useEffect(
     /// request movie details data
@@ -358,6 +313,14 @@ function MovieDetails({
   );
 
   useEffect(
+    function () {
+      /// increase countRef
+      if (thisUserRating) countRef.current++;
+    },
+    [thisUserRating]
+  );
+
+  useEffect(
     /// set document.title
     function () {
       if (!movie.Title) return;
@@ -373,10 +336,12 @@ function MovieDetails({
   function handleAdd() {
     const movieAdded = {
       imdbID: selectedId,
+      Title: movie.Title,
       imdbRating: Number(movie.imdbRating),
-      userRating: rating,
+      userRating: thisUserRating,
       runtime: Number(movie.Runtime.split(' ').at(0)),
       Poster: movie.Poster,
+      countRatingDecision: countRef.current,
     };
 
     console.log('movieAdded', movieAdded);
@@ -386,6 +351,7 @@ function MovieDetails({
 
   function handleRemove() {
     onRemoveFromWatched(selectedId);
+    // setRating(0);
   }
 
   return (
@@ -417,14 +383,14 @@ function MovieDetails({
               <StarRating
                 maxRating={10}
                 size={24}
-                defaultRating={rating}
+                defaultRating={thisUserRating}
                 isReadOnly={userRating > 0}
-                onSetRating={setRating}
+                onSetRating={setThisUserRating}
               />
 
               {(() => {
                 if (userRating === 0) {
-                  if (rating > 0)
+                  if (thisUserRating > 0)
                     return (
                       <button className="btn-add" onClick={handleAdd}>
                         + Add to list
@@ -443,8 +409,12 @@ function MovieDetails({
             <p>
               <em>{movie.Plot}</em>
             </p>
-            <p><strong>Actors:</strong> {movie.Actors}</p>
-            <p><strong>Directed by:</strong> {movie.Director}</p>
+            <p>
+              <strong>Actors:</strong> {movie.Actors}
+            </p>
+            <p>
+              <strong>Directed by:</strong> {movie.Director}
+            </p>
           </section>
         </>
       )}

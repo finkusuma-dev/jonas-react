@@ -60,8 +60,9 @@ function StarRating({
 
   function handleRate(rating) {
     if (isReadOnly) return;
-    
+
     setRating(rating);
+    setTmpRating(0);
     onSetRating && onSetRating(rating);
   }
   function handleHoverIn(rating){
@@ -108,7 +109,7 @@ Star.propTypes = {
   onRate: PropTypes.func,
   onHoverIn: PropTypes.func,
   onHoverOut: PropTypes.func,
-  size: PropTypes.string,
+  size: PropTypes.number,
   fullStar: PropTypes.bool,
   color: PropTypes.string
 }
