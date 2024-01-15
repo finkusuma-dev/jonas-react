@@ -1,5 +1,25 @@
 # React + Vite
 
+This repo is created using:
+
+```bash
+pnpm create vite my_project --template react
+```
+
+After clone run this commands:
+
+```bash
+cd app_folder
+pnpm install
+pnpm run dev
+```
+
+To run npm script:
+
+```bash
+pnpm run [script_name]
+```
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
