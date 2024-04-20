@@ -14,8 +14,8 @@ class App extends React.Component {
         "flag": "🇮🇩",
         "weather": [
           {
-            "time": "Sat",
-            "weather": "🌦",
+            "day": "Sat",
+            "icon": "🌦",
             "temp_min": 25.7,
             "temp_max": 33.8
           },
@@ -88,13 +88,13 @@ class App extends React.Component {
             this.state.weatherData?.weather?.map((e) => {
               return (
                 <div
-                  key={e.time}
+                  key={e.day}
                   className={`day ${
-                    e.time === formatDay(new Date()) ? 'important' : ''
+                    e.day === formatDay(new Date()) ? 'important' : ''
                   }`}
                 >
                   <div>
-                    <span>{e.weather}</span>
+                    <span>{e.icon}</span>
                   </div>
                   <div>{e.time}</div>
                   <div>{`${e.temp_max}° - ${e.temp_max}°`}</div>

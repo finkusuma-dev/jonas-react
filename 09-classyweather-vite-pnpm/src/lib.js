@@ -59,8 +59,8 @@ export async function getWeather(location) {
     };
     for (let i = 0; i < weatherData.daily.time.length; i++) {
       data.weather.push( {
-        time: formatDay(weatherData.daily.time[i]),
-        weather: getWeatherIcon(weatherData.daily.weathercode[i]),
+        day: formatDay(weatherData.daily.time[i]),
+        icon: getWeatherIcon(weatherData.daily.weathercode[i]),
         temp_min: weatherData.daily.temperature_2m_min[i],
         temp_max: weatherData.daily.temperature_2m_max[i],
       });      
