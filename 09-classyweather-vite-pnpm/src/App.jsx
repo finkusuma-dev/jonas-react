@@ -1,5 +1,6 @@
 import React from 'react';
-import { getWeather, formatDay } from './lib';
+import PropTypes from 'prop-types';
+import { getWeather } from './lib';
 
 class App extends React.Component {
   constructor(props) {
@@ -81,30 +82,62 @@ class App extends React.Component {
         {this.state.isLoading && <div>searching...</div>}
         {this.state.weatherData?.country && <h2>{weatherInfo}</h2>}
         {/* weatherInfo= Yogyakarta, Indonesia [flag] */}
-
-        {/* <MyCounter/> */}
-        <div className="weather">
-          {this.state.weatherData?.weather &&
-            this.state.weatherData?.weather?.map((e) => {
-              return (
-                <div
-                  key={e.day}
-                  className={`day ${
-                    e.day === formatDay(new Date()) ? 'important' : ''
-                  }`}
-                >
-                  <div>
-                    <span>{e.icon}</span>
-                  </div>
-                  <div>{e.time}</div>
-                  <div>{`${e.temp_max}° - ${e.temp_max}°`}</div>
-                </div>
-              );
-            })}
-        </div>
+        
+        {this.state.weatherData?.weather && (
+          <Weather weather={this.state.weatherData?.weather} />
+        )}      
       </div>
     );
   }
 }
+
+class Weather extends React.Component {
+  render() {
+    const { weather } = this.props;
+    return (
+      <ul className="weather">
+        {weather &&
+          weather.map((e, i) => {
+            return (
+              <Day
+                key={e.day}
+                day={e.day}
+                icon={e.icon}
+                temp_max={e.temp_max}
+                temp_min={e.temp_min}
+                isToday={i === 0}
+              />
+            );
+          })}
+      </ul>
+    );
+  }
+}
+
+Weather.propTypes = {
+  weather: PropTypes.array.isRequired,
+};
+
+class Day extends React.Component {
+  render() {
+    const { day, icon, temp_max, temp_min, isToday } = this.props;
+    return (
+      <li key={day} className={`day ${isToday ? 'important' : ''}`}>
+        <span>{icon}</span>
+
+        <p>{day}</p>
+        <p>{`${Math.floor(temp_min)}° - ${Math.ceil(temp_max)}°`}</p>
+      </li>
+    );
+  }
+}
+
+Day.propTypes = {
+  day: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  temp_max: PropTypes.number.isRequired,
+  temp_min: PropTypes.number.isRequired,
+  isToday: PropTypes.bool,
+};
 
 export default App;
