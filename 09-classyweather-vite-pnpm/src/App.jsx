@@ -3,32 +3,33 @@ import PropTypes from 'prop-types';
 import { getWeather } from './lib';
 
 class App extends React.Component {
+  state = {
+    isLoading: false,
+    city: '',
+    weatherData: {},
+    /* 
+    weatherData : {
+      "country": "Indonesia",
+      "flag": "🇮🇩",
+      "weather": [
+        {
+          "day": "Sat",
+          "icon": "🌦",
+          "temp_min": 25.7,
+          "temp_max": 33.8
+        },
+        ...
+      ]
+    } */
+  };
+
   constructor(props) {
     super(props);
-    this.state = {
-      isLoading: false,
-      city: '',
-      weatherData: {},
-      /* 
-      weatherData : {
-        "country": "Indonesia",
-        "flag": "🇮🇩",
-        "weather": [
-          {
-            "day": "Sat",
-            "icon": "🌦",
-            "temp_min": 25.7,
-            "temp_max": 33.8
-          },
-          ...
-        ]
-      } */
-    };
-    this.handleInputText = this.handleInputText.bind(this);
+
     this.timeoutID = null;
   }
 
-  handleInputText(e) {
+  handleInputText = (e) => {
     const city = e.target.value;
     this.setState((state) => ({
       ...state,
@@ -54,7 +55,7 @@ class App extends React.Component {
       }));
     }, 1000);
     // console.log(`interval ID: ${this.timeoutID}`);
-  }
+  };
 
   render() {
     let weatherInfo = '';
@@ -71,25 +72,43 @@ class App extends React.Component {
     return (
       <div className="app">
         <h1>Classy Weather</h1>
-        {/* <h2>Test</h2> */}
-        <input
-          type="text"
-          placeholder="Search for location"
-          value={this.state.city}
-          onChange={this.handleInputText}
-        />
 
+        {/* Input */}
+        <UserInput city={this.state.city} onChange={this.handleInputText} />
+
+        {/* Fetching data status */}
         {this.state.isLoading && <div>searching...</div>}
+
+        {/* City result */}
         {this.state.weatherData?.country && <h2>{weatherInfo}</h2>}
         {/* weatherInfo= Yogyakarta, Indonesia [flag] */}
-        
+
+        {/* Weather result */}
         {this.state.weatherData?.weather && (
           <Weather weather={this.state.weatherData?.weather} />
-        )}      
+        )}
       </div>
     );
   }
 }
+
+class UserInput extends React.Component {
+  render() {
+    return (
+      <input
+        type="text"
+        placeholder="Search for location"
+        value={this.props.city}
+        onChange={this.props.onChange}
+      />
+    );
+  }
+}
+
+UserInput.propTypes = {
+  city: PropTypes.string,
+  onChange: PropTypes.func,
+};
 
 class Weather extends React.Component {
   render() {
