@@ -57,7 +57,7 @@ class App extends React.Component {
     // console.log(`interval ID: ${this.timeoutID}`);
   };
 
-  render() {
+  buildLocationInfo = () => {
     let weatherInfo = '';
     if (this.state.weatherData?.country) {
       weatherInfo = this.state.city && `${this.state.city}`;
@@ -66,8 +66,13 @@ class App extends React.Component {
       }
       if (this.state.weatherData.flag) {
         weatherInfo += ' ' + this.state.weatherData.flag;
-      }
+      }      
     }
+    return weatherInfo;
+  }
+
+  render() {
+    let locationInfo = this.buildLocationInfo();    
 
     return (
       <div className="app">
@@ -80,7 +85,7 @@ class App extends React.Component {
         {this.state.isLoading && <div>searching...</div>}
 
         {/* City result */}
-        {this.state.weatherData?.country && <h2>{weatherInfo}</h2>}
+        {this.state.weatherData?.country && <h2>{locationInfo}</h2>}
         {/* weatherInfo= Yogyakarta, Indonesia [flag] */}
 
         {/* Weather result */}
