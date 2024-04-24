@@ -36,43 +36,98 @@ class App extends React.Component {
       city: city,
       weatherData: {},
     }));
+    // console.log(`interval ID: ${this.timeoutID}`);
+  };
 
+  searchCity = async (city) => {
     if (this.timeoutID != null) {
-      // console.log(`clear timeout ID: ${this.timeoutID}`);
-      clearTimeout(this.timeoutID);
+      this.clearTimeoutCity(this.timeoutID);      
     }
-    this.timeoutID = setTimeout(async () => {
+
+    /// If city is null, setItem will save 'null' (as string). 
+    /// To prevent this call getItem and assign empty string if it's null,
+    /// ex: getItem('city') || ''.
+
+    localStorage.setItem('city', city); 
+
+    // console.log('city', city);
+    if (city) console.log('city is', city);
+    if (!city || city.length < 2) return;
+
+
+    this.timeoutID = this.setTimeoutCity(city);
+  };
+
+  buildLocationInfo = () => {
+    let result = '';
+    if (this.state.weatherData?.country) {
+      result = this.state.city;
+      if (this.state.weatherData.country) {
+        result += ', ' + this.state.weatherData.country;
+      }
+      if (this.state.weatherData.flag) {
+        result += ' ' + this.state.weatherData.flag;
+      }
+    }
+    return result;
+  };
+
+  clearTimeoutCity(timeoutID) {
+      console.log('this.timeoutID', this.timeoutID);
+      console.log(`clear timeout ID: ${timeoutID}`);
+      clearTimeout(timeoutID);
+      this.timeoutID = null;
+    
+  }
+
+  setTimeoutCity(city) {
+    return setTimeout(async () => {
       this.setState((state) => ({
         ...state,
         isLoading: true,
       }));
-      //console.log('request weather data');
-      var results = await getWeather(city);
-      this.setState((state) => ({
-        ...state,
-        weatherData: results,
-        isLoading: false,
-      }));
-    }, 1000);
-    // console.log(`interval ID: ${this.timeoutID}`);
-  };
+      console.log('request weather data');
+      try {
+        var results = await getWeather(city);
 
-  buildLocationInfo = () => {
-    let weatherInfo = '';
-    if (this.state.weatherData?.country) {
-      weatherInfo = this.state.city && `${this.state.city}`;
-      if (this.state.weatherData.country) {
-        weatherInfo += ', ' + this.state.weatherData.country;
+        console.log('this.state.city', this.state.city);
+        console.log('city', city);
+
+        if (this.state.city === city) {
+          this.setState((state) => ({
+            ...state,
+            weatherData: results,
+          }));
+        }
+      } finally {
+        this.setState((state) => ({
+          ...state,
+          isLoading: false,
+        }));
       }
-      if (this.state.weatherData.flag) {
-        weatherInfo += ' ' + this.state.weatherData.flag;
-      }      
+    }, 1000);
+  }
+
+  /// componentDidMount is like useEffect with empty dependency array
+  componentDidMount() {
+    // console.log('');
+    const city = localStorage.getItem('city') || '';
+    console.log('localStorage getItem city', city);
+    this.setState((state) => ({
+      ...state,
+      city: city,
+      weatherData: {},
+    }));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.city !== prevState.city) {
+      this.searchCity(this.state.city);
     }
-    return weatherInfo;
   }
 
   render() {
-    let locationInfo = this.buildLocationInfo();    
+    let locationInfo = this.buildLocationInfo();
 
     return (
       <div className="app">
@@ -116,6 +171,11 @@ UserInput.propTypes = {
 };
 
 class Weather extends React.Component {
+
+  componentWillUnmount(){
+    console.log('Weather component will unmount');
+  }
+
   render() {
     const { weather } = this.props;
     return (
