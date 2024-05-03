@@ -6,9 +6,9 @@ Content.propTypes = {
 
 function Content({children}) {
   return (
-    <div>
+    <main className='main'>
       {children}
-    </div>
+    </main>
   )
 }
 

@@ -2,10 +2,16 @@ import Header from './Header';
 import Content from './Content';
 import { useEffect } from 'react';
 import { useReducer } from 'react';
+import Loader from './Loader';
+import Error from './Error';
+import StartScreen from './StartScreen';
+import Question from './Question';
 
 let initialData = {
-  questions: {},
-  status: 'Loading',
+  questions: [],
+  /// loading, error, ready, active, finished
+  status: 'loading',
+  questionIndex: 0,
 };
 
 function reducer(state, action) {
@@ -21,13 +27,21 @@ function reducer(state, action) {
         ...state,
         status: 'error',
       };
+    case 'start':
+      return {
+        ...state,
+        status: 'active',
+      };
     default:
       throw new Error('Action is unknown');
   }
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialData);
+  const [{ questions, status, questionIndex }, dispatch] = useReducer(
+    reducer,
+    initialData
+  );
 
   useEffect(function () {
     fetch('http://localhost:6700/questions')
@@ -38,18 +52,24 @@ function App() {
       })
       .catch((err) => {
         console.error(err);
-        dispatch({type: 'dataFailed'});
+        dispatch({ type: 'dataFailed' });
       });
   }, []);
 
   return (
-    <main className="main">
+    <div className="app">
       <Header />
       <Content>
-        <p>1/5</p>
-        <p>Question</p>
+        {status === 'loading' && <Loader />}
+        {status === 'error' && <Error />}
+        {status === 'ready' && (
+          <StartScreen numQuestions={questions.length} dispatch={dispatch} />
+        )}
+        {status === 'active' && (
+          <Question question={questions[questionIndex]} />
+        )}
       </Content>
-    </main>
+    </div>
   );
 }
 
