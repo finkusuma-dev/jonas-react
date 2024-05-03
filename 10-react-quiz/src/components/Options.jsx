@@ -1,19 +1,32 @@
 import PropTypes from 'prop-types';
 
 Options.propTypes = {
-  options: PropTypes.array
-}
+  question: PropTypes.object,
+  dispatch: PropTypes.any,
+  answer: PropTypes.number,
+};
 
-function Options({options}) {
+function Options({ question, dispatch, answer }) {
   return (
-    <div className='options'>
-        {
-          options.map(option => 
-            <button className='btn btn-option' key={option}>{option}</button>
-          )
-        }
-      </div>
-  )
+    <div className="options">
+      {question.options.map((option, i) => {
+        let classCorrectOrWrong =
+          answer != null &&
+          (i === question.correctOption ? 'correct' : 'wrong');
+        let classAnswer = i === answer ? 'answer' : '';
+        return (
+          <button
+            className={`btn btn-option ${classCorrectOrWrong} ${classAnswer}`}
+            key={option}
+            disabled={answer !== null}
+            onClick={() => dispatch({ type: 'newAnswer', payload: i })}
+          >
+            {option}
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
-export default Options
+export default Options;
