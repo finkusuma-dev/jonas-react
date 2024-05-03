@@ -7,6 +7,7 @@ import Error from './Error';
 import StartScreen from './StartScreen';
 import Question from './Question';
 import NextButton from './NextButton';
+import Progress from './Progress';
 
 let initialData = {
   questions: [],
@@ -45,22 +46,24 @@ function reducer(state, action) {
         ...state,
         answer: answer,
         points: state.points + answerPoints,
-      };    
+      };
     }
     case 'nextQuestion':
       return {
         ...state,
-        questionIndex : state.questionIndex + 1,
-        answer : null
-      }
+        questionIndex: state.questionIndex + 1,
+        answer: null,
+      };
     default:
       throw new Error('Action is unknown');
   }
 }
 
 function App() {
-  const [{ questions, status, questionIndex, answer, points }, dispatch] =
-    useReducer(reducer, initialData);
+  const [
+    { questions, status, questionIndex, answer, points },
+    dispatch,
+  ] = useReducer(reducer, initialData);
 
   useEffect(function () {
     fetch('http://localhost:6700/questions')
@@ -86,6 +89,13 @@ function App() {
         )}
         {status === 'active' && (
           <>
+            <Progress
+              answer={answer}
+              index={questionIndex}
+              numQuestions={questions.length}
+              points={points}
+              overallPoints={questions.reduce((acc, question) => acc+ question.points, 0)}
+            />
             <Question
               question={questions[questionIndex]}
               dispatch={dispatch}

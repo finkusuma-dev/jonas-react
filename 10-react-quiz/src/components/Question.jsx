@@ -8,11 +8,10 @@ Question.propTypes = {
   points: PropTypes.number
 }
 
-function Question({question, dispatch, answer, points}) {
+function Question({question, dispatch, answer}) {
   console.log('question', question);
   return (
-    <div>
-      <div>Points= {points}</div>
+    <div>      
       <h4>{question.question}</h4>
       <Options question={question} dispatch={dispatch} answer={answer}/>
     </div>
