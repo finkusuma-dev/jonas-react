@@ -9,6 +9,9 @@ import Question from './Question';
 import NextButton from './NextButton';
 import Progress from './Progress';
 import FinishScreen from './FinishScreen';
+import Timer from './Timer';
+
+const SECONDS_PER_QUESTION= 15;
 
 let initialData = {
   questions: [],
@@ -18,6 +21,7 @@ let initialData = {
   answer: null,
   points: 0,
   highscore: 20,
+  secondsRemaining: null,
 };
 
 function reducer(state, action) {
@@ -37,6 +41,7 @@ function reducer(state, action) {
       return {
         ...state,
         status: 'active',
+        secondsRemaining: state.questions.length * SECONDS_PER_QUESTION,
       };
     case 'newAnswer': {
       let answer = action.payload;
@@ -60,24 +65,41 @@ function reducer(state, action) {
       return {
         ...state,
         status: 'finished',
-        highscore: state.points > state.highscore ? state.points : state.highscore,
+        highscore:
+          state.points > state.highscore ? state.points : state.highscore,
       };
     case 'restart':
       return {
-        ...state,
-        questionIndex: 0,
-        answer: null,
-        points: 0,
-        status: 'ready',        
+        ...initialData,
+        questions: state.questions,
+        status: 'ready',
+        highscore: state.highscore      
       };
+    case 'decreaseSecondsRemaining': {      
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining - 1 === 0 ? 'finished' : state.status,
+      };
+    }
     default:
       throw new Error('Action is unknown');
   }
 }
 
 function App() {
-  const [{ questions, status, questionIndex, answer, points, highscore }, dispatch] =
-    useReducer(reducer, initialData);
+  const [
+    {
+      questions,
+      status,
+      questionIndex,
+      answer,
+      points,
+      highscore,
+      secondsRemaining,
+    },
+    dispatch,
+  ] = useReducer(reducer, initialData);
 
   let overallPoints = questions.reduce(
     (acc, question) => acc + question.points,
@@ -121,12 +143,15 @@ function App() {
               answer={answer}
               points={points}
             />
-            <NextButton
-              answer={answer}
-              dispatch={dispatch}
-              questionIndex={questionIndex}
-              numQuestions={questions.length}
-            />
+            <footer>
+              <Timer secondsRemaining={secondsRemaining} dispatch={dispatch} />
+              <NextButton
+                answer={answer}
+                dispatch={dispatch}
+                questionIndex={questionIndex}
+                numQuestions={questions.length}
+              />
+            </footer>
           </>
         )}
         {status === 'finished' && (
