@@ -1,9 +1,13 @@
+import { Link } from 'react-router-dom';
+
 function AppNav() {
   return (
-    <div>
-      AppNav
-    </div>
-  )
+    <nav>
+      <ul className="li">
+        <Link to="/">Link1</Link>
+      </ul>
+    </nav>
+  );
 }
 
-export default AppNav
+export default AppNav;
