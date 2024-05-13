@@ -33,20 +33,6 @@ function App() {
     fetchCities();
   }, []);
 
-  const countries = [];
-  for (let index = 0; index < cities.length; index++) {
-    const city = cities[index];
-
-    if (!countries.find((country) => country.country === city.country)) {
-      countries.push({
-        emoji: city.emoji,
-        country: city.country,
-      });
-    }
-  }
-
-  console.log('countries', countries);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -60,11 +46,11 @@ function App() {
           <Route index element={<CityList />} />
           <Route
             path="cities"
-            element={<CityList isLoading={isLoading} cities={cities} />}
+            element={<CityList cities={cities} isLoading={isLoading} />}
           />
           <Route
             path="countries"
-            element={<CountryList countries={countries} />}
+            element={<CountryList cities={cities} isLoading={isLoading} />}
           />
           <Route path="form" element={<p>Form</p>} />
         </Route>
