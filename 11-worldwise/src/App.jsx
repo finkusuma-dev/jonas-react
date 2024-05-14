@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Product from './pages/Product';
 import Homepage from './pages/Homepage';
@@ -45,10 +45,8 @@ function App() {
 
         <Route path="app" element={<AppLayout />}>
           {/* Nested Routes */}
-          <Route
-            index
-            element={<CityList cities={cities} isLoading={isLoading} />}
-          />
+          {/* Using <Navigate replace /> to redirect and replace history with target url */}
+          <Route index element={<Navigate replace to="cities" />} />
           <Route
             path="cities"
             element={<CityList cities={cities} isLoading={isLoading} />}
