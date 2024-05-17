@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import styles from './CountryList.module.css';
 import CountryItem from './CountryItem';
 import Spinner from './Spinner';
+import { useCities } from '../contexts/CitiesContext';
 // import Message from './Message';
 
 CountryList.propTypes = {
@@ -9,7 +10,9 @@ CountryList.propTypes = {
   cities: PropTypes.array,
 };
 
-function CountryList({ isLoading, cities }) {
+function CountryList() {
+  const { cities, isLoading } = useCities();
+
   if (isLoading) return <Spinner />;
 
   const countries = cities.reduce(
