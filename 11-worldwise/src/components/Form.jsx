@@ -88,11 +88,12 @@ function Form() {
       </div>
 
       <div className={styles.row}>
-        <label htmlFor="date">When did you go to {`${cityName}`}?</label>
-        <input
+        <label htmlFor="date">When did you go to {`${cityName}`}?</label>        
+        <DatePicker
           id="date"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
+          selected={date}
+          onChange={(date) => setDate(date)}
+          dateFormat={'EEE, dd MMM yyyy'}
         />
       </div>
 
