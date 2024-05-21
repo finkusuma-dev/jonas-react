@@ -38,6 +38,9 @@ function Form() {
   useEffect(
     function () {
       async function fetchGeocoding() {
+
+        if (!lat || !lng) return;
+
         setIsLoadingGeocoding(true);
         setErrorGeocoding('');
         try {
