@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams , useSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import styles from './City.module.css';
 import { useCities } from '../contexts/CitiesContext';
 import Spinner from './Spinner';
 import BackButton from './BackButton';
+import Button from './Button';
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en', {
@@ -15,6 +16,7 @@ const formatDate = (date) =>
 
 function City() {
   const { isLoading, getCity, currentCity } = useCities();
+  const navigate = useNavigate();
 
   const { id } = useParams();
   // console.log('cityId', id);
@@ -25,22 +27,20 @@ function City() {
     }
   }, [id]); /// Warning: add getCity on dependencies array made it loop
 
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // const lat = searchParams.get('lat');
-  // const lng = searchParams.get('lng');
-  // console.log('id', params.id);
+  const cityAdded = searchParams.get('added');
 
   if (isLoading) return <Spinner />;
 
-  const { cityName, emoji, date, notes } = currentCity;
+  const { cityName, country, emoji, date, notes } = currentCity;
 
   return (
     <div className={styles.city}>
       <div className={styles.row}>
         <h6>City name</h6>
         <h3>
-          <span>{emoji}</span> {cityName}
+          <span>{emoji}</span> {cityName}, {country}
         </h3>
       </div>
       <div className={styles.row}>
@@ -64,7 +64,19 @@ function City() {
         </a>
       </div>
       <div>
-        <BackButton />
+        {cityAdded ? (
+          <Button
+            type="back"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/app/cities');
+            }}
+          >
+            &larr; Back
+          </Button>
+        ) : (
+          <BackButton />
+        )}
       </div>
     </div>
   );
