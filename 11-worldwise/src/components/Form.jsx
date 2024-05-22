@@ -92,8 +92,8 @@ function Form() {
       },
     };
     newCity = await addCity(newCity);
-    // await fetchCities();
-    navigate(`../cities/${newCity.id}`);
+    
+    navigate(`../cities/${newCity.id}?added=true`);
   }
 
   if (isLoadingGeocoding) return <Spinner />;
