@@ -1,14 +1,17 @@
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
 
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useUrlPosition } from '../hooks/useUrlPosition';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import styles from './Form.module.css';
 import Button from './Button';
 import BackButton from './BackButton';
-import { useEffect } from 'react';
-import { useUrlPosition } from '../hooks/useUrlPosition';
 import Spinner from './Spinner';
 import Message from './Message';
+import { useCities } from '../contexts/CitiesContext';
 
 const BASE_URL_GEOCODING =
   'https://api.bigdatacloud.net/data/reverse-geocode-client';
@@ -24,12 +27,14 @@ export function convertToEmoji(countryCode) {
 function Form() {
   const [cityName, setCityName] = useState('');
   const [country, setCountry] = useState('');
-  const [countryCode, setCountryCode] = useState('');
+  const [emoji, setEmoji] = useState('');
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState('');
   const [lat, lng] = useUrlPosition();
   const [errorGeocoding, setErrorGeocoding] = useState('');
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState(false);
+  const { addCity, isLoading } = useCities();
+  const navigate = useNavigate();
 
   // const [searchParams] = useSearchParams();
   // const lat = searchParams.get('lat');
@@ -38,7 +43,6 @@ function Form() {
   useEffect(
     function () {
       async function fetchGeocoding() {
-
         if (!lat || !lng) return;
 
         setIsLoadingGeocoding(true);
@@ -48,17 +52,17 @@ function Form() {
             `${BASE_URL_GEOCODING}?latitude=${lat}&longitude=${lng}`
           );
           const data = await res.json();
-          // console.log('geocoding data', !data.countryCode);
-          
+          console.log('geocoding data', data);
+
           if (!data.countryCode) {
             throw new Error(
               "It doesn't seems to be a city. Click somewhere else 😉!"
             );
           }
-          
+
           setCityName(data.city || data.locality || '');
           setCountry(data.countryName);
-          setCountryCode(convertToEmoji(data.countryCode));
+          setEmoji(convertToEmoji(data.countryCode));
         } catch (err) {
           console.log(err);
           setErrorGeocoding(err.message);
@@ -71,12 +75,33 @@ function Form() {
     [lat, lng]
   );
 
+  async function handleAddCity(e) {
+    e.preventDefault();
+
+    if (!cityName || !date) return;
+
+    let newCity = {
+      cityName,
+      country,
+      emoji,
+      date,
+      notes,
+      position: {
+        lat: Number.parseFloat(lat),
+        lng: Number.parseFloat(lng),
+      },
+    };
+    newCity = await addCity(newCity);
+    // await fetchCities();
+    navigate(`../cities/${newCity.id}`);
+  }
+
   if (isLoadingGeocoding) return <Spinner />;
 
   if (errorGeocoding) return <Message message={errorGeocoding} />;
 
   return (
-    <form className={styles.form}>
+    <form className={`${styles.form} ${isLoading ? styles.loading : ''}`}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -84,11 +109,11 @@ function Form() {
           onChange={(e) => setCityName(e.target.value)}
           value={cityName}
         />
-        <span className={styles.flag}>{countryCode}</span>
+        <span className={styles.flag}>{emoji}</span>
       </div>
 
       <div className={styles.row}>
-        <label htmlFor="date">When did you go to {`${cityName}`}?</label>        
+        <label htmlFor="date">When did you go to {`${cityName}, ${country}`}?</label>        
         <DatePicker
           id="date"
           selected={date}
@@ -107,7 +132,9 @@ function Form() {
       </div>
 
       <div className={styles.buttons}>
-        <Button type="primary">Add</Button>
+        <Button type="primary" onClick={handleAddCity}>
+          Add
+        </Button>
         <BackButton />
       </div>
     </form>
