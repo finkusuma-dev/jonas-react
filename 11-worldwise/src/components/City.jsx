@@ -27,7 +27,7 @@ function City() {
     }
   }, [id]); /// Warning: add getCity on dependencies array made it loop
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const cityAdded = searchParams.get('added');
 
