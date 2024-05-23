@@ -13,9 +13,7 @@ CityList.propTypes = {
 
 
 function CityList() {
-  const {isLoading} = useCities();
-
-  const {cities} = useCities();
+  const {isLoading, cities} = useCities();  
 
   if (isLoading) {
     return <Spinner />
