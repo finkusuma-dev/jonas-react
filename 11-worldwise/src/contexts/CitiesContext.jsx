@@ -1,5 +1,6 @@
 import React, { useContext, useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useCallback } from 'react';
 
 export const BASE_URL = 'http://localhost:8000';
 
@@ -79,7 +80,7 @@ function CitiesProvider({ children }) {
     }
   }
 
-  async function getCity(id) {
+  const getCity = useCallback (async function (id) {
     if (id === currentCity.id) return;
 
     console.log('> getCity',id);
@@ -93,7 +94,7 @@ function CitiesProvider({ children }) {
     } catch (err) {
       dispatch({ type: 'rejected', payload: 'Failed to add new city!' });
     }
-  }
+  },[currentCity.id]);
 
   async function addCity(newCity) {
     dispatch({ type: 'loading' });
