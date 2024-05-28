@@ -11,6 +11,14 @@ const Calculator = memo  (function Calculator({ workouts, allowSound }) {
 
   const [duration, setDuration] = useState(0);
 
+
+  const playSound = function () {
+    if (!allowSound) return;
+    const sound = new Audio(clickSound);
+    sound.play();
+  };
+
+
   useEffect(()=>{
     setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
 
@@ -21,19 +29,13 @@ const Calculator = memo  (function Calculator({ workouts, allowSound }) {
 
   function handleInc(){
     setDuration(duration => Math.floor(duration) + 1);
+    playSound();
   }
   
   function handleDec(){
     setDuration(duration => Math.ceil(duration) - 1);
-  }
-  
-
-
-  const playSound = function () {
-    if (!allowSound) return;
-    const sound = new Audio(clickSound);
-    sound.play();
-  };
+    playSound();
+  }  
 
   return (
     <>
