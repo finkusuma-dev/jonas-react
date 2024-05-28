@@ -9,7 +9,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "server": "json-server --watch data/cities.json --port 8000",
-    "server-help": "json-server --help"
+    "server-help": "json-server --help",
+    "server-version": "json-server --version"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

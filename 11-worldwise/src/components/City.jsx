@@ -25,7 +25,7 @@ function City() {
     if (id) {
       getCity(id);
     }
-  }, [id]); /// Warning: add getCity on dependencies array made it loop
+  }, [id, getCity]);
 
   const [searchParams] = useSearchParams();
 
