@@ -21,8 +21,9 @@ const Calculator = memo  (function Calculator({ workouts, allowSound }) {
 
   useEffect(()=>{
     setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
+    playSound();
 
-  },[number, sets, speed, durationBreak]);
+  },[number, sets, speed, durationBreak, playSound]);
 
   const mins = Math.floor(duration);
   const seconds = (duration - mins) * 60;
