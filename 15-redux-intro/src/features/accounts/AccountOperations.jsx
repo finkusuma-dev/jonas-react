@@ -1,19 +1,38 @@
-import { useState } from "react";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AccountAction } from './accountSlice';
 
 function AccountOperations() {
-  const [depositAmount, setDepositAmount] = useState("");
-  const [withdrawalAmount, setWithdrawalAmount] = useState("");
-  const [loanAmount, setLoanAmount] = useState("");
-  const [loanPurpose, setLoanPurpose] = useState("");
-  const [currency, setCurrency] = useState("USD");
+  const [depositAmount, setDepositAmount] = useState('');
+  const [withdrawalAmount, setWithdrawalAmount] = useState('');
+  const [loanAmount, setLoanAmount] = useState('');
+  const [loanPurpose, setLoanPurpose] = useState('');
+  const [currency, setCurrency] = useState('USD');
+  const dispath = useDispatch();
 
-  function handleDeposit() {}
+  const {loan: currentLoan, loanPurpose: currentLoanPurpose} = useSelector((store) => store.account);
 
-  function handleWithdrawal() {}
+  function handleDeposit() {
+    if (!depositAmount) return;
+    dispath(AccountAction.deposit(depositAmount));
+    setDepositAmount('');
+  }
 
-  function handleRequestLoan() {}
+  function handleWithdrawal() {
+    if (!withdrawalAmount) return;
+    dispath(AccountAction.withdrawal(withdrawalAmount));
+    setWithdrawalAmount('');
+  }
 
-  function handlePayLoan() {}
+  function handleRequestLoan() {
+    if (!loanAmount) return;
+    dispath(AccountAction.requestLoan(loanAmount, loanPurpose));
+  }
+
+  function handlePayLoan() {
+    if (!currentLoan) return;
+    dispath(AccountAction.payLoan());
+  }
 
   return (
     <div>
@@ -50,26 +69,28 @@ function AccountOperations() {
           </button>
         </div>
 
-        <div>
-          <label>Request loan</label>
-          <input
-            type="number"
-            value={loanAmount}
-            onChange={(e) => setLoanAmount(+e.target.value)}
-            placeholder="Loan amount"
-          />
-          <input
-            value={loanPurpose}
-            onChange={(e) => setLoanPurpose(e.target.value)}
-            placeholder="Loan purpose"
-          />
-          <button onClick={handleRequestLoan}>Request loan</button>
-        </div>
-
-        <div>
-          <span>Pay back $X</span>
-          <button onClick={handlePayLoan}>Pay loan</button>
-        </div>
+        {!currentLoan ? (
+          <div>
+            <label>Request loan</label>
+            <input
+              type="number"
+              value={loanAmount}
+              onChange={(e) => setLoanAmount(+e.target.value)}
+              placeholder="Loan amount"
+            />
+            <input
+              value={loanPurpose}
+              onChange={(e) => setLoanPurpose(e.target.value)}
+              placeholder="Loan purpose"
+            />
+            <button onClick={handleRequestLoan}>Request loan</button>
+          </div>
+        ) : (
+          <div>
+            <span>Pay back ${currentLoan} ({currentLoanPurpose})</span>&nbsp;
+            <button onClick={handlePayLoan}>Pay loan</button>
+          </div>
+        )}
       </div>
     </div>
   );
