@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AccountAction } from './accountSlice';
+import { AccountActions } from './accountSlice';
 
 function AccountOperations() {
   const [depositAmount, setDepositAmount] = useState('');
@@ -18,24 +18,24 @@ function AccountOperations() {
 
   function handleDeposit() {
     if (!depositAmount) return;
-    dispath(AccountAction.deposit(depositAmount, currency));
+    dispath(AccountActions.deposit({ amount: depositAmount, currency }));
     setDepositAmount('');
   }
 
   function handleWithdrawal() {
     if (!withdrawalAmount) return;
-    dispath(AccountAction.withdrawal(withdrawalAmount));
+    dispath(AccountActions.withdrawal(withdrawalAmount));
     setWithdrawalAmount('');
   }
 
   function handleRequestLoan() {
     if (!loanAmount) return;
-    dispath(AccountAction.requestLoan(loanAmount, loanPurpose));
+    dispath(AccountActions.requestLoan({ loanAmount, loanPurpose }));
   }
 
   function handlePayLoan() {
     if (!currentLoan) return;
-    dispath(AccountAction.payLoan());
+    dispath(AccountActions.payLoan());
   }
 
   return (
@@ -52,12 +52,14 @@ function AccountOperations() {
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            >
+          >
             <option value="USD">US Dollar</option>
             <option value="EUR">Euro</option>
             <option value="GBP">British Pound</option>
           </select>
-          <button onClick={handleDeposit}>{isLoading ? 'Converting...' : `Deposit ${depositAmount}`}</button>          
+          <button onClick={handleDeposit}>
+            {isLoading ? 'Converting...' : `Deposit ${depositAmount}`}
+          </button>
         </div>
 
         <div>
