@@ -63,11 +63,7 @@ function deposit(amount, currency) {
   };
 }
 
-const { actions } = accountSlice;
-const AccountActions = { ...actions, deposit };
-
-export { AccountActions };
-
+export const AccountActions = { ...accountSlice.actions, deposit };
 export default accountSlice.reducer;
 
 // function accountReducer(state = initialStateAccount, action) {
