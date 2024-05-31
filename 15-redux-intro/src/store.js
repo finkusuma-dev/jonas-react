@@ -1,6 +1,8 @@
 import { createStore, combineReducers } from 'redux';
 import accountReducer from './features/accounts/accountSlice';
 import customerReducer from './features/customers/customerSlice';
+import { applyMiddleware } from 'redux';
+import { thunk } from 'redux-thunk';
 
 const rootReducer = combineReducers({
   account: accountReducer,
@@ -9,7 +11,8 @@ const rootReducer = combineReducers({
 
 const store = createStore(
   rootReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() /// enable browser extension
+  applyMiddleware(thunk),
+  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() /// enable browser extension
 );
 
 export default store;
