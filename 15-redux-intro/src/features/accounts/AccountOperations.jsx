@@ -18,7 +18,7 @@ function AccountOperations() {
 
   function handleDeposit() {
     if (!depositAmount) return;
-    dispath(AccountActions.deposit({ amount: depositAmount, currency }));
+    dispath(AccountActions.deposit( depositAmount, currency ));
     setDepositAmount('');
   }
 
@@ -30,7 +30,7 @@ function AccountOperations() {
 
   function handleRequestLoan() {
     if (!loanAmount) return;
-    dispath(AccountActions.requestLoan({ loanAmount, loanPurpose }));
+    dispath(AccountActions.requestLoan( loanAmount, loanPurpose ));
   }
 
   function handlePayLoan() {

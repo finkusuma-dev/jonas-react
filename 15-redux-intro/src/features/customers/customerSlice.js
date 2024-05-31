@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   fullname: '',
@@ -10,16 +10,28 @@ const customerSlice = createSlice({
   name: 'customer',
   initialState,
   reducers: {
-    create(state, action) {
-      console.log('customer/create action', action)
-      state.fullname = action.payload.fullName;
-      state.nationalID = action.payload.nationalId;
-      state.createdAt = action.payload.createdAt;
+    create: {
+      prepare(fullName, nationalId, createdAt){
+        return {
+          payload: {
+            fullName: fullName,
+            nationalId,
+            createdAt
+          }
+        }
+      },
+      
+      reducer(state, action) {
+        console.log('customer/create action', action);
+        state.fullname = action.payload.fullName;
+        state.nationalID = action.payload.nationalId;
+        state.createdAt = action.payload.createdAt;
+      },
     },
     updateName(state, account) {
       state.fullname = account.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { actions: CustomerActions } = customerSlice;

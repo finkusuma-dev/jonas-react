@@ -9,7 +9,7 @@ function Customer() {
 
   function handleClick() {
     if (!fullName || !nationalId) return;
-    dispatch(CustomerActions.create({ fullName, nationalId }));
+    dispatch(CustomerActions.create( fullName, nationalId ));
   }
 
   return (
