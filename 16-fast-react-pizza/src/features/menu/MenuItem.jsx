@@ -1,5 +1,5 @@
-import { formatCurrency } from '../../utils/helpers';
 import PropTypes from 'prop-types';
+import { formatCurrency } from '../../utils/helpers';
 
 MenuItem.propTypes = {
   pizza: PropTypes.object
