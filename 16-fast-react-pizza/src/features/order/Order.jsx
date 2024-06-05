@@ -26,10 +26,11 @@ function Order() {
   return (
     <div>
       <div>
+        <h1>Order id: {id}</h1>
         <h2>Status</h2>
 
         <div>
-          {priority && <span>Priority</span>}
+          {priority && <span>Priority</span>} <br/>
           <span>{status} order</span>
         </div>
       </div>
