@@ -41,9 +41,6 @@ function CreateOrder() {
   const errors = useActionData();
   const cart = fakeCart;
 
-  const className =
-    'w-full rounded-full border border-stone-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500';
-
   return (
     <div>
       <h2>Ready to order? Let's go!</h2>
@@ -51,13 +48,13 @@ function CreateOrder() {
       <Form method="POST">
         <div>
           <label>First Name</label>
-          <input type="text" name="customer" required className={className} />
+          <input type="text" name="customer" required className="input" />
         </div>
 
         <div>
           <label>Phone number</label>
           <div>
-            <input type="tel" name="phone" required className={className} />
+            <input type="tel" name="phone" required className="input" />
           </div>
           {errors?.phone && <div>{errors.phone}</div>}
         </div>
@@ -65,7 +62,7 @@ function CreateOrder() {
         <div>
           <label>Address</label>
           <div>
-            <input type="text" name="address" required className={className} />
+            <input type="text" name="address" required className="input" />
           </div>
         </div>
 
