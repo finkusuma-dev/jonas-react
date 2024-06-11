@@ -41,6 +41,9 @@ function CreateOrder() {
   const errors = useActionData();
   const cart = fakeCart;
 
+  const className =
+    'w-full rounded-full border border-stone-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500';
+
   return (
     <div>
       <h2>Ready to order? Let's go!</h2>
@@ -48,13 +51,13 @@ function CreateOrder() {
       <Form method="POST">
         <div>
           <label>First Name</label>
-          <input type="text" name="customer" required />
+          <input type="text" name="customer" required className={className} />
         </div>
 
         <div>
           <label>Phone number</label>
           <div>
-            <input type="tel" name="phone" required />
+            <input type="tel" name="phone" required className={className} />
           </div>
           {errors?.phone && <div>{errors.phone}</div>}
         </div>
@@ -62,7 +65,7 @@ function CreateOrder() {
         <div>
           <label>Address</label>
           <div>
-            <input type="text" name="address" required />
+            <input type="text" name="address" required className={className} />
           </div>
         </div>
 
@@ -71,6 +74,7 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
+            className="h-4 w-4 accent-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:ring-offset-2"
             // value={withPriority}
             // onChange={(e) => setWithPriority(e.target.checked)}
           />
