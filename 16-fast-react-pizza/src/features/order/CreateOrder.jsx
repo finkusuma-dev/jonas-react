@@ -43,31 +43,44 @@ function CreateOrder() {
   const cart = fakeCart;
 
   return (
-    <div>
-      <h2>Ready to order? Let&apos;s go!</h2>
+    <div className="mx-6 my-4">
+      <h2 className="mb-10 text-xl font-semibold">
+        Ready to order? Let&apos;s go!
+      </h2>
 
-      <Form method="POST">
-        <div>
-          <label>First Name</label>
-          <input type="text" name="customer" required className="input" />
+      <Form method="POST" className="">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">First Name</label>
+          <input type="text" name="customer" required className="input grow" />
         </div>
 
-        <div>
-          <label>Phone number</label>
-          <div>
-            <input type="tel" name="phone" required className="input" />
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start">
+          <label className="sm:mt-1.5 sm:shrink-0 sm:basis-40">
+            Phone number
+          </label>
+          <div className="grow">
+            <input type="tel" name="phone" required className="input w-full" />
+            {errors?.phone && (
+              <div className="mt-2 rounded-lg bg-red-100 p-2 text-xs text-red-700">
+                {errors.phone}
+              </div>
+            )}
           </div>
-          {errors?.phone && <div>{errors.phone}</div>}
         </div>
 
-        <div>
-          <label>Address</label>
-          <div>
-            <input type="text" name="address" required className="input" />
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Address</label>
+          <div className="grow">
+            <input
+              type="text"
+              name="address"
+              required
+              className="input w-full"
+            />
           </div>
         </div>
 
-        <div>
+        <div className="mb-10 flex items-center gap-3">
           <input
             type="checkbox"
             name="priority"
