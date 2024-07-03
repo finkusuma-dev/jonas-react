@@ -40,5 +40,8 @@ const userSlice = createSlice({
   },
 });
 
+const getUsername = (store) => store.user.username;
+
 export const userActions = { ...userSlice.actions };
+export const userGetters = { getUsername };
 export default userSlice.reducer;

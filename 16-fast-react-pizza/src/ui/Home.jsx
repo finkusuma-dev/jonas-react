@@ -1,9 +1,10 @@
 import CreateUser from '../features/user/CreateUser';
 import { useSelector } from 'react-redux';
 import Button from './Button';
+import { userGetters } from '../features/user/userSlice';
 
 function Home() {
-  const username = useSelector((store) => store.user.username);
+  const username = useSelector(userGetters.getUsername);
 
   return (
     <div className="my-10 px-4 text-center sm:my-16">
