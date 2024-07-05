@@ -8,9 +8,22 @@ import {
   formatDate,
 } from '../../utils/helpers';
 import OrderItem from './OrderItem';
+import { useFetcher } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Order() {
   const order = useLoaderData();
+  const fetcher = useFetcher();
+
+  useEffect(
+    function () {
+      if (!fetcher.data && fetcher.state === 'idle') {
+        fetcher.load('/menu');
+      }
+    },
+    [fetcher],
+  );
+  //console.log('fetcher.data', fetcher.data);
 
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
@@ -56,7 +69,15 @@ function Order() {
 
       <ul className="mt-3 divide-y divide-stone-200 border-b">
         {cart.map((item) => (
-          <OrderItem key={item.pizzaId} item={item} />
+          <OrderItem
+            key={item.pizzaId}
+            item={item}
+            isLoadingIngredients={fetcher.state === 'loading'}
+            ingredients={
+              fetcher.data?.find((menuItem) => menuItem.id === item.pizzaId)
+                ?.ingredients ?? []
+            }
+          />
         ))}
       </ul>
 
