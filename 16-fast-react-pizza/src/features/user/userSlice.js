@@ -68,10 +68,10 @@ const userSlice = createSlice({
 });
 
 const getUser = (store) => store.user;
-// const getUserAddress = (store) => store.user.address;
+const getUsername = (store) => store.user.username;
 // const getStatus = (store) => store.user.status;
 // const getError = (store) => store.user.error;
 
 export const userActions = { ...userSlice.actions, fetchAddress };
-export const userGetters = { getUser };
+export const userGetters = { getUser, getUsername };
 export default userSlice.reducer;
