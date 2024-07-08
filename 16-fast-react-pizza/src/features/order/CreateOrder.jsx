@@ -73,6 +73,7 @@ function CreateOrder() {
       </h2>
 
       <Form method="POST" className="">
+        {/* Username */}
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">First Name</label>
           <input
@@ -84,6 +85,7 @@ function CreateOrder() {
           />
         </div>
 
+        {/* Phone Number */}
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start">
           <label className="sm:mt-1.5 sm:shrink-0 sm:basis-40">
             Phone number
@@ -98,6 +100,7 @@ function CreateOrder() {
           </div>
         </div>
 
+        {/* Address - Input and Get position button */}
         <div className="relative mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
           <div className="grow">
@@ -132,6 +135,7 @@ function CreateOrder() {
           </div>
         )}
 
+        {/* Priority of the order */}
         <div className="mb-10 flex items-center gap-3">
           <input
             type="checkbox"
@@ -145,6 +149,7 @@ function CreateOrder() {
         </div>
 
         <div>
+          {/* Hidden cart object & position */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <input
             type="hidden"
@@ -155,6 +160,7 @@ function CreateOrder() {
                 : ''
             }
           />
+          {/* Submit button */}
           <Button disabled={isSubmitting || isLoadingAddress}>
             {isSubmitting
               ? 'Placing order...'
