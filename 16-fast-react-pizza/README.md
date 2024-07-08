@@ -2,6 +2,14 @@
 
 This project is create using `pnpm create vite myproject --template react`.
 
+How to run:
+
+```bash
+cd 16-fast-react-pizza
+pnpm install
+pnpm run dev
+```
+
 ---
 
 ## React + Vite
