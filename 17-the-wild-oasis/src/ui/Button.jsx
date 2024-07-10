@@ -1,4 +1,5 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
+import PropTypes from 'prop-types';
 
 const sizes = {
   small: css`
@@ -47,3 +48,22 @@ const variations = {
     }
   `,
 };
+
+const Button = styled.button`
+  border: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+  ${(props) => sizes[props.size]};
+  ${(props) => variations[props.var]};
+`;
+
+Button.defaultProps = {
+  size: 'medium',
+  var: 'primary',
+};
+
+Button.propTypes = {
+  var: PropTypes.string,
+};
+
+export default Button;
