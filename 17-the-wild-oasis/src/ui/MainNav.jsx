@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
 
 const NavList = styled.ul`
   display: flex;
@@ -6,7 +7,7 @@ const NavList = styled.ul`
   gap: 0.8rem;
 `;
 
-const Link = styled.a`
+const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {
     display: flex;
@@ -44,3 +45,18 @@ const Link = styled.a`
     color: var(--color-brand-600);
   }
 `;
+
+function MainNav() {
+  return (
+    <main>
+      <NavList>
+        <ul>
+          <StyledNavLink to="/dashboard">Home</StyledNavLink>
+          <StyledNavLink to="/account">Account</StyledNavLink>
+        </ul>
+      </NavList>
+    </main>
+  );
+}
+
+export default MainNav;
