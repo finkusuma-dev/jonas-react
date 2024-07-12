@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyled = createGlobalStyle`
+const GlobalStyles = createGlobalStyle`
 :root {
   /* Indigo */
   --color-brand-50: #eef2ff;
@@ -184,4 +184,4 @@ FOR DARK MODE
 */
 `;
 
-export default GlobalStyled;
+export default GlobalStyles;

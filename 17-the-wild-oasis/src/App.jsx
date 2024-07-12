@@ -1,8 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import GlobalStyled from './styles/GlobalStyled';
-import Button from './ui/Button';
-import Heading from './ui/Heading';
-import Row from './ui/Row';
+import GlobalStyles from './styles/GlobalStyles';
 import { Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import Account from './pages/Account';
