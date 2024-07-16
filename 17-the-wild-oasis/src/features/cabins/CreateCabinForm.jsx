@@ -77,7 +77,7 @@ function CreateCabinForm() {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" disabled={isInserting}>
           Cancel
         </Button>
         <Button>Edit cabin</Button>
