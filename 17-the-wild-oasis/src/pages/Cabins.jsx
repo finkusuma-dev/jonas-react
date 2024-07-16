@@ -4,6 +4,7 @@ import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 import CabinTable from '../features/cabins/CabinTable';
 import Spinner from '../ui/Spinner';
+// import toast from 'react-hot-toast';
 
 function Cabins() {
   const {
@@ -21,6 +22,7 @@ function Cabins() {
 
   return (
     <>
+      {/* <button onClick={() => toast.success('Testing the toast')}>Toast</button> */}
       <Row type="horizontal">
         <Heading as="h1">All cabins</Heading>
         <div>Filter/Sort</div>
