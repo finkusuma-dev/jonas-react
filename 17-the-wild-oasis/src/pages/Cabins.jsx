@@ -11,7 +11,7 @@ function Cabins() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['cabin'],
+    queryKey: ['cabins'],
     queryFn: getCabins,
   });
 
