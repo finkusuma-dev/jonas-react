@@ -10,6 +10,22 @@ export async function getCabins() {
 
   return data;
 }
+
+export async function insertCabin(newCabin) {
+  // console.log('deleteCabin', id);
+  const { data, error } = await supabase.from('cabins').insert([newCabin]);
+  // .select();
+
+  console.log('insertCabin result', data);
+
+  if (error) {
+    console.log('insertCabins error', error);
+    throw new Error('Failed to insert a cabin');
+  }
+
+  return data;
+}
+
 export async function deleteCabin(id) {
   // console.log('deleteCabin', id);
   const result = await supabase.from('cabins').delete().eq('id', id);
