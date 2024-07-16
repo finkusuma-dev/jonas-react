@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { formatCurrency } from '../../utils/helpers';
 
 const TableRow = styled.div`
   display: grid;
@@ -25,16 +27,45 @@ const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
-  font-family: "Sono";
+  font-family: 'Sono';
 `;
 
 const Price = styled.div`
-  font-family: "Sono";
+  font-family: 'Sono';
   font-weight: 600;
 `;
 
 const Discount = styled.div`
-  font-family: "Sono";
+  font-family: 'Sono';
   font-weight: 500;
   color: var(--color-green-700);
 `;
+
+CabinRow.propTypes = {
+  cabin: PropTypes.object,
+};
+
+function CabinRow({ cabin }) {
+  const {
+    // created_at,
+    // description,
+    discount,
+    // id,/
+    image,
+    max_capacity,
+    name,
+    regular_price,
+  } = cabin;
+  return (
+    <TableRow role="row">
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>{max_capacity}</div>
+      <Price>{formatCurrency(regular_price)}</Price>
+      <Discount>{formatCurrency(discount)}</Discount>
+      <button>Delete</button>
+    </TableRow>
+  );
+}
+
+export default CabinRow;
