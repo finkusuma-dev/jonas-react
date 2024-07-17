@@ -1,6 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-const FileInput = styled.input`
+/// styled.input.attrs({ type: 'file' }) is adding a new attribute to the component.
+/// It's the same with when we use it below:
+/// <FileInput type='file' />
+///
+const FileInput = styled.input.attrs({ type: 'file' })`
   font-size: 1.4rem;
   border-radius: var(--border-radius-sm);
 
