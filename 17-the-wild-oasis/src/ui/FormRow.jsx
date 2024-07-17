@@ -38,7 +38,7 @@ const Error = styled.span`
 `;
 
 FormRow.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.any,
   label: PropTypes.string,
   errorMsg: PropTypes.string,
 };
