@@ -35,14 +35,16 @@ function CreateCabinForm({ onInsertSuccess }) {
   });
 
   function onSubmit(data) {
-    console.log('onSubmit data', data);
-    mutInsert(data);
+    const newCabin = { ...data, image: data.image[0] };
+    // console.log('onSubmit data', data);
+
+    mutInsert(newCabin);
   }
 
   function onSubmitError(err) {
     /// This function is not too useful here, but we can use it for another purpose such as
     /// uploading the error to some logs.
-    // console.log('onSubmitError', err);
+    console.log('onSubmitError', err);
   }
 
   return (
@@ -115,8 +117,15 @@ function CreateCabinForm({ onInsertSuccess }) {
         />
       </FormRow>
 
-      <FormRow label="Cabin photo">
-        <FileInput id="image" accept="image/*" disabled={isInserting} />
+      <FormRow label="Cabin photo" errorMsg={errors?.image?.message}>
+        <FileInput
+          id="image"
+          accept="image/*"
+          disabled={isInserting}
+          {...register('image', {
+            required: 'This field is required',
+          })}
+        />
       </FormRow>
 
       <FormRow>
