@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -10,42 +9,7 @@ import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import { insertCabin } from '../../services/apiCabins';
-
-const FormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-`;
-
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
+import FormRow from '../../ui/FormRow';
 
 CreateCabinForm.propTypes = {
   onInsertSuccess: PropTypes.func,
@@ -53,7 +17,9 @@ CreateCabinForm.propTypes = {
 
 function CreateCabinForm({ onInsertSuccess }) {
   /// Beside register there is also reset to reset the form.
-  const { register, handleSubmit, getValues } = useForm();
+  const { register, handleSubmit, getValues, formState } = useForm();
+  const { errors } = formState;
+  console.log('errors', errors);
   const queryClient = useQueryClient();
 
   const { mutate: mutInsert, isLoading: isInserting } = useMutation({
@@ -74,27 +40,32 @@ function CreateCabinForm({ onInsertSuccess }) {
   }
 
   function onSubmitError(err) {
-    console.log('onSubmitError', err);
+    /// This function is not too useful here, but we can use it for another purpose such as
+    /// uploading the error to some logs.
+    // console.log('onSubmitError', err);
   }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-      <FormRow>
-        <Label htmlFor="name">Cabin name</Label>
+      <FormRow label="Cabins name" errorMsg={errors?.name?.message}>
         <Input
           type="text"
           id="name"
+          disabled={isInserting}
           {...register('name', {
             required: 'This field is required',
           })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="maxCapacity">Maximum capacity</Label>
+      <FormRow
+        label="Maximum capacity"
+        errorMsg={errors?.max_capacity?.message}
+      >
         <Input
           type="number"
           id="maxCapacity"
+          disabled={isInserting}
           {...register('max_capacity', {
             required: 'This field is required',
             min: {
@@ -105,47 +76,47 @@ function CreateCabinForm({ onInsertSuccess }) {
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="regularPrice">Regular price</Label>
+      <FormRow label="Regular price" errorMsg={errors?.regular_price?.message}>
         <Input
           type="number"
           id="regularPrice"
+          disabled={isInserting}
           {...register('regular_price', {
             required: 'This field is required',
           })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="discount">Discount</Label>
+      <FormRow label="Discount" errorMsg={errors?.discount?.message}>
         <Input
           type="number"
           id="discount"
           defaultValue={0}
+          disabled={isInserting}
           {...register('discount', {
             required: 'This field is required',
             validate: (value) =>
-              value <= getValues().regular_price ||
-              'Discount must be less than regular price',
+              Number.parseFloat(value) <=
+                Number.parseFloat(getValues().regular_price) ||
+              'Discount must be less or equal than regular price',
           })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+      <FormRow label="Description" errorMsg={errors?.description?.message}>
         <Textarea
           type="number"
           id="description"
           defaultValue=""
+          disabled={isInserting}
           {...register('description', {
             required: 'This field is required',
           })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+      <FormRow label="Cabin photo">
+        <FileInput id="image" accept="image/*" disabled={isInserting} />
       </FormRow>
 
       <FormRow>
