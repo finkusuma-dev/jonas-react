@@ -53,7 +53,7 @@ CreateCabinForm.propTypes = {
 
 function CreateCabinForm({ onInsertSuccess }) {
   /// Beside register there is also reset to reset the form.
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, getValues } = useForm();
   const queryClient = useQueryClient();
 
   const { mutate: mutInsert, isLoading: isInserting } = useMutation({
@@ -72,21 +72,48 @@ function CreateCabinForm({ onInsertSuccess }) {
     console.log('onSubmit data', data);
     mutInsert(data);
   }
+
+  function onSubmitError(err) {
+    console.log('onSubmitError', err);
+  }
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register('name')} />
+        <Input
+          type="text"
+          id="name"
+          {...register('name', {
+            required: 'This field is required',
+          })}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register('max_capacity')} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          {...register('max_capacity', {
+            required: 'This field is required',
+            min: {
+              value: 1,
+              message: 'Capacity must be at least 1',
+            },
+          })}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register('regular_price')} />
+        <Input
+          type="number"
+          id="regularPrice"
+          {...register('regular_price', {
+            required: 'This field is required',
+          })}
+        />
       </FormRow>
 
       <FormRow>
@@ -95,7 +122,12 @@ function CreateCabinForm({ onInsertSuccess }) {
           type="number"
           id="discount"
           defaultValue={0}
-          {...register('discount')}
+          {...register('discount', {
+            required: 'This field is required',
+            validate: (value) =>
+              value <= getValues().regular_price ||
+              'Discount must be less than regular price',
+          })}
         />
       </FormRow>
 
@@ -105,7 +137,9 @@ function CreateCabinForm({ onInsertSuccess }) {
           type="number"
           id="description"
           defaultValue=""
-          {...register('description')}
+          {...register('description', {
+            required: 'This field is required',
+          })}
         />
       </FormRow>
 
