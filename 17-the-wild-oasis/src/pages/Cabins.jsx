@@ -1,24 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getCabins } from '../services/apiCabins';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 import CabinTable from '../features/cabins/CabinTable';
 import Spinner from '../ui/Spinner';
 import Button from '../ui/Button';
 import CreateCabinForm from '../features/cabins/CreateCabinForm';
+import { useCabins } from '../features/cabins/useCabins';
 
 function Cabins() {
-  const [showForm, setShowForm] = useState(false);
-  const {
-    data: cabins,
-    isLoading,
-    // error,
-  } = useQuery({
-    queryKey: ['cabins'],
-    queryFn: getCabins,
-  });
+  const { isLoading, cabins } = useCabins();
 
+  const [showForm, setShowForm] = useState(false);
   const [cabinToEdit, setCabinToEdit] = useState(null);
 
   function handleAddNewCabin() {
