@@ -119,7 +119,7 @@ export async function updateCabin(cabin, cabinId) {
   return data;
 }
 
-export async function deleteCabin(id) {
+export async function deleteCabinApi(id) {
   // console.log('deleteCabin', id);
   const result = await supabase.from('cabins').delete().eq('id', id);
 
