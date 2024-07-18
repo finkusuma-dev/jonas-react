@@ -13,11 +13,28 @@ function Cabins() {
   const {
     data: cabins,
     isLoading,
-    error,
+    // error,
   } = useQuery({
     queryKey: ['cabins'],
     queryFn: getCabins,
   });
+
+  const [cabinToEdit, setCabinToEdit] = useState(null);
+
+  function handleAddNewCabin() {
+    setCabinToEdit(null);
+    setShowForm((show) => !show);
+  }
+
+  function handleEditCabin(cabin) {
+    setShowForm(true);
+    setCabinToEdit(cabin);
+  }
+
+  function handleInsertOrUpdateSuccess() {
+    setShowForm(false);
+    setCabinToEdit(null);
+  }
 
   console.log('cabins', cabins);
 
@@ -32,15 +49,20 @@ function Cabins() {
       </Row>
 
       <Row>
-        <CabinTable cabins={cabins} />
-        <Button onClick={() => setShowForm((show) => !show)}>
+        <CabinTable cabins={cabins} onEditCabin={handleEditCabin} />
+        <Button onClick={handleAddNewCabin}>
           {showForm ? 'Close form' : 'Add new cabin'}
         </Button>
       </Row>
       {showForm && (
         <Row>
-          <Heading as="h2">Add a New Cabin</Heading>
-          <CreateCabinForm onInsertSuccess={() => setShowForm(false)} />
+          <Heading as="h2">
+            {cabinToEdit ? 'Edit cabin' : 'Add a New Cabin'}
+          </Heading>
+          <CreateCabinForm
+            onInsertSuccess={handleInsertOrUpdateSuccess}
+            cabinToEdit={cabinToEdit}
+          />
         </Row>
       )}
     </>

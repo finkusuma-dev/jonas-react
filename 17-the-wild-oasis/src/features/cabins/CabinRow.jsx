@@ -46,9 +46,10 @@ const Discount = styled.div`
 
 CabinRow.propTypes = {
   cabin: PropTypes.object,
+  onEditClick: PropTypes.func,
 };
 
-function CabinRow({ cabin }) {
+function CabinRow({ cabin, onEditClick }) {
   const {
     // created_at,
     // description,
@@ -82,9 +83,18 @@ function CabinRow({ cabin }) {
       <div>Fits up to {max_capacity} guests</div>
       <Price>{formatCurrency(regular_price)}</Price>
       <Discount>{formatCurrency(discount)}</Discount>
-      <button disabled={isDeleting} onClick={() => mutDelete(cabinId)}>
-        Delete
-      </button>
+      <div>
+        <button
+          disabled={isDeleting}
+          onClick={() => onEditClick && onEditClick(cabin)}
+        >
+          Edit
+        </button>
+        &nbsp;
+        <button disabled={isDeleting} onClick={() => mutDelete(cabinId)}>
+          Delete
+        </button>
+      </div>
     </TableRow>
   );
 }

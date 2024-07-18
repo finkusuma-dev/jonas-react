@@ -8,16 +8,68 @@ import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
-import { insertCabin } from '../../services/apiCabins';
+import { insertCabin, updateCabin } from '../../services/apiCabins';
 import FormRow from '../../ui/FormRow';
+import styled from 'styled-components';
+
+const StyledFormRow = styled.div`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 24rem 1fr 1.2fr;
+  gap: 2.4rem;
+
+  padding: 1.2rem 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-grey-100);
+  }
+
+  &:has(button) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+  }
+`;
+
+const Label = styled.label`
+  font-weight: 500;
+`;
+
+const Error = styled.span`
+  font-size: 1.4rem;
+  color: var(--color-red-700);
+`;
+
+const Image = styled.img`
+  width: 200px;
+  height: auto;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-grey-300);
+  padding: 8px;
+  border-radius: var(--border-radius-sm);
+  display: block;
+`;
 
 CreateCabinForm.propTypes = {
   onInsertSuccess: PropTypes.func,
+  cabinToEdit: PropTypes.object,
 };
 
-function CreateCabinForm({ onInsertSuccess }) {
+function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
   /// Beside register there is also reset to reset the form.
-  const { register, handleSubmit, getValues, formState } = useForm();
+  const isEdit = cabinToEdit !== null;
+  const { register, handleSubmit, getValues, formState } = useForm({
+    defaultValues: isEdit ? cabinToEdit : {},
+  });
+  console.log('useForm getValues', getValues());
   const { errors } = formState;
   console.log('errors', errors);
   const queryClient = useQueryClient();
@@ -33,12 +85,36 @@ function CreateCabinForm({ onInsertSuccess }) {
     },
     onError: (err) => toast.error(err.message),
   });
+  const { mutate, isLoading: isUpdating } = useMutation({
+    mutationFn: ({ cabin, cabinId }) => {
+      console.log('mutateFn', cabin, cabinId);
+      return updateCabin(cabin, cabinId);
+    },
+    onSuccess: () => {
+      toast.success(' Cabin is successfully updated');
+      queryClient.invalidateQueries({
+        queryKey: ['cabins'],
+      });
+      if (onInsertSuccess) onInsertSuccess();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const isBusy = isUpdating || isInserting;
 
   function onSubmit(data) {
-    const newCabin = { ...data, image: data.image[0] };
-    // console.log('onSubmit data', data);
+    console.log('onSubmit', data);
+    const newCabin = {
+      ...data,
+      image: typeof data.image === 'string' ? data.image : data.image[0],
+    };
+    if (isEdit) {
+      mutate({ cabin: newCabin, cabinId: data?.id ?? null });
+    } else {
+      // console.log('onSubmit data', data);
 
-    mutInsert(newCabin);
+      mutInsert(newCabin);
+    }
   }
 
   function onSubmitError(err) {
@@ -49,11 +125,14 @@ function CreateCabinForm({ onInsertSuccess }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
+      {/* <input hidden name="id" defaultValue={cabinToEdit?.id} /> */}
+
       <FormRow label="Cabins name" errorMsg={errors?.name?.message}>
         <Input
           type="text"
           id="name"
-          disabled={isInserting}
+          // defaultValue={cabinToEdit?.name}
+          disabled={isBusy}
           {...register('name', {
             required: 'This field is required',
           })}
@@ -67,7 +146,8 @@ function CreateCabinForm({ onInsertSuccess }) {
         <Input
           type="number"
           id="maxCapacity"
-          disabled={isInserting}
+          // defaultValue={cabinToEdit?.max_capacity}
+          disabled={isBusy}
           {...register('max_capacity', {
             required: 'This field is required',
             min: {
@@ -82,7 +162,8 @@ function CreateCabinForm({ onInsertSuccess }) {
         <Input
           type="number"
           id="regularPrice"
-          disabled={isInserting}
+          // defaultValue={cabinToEdit?.regular_price}
+          disabled={isBusy}
           {...register('regular_price', {
             required: 'This field is required',
           })}
@@ -94,7 +175,7 @@ function CreateCabinForm({ onInsertSuccess }) {
           type="number"
           id="discount"
           defaultValue={0}
-          disabled={isInserting}
+          disabled={isBusy}
           {...register('discount', {
             required: 'This field is required',
             validate: (value) =>
@@ -109,31 +190,49 @@ function CreateCabinForm({ onInsertSuccess }) {
         <Textarea
           type="number"
           id="description"
-          defaultValue=""
-          disabled={isInserting}
+          defaultValue={''}
+          disabled={isBusy}
           {...register('description', {
             required: 'This field is required',
           })}
         />
       </FormRow>
 
-      <FormRow label="Cabin photo" errorMsg={errors?.image?.message}>
-        <FileInput
-          id="image"
-          accept="image/*"
-          disabled={isInserting}
-          {...register('image', {
-            required: 'This field is required',
-          })}
-        />
-      </FormRow>
+      <StyledFormRow>
+        <Label for="image">Cabin photo</Label>
+        <div>
+          {cabinToEdit && (
+            <>
+              <Image
+                src={cabinToEdit?.image}
+                width="200px"
+                height="200px"
+                defaultValue={cabinToEdit?.image}
+              />
+            </>
+          )}
+
+          <FileInput
+            id="image"
+            accept="image/*"
+            // onChange={(e) => console.log('files', e.target)}
+            disabled={isBusy}
+            {...register('image', {
+              required: isEdit ? false : 'This field is required',
+            })}
+          />
+        </div>
+        {errors?.image?.message && <Error>{errors?.image?.message}</Error>}
+      </StyledFormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset" disabled={isInserting}>
-          Cancel
-        </Button>
-        <Button disabled={isInserting}>Add cabin</Button>
+        {!isEdit && (
+          <Button variation="secondary" type="reset" disabled={isBusy}>
+            Cancel
+          </Button>
+        )}
+        <Button disabled={isBusy}>{isEdit ? 'Save' : 'Add cabin'}</Button>
       </FormRow>
     </Form>
   );

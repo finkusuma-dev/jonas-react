@@ -28,9 +28,10 @@ const TableHeader = styled.header`
 
 CabinTable.propTypes = {
   cabins: PropTypes.array,
+  onEditCabin: PropTypes.object,
 };
 
-function CabinTable({ cabins }) {
+function CabinTable({ cabins, onEditCabin }) {
   return (
     <Table role="table">
       <TableHeader role="row">
@@ -42,7 +43,7 @@ function CabinTable({ cabins }) {
         <div></div>
       </TableHeader>
       {cabins.map((cabin) => (
-        <CabinRow key={cabin.id} cabin={cabin} />
+        <CabinRow key={cabin.id} cabin={cabin} onEditClick={onEditCabin} />
       ))}
     </Table>
   );
