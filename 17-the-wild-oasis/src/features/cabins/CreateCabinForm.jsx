@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -10,8 +8,10 @@ import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
-import { insertCabin, updateCabin } from '../../services/apiCabins';
 import FormRow from '../../ui/FormRow';
+
+import { useInsertCabin } from './useInsertCabin';
+import { useUpdateCabin } from './useUpdateCabin';
 
 const StyledFormRow = styled.div`
   display: grid;
@@ -60,48 +60,29 @@ const Image = styled.img`
 `;
 
 CreateCabinForm.propTypes = {
-  onInsertSuccess: PropTypes.func,
+  onInsertUpdateSuccess: PropTypes.func,
   cabinToEdit: PropTypes.object,
 };
 
-function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
+function CreateCabinForm({ cabinToEdit, onInsertUpdateSuccess }) {
+  /// Form Hooks
+
   /// Beside register there is also reset to reset the form.
   const isEdit = cabinToEdit !== null;
   const { register, handleSubmit, getValues, formState } = useForm({
     defaultValues: isEdit ? cabinToEdit : {},
   });
+
   // console.log('useForm getValues', getValues());
   const { errors } = formState;
 
   console.log('errors', errors);
-  const queryClient = useQueryClient();
 
-  const { mutate: mutInsert, isLoading: isInserting } = useMutation({
-    mutationFn: insertCabin,
-    onSuccess: () => {
-      toast.success(' A new cabin is successfully inserted');
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      });
-      if (onInsertSuccess) onInsertSuccess();
-    },
-    onError: (err) => toast.error(err.message),
-  });
-  const { mutate, isLoading: isUpdating } = useMutation({
-    mutationFn: ({ cabin, cabinId }) => {
-      console.log('mutateFn', cabin, cabinId);
-      return updateCabin(cabin, cabinId);
-    },
-    onSuccess: () => {
-      toast.success(' Cabin is successfully updated');
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      });
-      if (onInsertSuccess) onInsertSuccess();
-    },
-    onError: (err) => toast.error(err.message),
-  });
+  /// Query Hooks
+  const { isInserting, insertCabin } = useInsertCabin();
+  const { isUpdating, updateCabin } = useUpdateCabin();
 
+  /// Other hook
   const [previewImgUrl, setPreviewImgUrl] = useState(null);
 
   const isBusy = isUpdating || isInserting;
@@ -113,18 +94,25 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
       image: typeof data.image === 'string' ? data.image : data.image[0],
     };
     if (isEdit) {
-      mutate({ cabin: newCabin, cabinId: data?.id ?? null });
+      updateCabin(
+        { cabin: newCabin, cabinId: data?.id ?? null },
+        {
+          onSuccess: () => onInsertUpdateSuccess && onInsertUpdateSuccess(),
+        }
+      );
     } else {
       // console.log('onSubmit data', data);
 
-      mutInsert(newCabin);
+      insertCabin(newCabin, {
+        onSuccess: () => onInsertUpdateSuccess && onInsertUpdateSuccess(),
+      });
     }
   }
 
-  function onSubmitError(err) {
+  function onSubmitError(/* err */) {
     /// This function is not too useful here, but we can use it for another purpose such as
     /// uploading the error to some logs.
-    console.log('onSubmitError', err);
+    // console.log('onSubmitError', err);
   }
 
   return (

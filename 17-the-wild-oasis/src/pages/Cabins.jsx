@@ -27,11 +27,11 @@ function Cabins() {
   }
 
   function handleEditCabin(cabin) {
-    setShowForm(true);
     setCabinToEdit(cabin);
+    setShowForm(true);
   }
 
-  function handleInsertOrUpdateSuccess() {
+  function handleInsertUpdateSuccess() {
     setShowForm(false);
     setCabinToEdit(null);
   }
@@ -60,7 +60,7 @@ function Cabins() {
             {cabinToEdit ? 'Edit cabin' : 'Add a New Cabin'}
           </Heading>
           <CreateCabinForm
-            onInsertSuccess={handleInsertOrUpdateSuccess}
+            onInsertUpdateSuccess={handleInsertUpdateSuccess}
             cabinToEdit={cabinToEdit}
           />
         </Row>

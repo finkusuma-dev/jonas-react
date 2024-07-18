@@ -11,7 +11,7 @@ export async function getCabins() {
   return data;
 }
 
-export async function insertCabin(newCabin) {
+export async function insertCabinApi(newCabin) {
   const imageName = `${Math.floor(Math.random() * 1000000000)}-${
     newCabin.image.name
   }`.replace(/\//g, '');
@@ -51,7 +51,7 @@ export async function insertCabin(newCabin) {
   return data;
 }
 
-export async function updateCabin(cabin, cabinId) {
+export async function updateCabinApi(cabin, cabinId) {
   console.log('cabinId', cabinId);
   console.log('cabin', cabin);
   console.log('image type', typeof cabin.image);
