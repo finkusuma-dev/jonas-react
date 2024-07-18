@@ -131,8 +131,8 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
     <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <FormRow label="Cabins name" errorMsg={errors?.name?.message}>
         <Input
-          type="text"
           id="name"
+          type="text"
           // defaultValue={cabinToEdit?.name}
           disabled={isBusy}
           {...register('name', {
@@ -146,8 +146,8 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
         errorMsg={errors?.max_capacity?.message}
       >
         <Input
-          type="number"
           id="maxCapacity"
+          type="number"
           // defaultValue={cabinToEdit?.max_capacity}
           disabled={isBusy}
           {...register('max_capacity', {
@@ -162,8 +162,8 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
 
       <FormRow label="Regular price" errorMsg={errors?.regular_price?.message}>
         <Input
-          type="number"
           id="regularPrice"
+          type="number"
           // defaultValue={cabinToEdit?.regular_price}
           disabled={isBusy}
           {...register('regular_price', {
@@ -174,8 +174,8 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
 
       <FormRow label="Discount" errorMsg={errors?.discount?.message}>
         <Input
-          type="number"
           id="discount"
+          type="number"
           defaultValue={0}
           disabled={isBusy}
           {...register('discount', {
@@ -190,8 +190,8 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
 
       <FormRow label="Description" errorMsg={errors?.description?.message}>
         <Textarea
-          type="number"
           id="description"
+          type="number"
           defaultValue={''}
           disabled={isBusy}
           {...register('description', {
