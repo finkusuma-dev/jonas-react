@@ -28,7 +28,7 @@ const TableHeader = styled.header`
 
 CabinTable.propTypes = {
   cabins: PropTypes.array,
-  onEditCabin: PropTypes.object,
+  onEditCabin: PropTypes.func,
 };
 
 function CabinTable({ cabins, onEditCabin }) {
