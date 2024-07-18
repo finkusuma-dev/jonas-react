@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -10,7 +12,6 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import { insertCabin, updateCabin } from '../../services/apiCabins';
 import FormRow from '../../ui/FormRow';
-import styled from 'styled-components';
 
 const StyledFormRow = styled.div`
   display: grid;
@@ -69,8 +70,9 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
   const { register, handleSubmit, getValues, formState } = useForm({
     defaultValues: isEdit ? cabinToEdit : {},
   });
-  console.log('useForm getValues', getValues());
+  // console.log('useForm getValues', getValues());
   const { errors } = formState;
+
   console.log('errors', errors);
   const queryClient = useQueryClient();
 
@@ -100,6 +102,8 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
     onError: (err) => toast.error(err.message),
   });
 
+  const [previewImgUrl, setPreviewImgUrl] = useState(null);
+
   const isBusy = isUpdating || isInserting;
 
   function onSubmit(data) {
@@ -125,8 +129,6 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-      {/* <input hidden name="id" defaultValue={cabinToEdit?.id} /> */}
-
       <FormRow label="Cabins name" errorMsg={errors?.name?.message}>
         <Input
           type="text"
@@ -201,24 +203,24 @@ function CreateCabinForm({ cabinToEdit, onInsertSuccess }) {
       <StyledFormRow>
         <Label for="image">Cabin photo</Label>
         <div>
-          {cabinToEdit && (
-            <>
-              <Image
-                src={cabinToEdit?.image}
-                width="200px"
-                height="200px"
-                defaultValue={cabinToEdit?.image}
-              />
-            </>
+          {(previewImgUrl || cabinToEdit?.image) && (
+            <Image
+              src={previewImgUrl || cabinToEdit?.image}
+              defaultValue={cabinToEdit?.image}
+            />
           )}
 
           <FileInput
             id="image"
             accept="image/*"
-            // onChange={(e) => console.log('files', e.target)}
             disabled={isBusy}
             {...register('image', {
               required: isEdit ? false : 'This field is required',
+              onChange: (e) => {
+                /// Preview selected image
+                // console.log('url', URL.createObjectURL(e.target.files[0]));
+                setPreviewImgUrl(URL.createObjectURL(e.target.files[0]));
+              },
             })}
           />
         </div>
