@@ -11,6 +11,7 @@ export async function getCabins() {
   return data;
 }
 
+/// insertCabinApi is not used. Insert cabin use updateCabinApi without filling cabinId
 export async function insertCabinApi(newCabin) {
   const imageName = `${Math.floor(Math.random() * 1000000000)}-${
     newCabin.image.name
@@ -51,13 +52,16 @@ export async function insertCabinApi(newCabin) {
   return data;
 }
 
+/// Can be used to insert or update cabin.
+/// To insert cabin omit the cabinId.
 export async function updateCabinApi(cabin, cabinId) {
   console.log('cabinId', cabinId);
   console.log('cabin', cabin);
   console.log('image type', typeof cabin.image);
 
-  const isEdit = cabinId !== null;
-  const isUploadImage = !isEdit || typeof cabin.image === 'object';
+  const isEdit = Boolean(cabinId);
+  console.log('isEdit', isEdit);
+  const isUploadImage = typeof cabin.image === 'object';
   const imageFileObject = isUploadImage ? cabin.image : null;
 
   let cabinData = {
@@ -91,8 +95,9 @@ export async function updateCabinApi(cabin, cabinId) {
   }
 
   const { data, error } = await query.select(); /// select is mandatory if we want to get the result data
+  const newCabinId = data[0].id;
 
-  console.log('updateCabin result', data, 'data[0].id', data[0].id);
+  console.log('updateCabin result', data, 'data[0].id', newCabinId);
 
   if (error) {
     console.log('updateCabins error', error);
@@ -108,10 +113,12 @@ export async function updateCabinApi(cabin, cabinId) {
     /// 3. Delete cabin data if upload failed
     if (errorStorage) {
       console.log('errorStorage', errorStorage);
-      // if (!isEdit) {
-      //   await supabase.from('cabins').delete().eq('id', data.id);
-      // }
-      throw new Error('Cabin image cannot be uploaded');
+      if (!isEdit) {
+        await supabase.from('cabins').delete().eq('id', newCabinId);
+      }
+      throw new Error(
+        'Cabin image cannot be uploaded and cabin data was deleted'
+      );
     }
     console.log('dataStorage', dataStorage);
   }

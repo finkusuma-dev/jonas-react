@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { formatCurrency } from '../../utils/helpers';
 import { useDeleteCabin } from './useDeleteCabin';
+import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
+import { useInsertCabin } from './useInsertCabin';
 
 const TableRow = styled.div`
   display: grid;
@@ -53,13 +55,35 @@ function CabinRow({ cabin, onEditClick }) {
     // description,
     discount,
     id: cabinId,
-    image,
-    max_capacity,
     name,
+    max_capacity,
     regular_price,
+    description,
+    image,
   } = cabin;
 
   const { isDeleting, deleteCabin } = useDeleteCabin();
+  const { isInserting, insertCabin } = useInsertCabin();
+
+  const isBusy = isDeleting || isInserting;
+
+  function handleDuplicate() {
+    const newCabin = {
+      name: `Copy of ${name}`,
+      discount,
+      max_capacity,
+      regular_price,
+      description,
+      image,
+    };
+
+    delete newCabin.id;
+    delete newCabin.created_at;
+
+    console.log('duplicate, new cabin', newCabin);
+
+    insertCabin(newCabin, {});
+  }
 
   return (
     <TableRow role="row">
@@ -71,15 +95,19 @@ function CabinRow({ cabin, onEditClick }) {
         {discount ? formatCurrency(discount) : <span>&mdash;</span>}
       </Discount>
       <div>
-        <button
-          disabled={isDeleting}
-          onClick={() => onEditClick && onEditClick(cabin)}
-        >
-          Edit
+        <button disabled={isBusy} onClick={handleDuplicate}>
+          <HiSquare2Stack />
         </button>
         &nbsp;
-        <button disabled={isDeleting} onClick={() => deleteCabin(cabinId)}>
-          Delete
+        <button
+          disabled={isBusy}
+          onClick={() => onEditClick && onEditClick(cabin)}
+        >
+          <HiPencil />
+        </button>
+        &nbsp;
+        <button disabled={isBusy} onClick={() => deleteCabin(cabinId)}>
+          <HiTrash />
         </button>
       </div>
     </TableRow>
