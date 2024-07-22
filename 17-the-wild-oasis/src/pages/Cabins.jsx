@@ -4,8 +4,8 @@ import Row from '../ui/Row';
 import CabinTable from '../features/cabins/CabinTable';
 import Spinner from '../ui/Spinner';
 import Button from '../ui/Button';
-import CreateCabinForm from '../features/cabins/CreateCabinForm';
 import { useCabins } from '../features/cabins/useCabins';
+import AddEditCabin from '../features/cabins/AddEditCabin';
 
 function Cabins() {
   const { isLoading, cabins } = useCabins();
@@ -23,7 +23,7 @@ function Cabins() {
     setShowForm(true);
   }
 
-  function handleInsertUpdateSuccess() {
+  function onCloseModal() {
     setShowForm(false);
     setCabinToEdit(null);
   }
@@ -41,21 +41,16 @@ function Cabins() {
       </Row>
 
       <Row>
+        <div>
+          <Button onClick={handleAddNewCabin}>
+            {showForm ? 'Close form' : 'Add new cabin'}
+          </Button>
+        </div>
         <CabinTable cabins={cabins} onEditCabin={handleEditCabin} />
-        <Button onClick={handleAddNewCabin}>
-          {showForm ? 'Close form' : 'Add new cabin'}
-        </Button>
       </Row>
+
       {showForm && (
-        <Row>
-          <Heading as="h2">
-            {cabinToEdit ? 'Edit cabin' : 'Add a New Cabin'}
-          </Heading>
-          <CreateCabinForm
-            onInsertUpdateSuccess={handleInsertUpdateSuccess}
-            cabinToEdit={cabinToEdit}
-          />
-        </Row>
+        <AddEditCabin cabinToEdit={cabinToEdit} onCloseModal={onCloseModal} />
       )}
     </>
   );

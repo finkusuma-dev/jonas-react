@@ -50,7 +50,7 @@ const Error = styled.span`
 `;
 
 const Image = styled.img`
-  width: 200px;
+  width: 150px;
   height: auto;
   margin-bottom: 10px;
   border: 1px solid var(--color-grey-300);
@@ -60,11 +60,11 @@ const Image = styled.img`
 `;
 
 CreateCabinForm.propTypes = {
-  onInsertUpdateSuccess: PropTypes.func,
+  onCloseModal: PropTypes.func,
   cabinToEdit: PropTypes.object,
 };
 
-function CreateCabinForm({ cabinToEdit, onInsertUpdateSuccess }) {
+function CreateCabinForm({ cabinToEdit, onCloseModal }) {
   /// Form Hooks
 
   /// Beside register there is also reset to reset the form.
@@ -97,14 +97,14 @@ function CreateCabinForm({ cabinToEdit, onInsertUpdateSuccess }) {
       updateCabin(
         { cabin: newCabin, cabinId: data?.id ?? null },
         {
-          onSuccess: () => onInsertUpdateSuccess && onInsertUpdateSuccess(),
+          onSuccess: () => onCloseModal?.(),
         }
       );
     } else {
       // console.log('onSubmit data', data);
 
       insertCabin(newCabin, {
-        onSuccess: () => onInsertUpdateSuccess && onInsertUpdateSuccess(),
+        onSuccess: () => onCloseModal?.(),
       });
     }
   }
@@ -189,7 +189,7 @@ function CreateCabinForm({ cabinToEdit, onInsertUpdateSuccess }) {
       </FormRow>
 
       <StyledFormRow>
-        <Label for="image">Cabin photo</Label>
+        <Label htmlFor="image">Cabin photo</Label>
         <div>
           {(previewImgUrl || cabinToEdit?.image) && (
             <Image
@@ -217,11 +217,16 @@ function CreateCabinForm({ cabinToEdit, onInsertUpdateSuccess }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        {!isEdit && (
-          <Button variation="secondary" type="reset" disabled={isBusy}>
-            Cancel
-          </Button>
-        )}
+
+        <Button
+          variation="secondary"
+          type="reset"
+          disabled={isBusy}
+          onClick={() => onCloseModal?.()}
+        >
+          Cancel
+        </Button>
+
         <Button disabled={isBusy}>{isEdit ? 'Save' : 'Add cabin'}</Button>
       </FormRow>
     </Form>
