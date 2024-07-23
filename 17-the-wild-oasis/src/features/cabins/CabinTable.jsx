@@ -5,6 +5,8 @@ import Modal, { ModalContext } from '../../ui/Modal';
 import AddEditCabin from './AddEditCabin';
 import { useContext } from 'react';
 import { useState } from 'react';
+import { useDeleteCabin } from './useDeleteCabin';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -37,6 +39,7 @@ CabinTable.propTypes = {
 function CabinTable({ cabins }) {
   const [cabinToEdit, setCabinToEdit] = useState(null);
   const { closeModal, openModal } = useContext(ModalContext);
+  const { isDeleting, deleteCabin } = useDeleteCabin();
   return (
     <>
       <Table role="table">
@@ -52,8 +55,12 @@ function CabinTable({ cabins }) {
           <CabinRow
             key={cabin.id}
             cabin={cabin}
-            onClick={() => {
+            onEdit={() => {
               openModal('edit-cabin');
+              setCabinToEdit(cabin);
+            }}
+            onDelete={() => {
+              openModal('delete-cabin');
               setCabinToEdit(cabin);
             }}
           />
@@ -65,6 +72,16 @@ function CabinTable({ cabins }) {
           onCloseModal={() => {
             closeModal();
           }}
+        />
+      </Modal.Window>
+      <Modal.Window name="delete-cabin">
+        <ConfirmDelete
+          resourceName="cabins"
+          onConfirm={() => {
+            deleteCabin(cabinToEdit.id);
+            closeModal();
+          }}
+          disabled={isDeleting}
         />
       </Modal.Window>
     </>

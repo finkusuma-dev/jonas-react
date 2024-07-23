@@ -46,15 +46,16 @@ const Discount = styled.div`
 
 CabinRow.propTypes = {
   cabin: PropTypes.object,
-  onClick: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
-function CabinRow({ cabin, onClick }) {
+function CabinRow({ cabin, onEdit, onDelete }) {
   const {
     // created_at,
     // description,
     discount,
-    id: cabinId,
+    // id: cabinId,
     name,
     max_capacity,
     regular_price,
@@ -62,7 +63,7 @@ function CabinRow({ cabin, onClick }) {
     image,
   } = cabin;
 
-  const { isDeleting, deleteCabin } = useDeleteCabin();
+  const { isDeleting } = useDeleteCabin();
   const { isInserting, insertCabin } = useInsertCabin();
 
   const isBusy = isDeleting || isInserting;
@@ -100,11 +101,12 @@ function CabinRow({ cabin, onClick }) {
             <HiSquare2Stack />
           </button>
           &nbsp;
-          <button disabled={isBusy} onClick={onClick}>
+          <button disabled={isBusy} onClick={onEdit}>
             <HiPencil />
           </button>
           &nbsp;
-          <button disabled={isBusy} onClick={() => deleteCabin(cabinId)}>
+          {/* <button disabled={isBusy} onClick={() => deleteCabin(cabinId)}> */}
+          <button disabled={isBusy} onClick={onDelete}>
             <HiTrash />
           </button>
         </div>
