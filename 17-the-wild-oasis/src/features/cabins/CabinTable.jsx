@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import CabinRow from './CabinRow';
+import Modal, { ModalContext } from '../../ui/Modal';
+import AddEditCabin from './AddEditCabin';
+import { useContext } from 'react';
+import { useState } from 'react';
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -28,24 +32,42 @@ const TableHeader = styled.header`
 
 CabinTable.propTypes = {
   cabins: PropTypes.array,
-  onEditCabin: PropTypes.func,
 };
 
-function CabinTable({ cabins, onEditCabin }) {
+function CabinTable({ cabins }) {
+  const [cabinToEdit, setCabinToEdit] = useState(null);
+  const { closeModal, openModal } = useContext(ModalContext);
   return (
-    <Table role="table">
-      <TableHeader role="row">
-        <div></div>
-        <div>Cabin</div>
-        <div>Capacity</div>
-        <div>Price</div>
-        <div>Discount</div>
-        <div></div>
-      </TableHeader>
-      {cabins.map((cabin) => (
-        <CabinRow key={cabin.id} cabin={cabin} onEditClick={onEditCabin} />
-      ))}
-    </Table>
+    <>
+      <Table role="table">
+        <TableHeader role="row">
+          <div></div>
+          <div>Cabin</div>
+          <div>Capacity</div>
+          <div>Price</div>
+          <div>Discount</div>
+          <div></div>
+        </TableHeader>
+        {cabins.map((cabin) => (
+          <CabinRow
+            key={cabin.id}
+            cabin={cabin}
+            onClick={() => {
+              openModal('edit-cabin');
+              setCabinToEdit(cabin);
+            }}
+          />
+        ))}
+      </Table>
+      <Modal.Window name="edit-cabin">
+        <AddEditCabin
+          cabinToEdit={cabinToEdit}
+          onCloseModal={() => {
+            closeModal();
+          }}
+        />
+      </Modal.Window>
+    </>
   );
 }
 

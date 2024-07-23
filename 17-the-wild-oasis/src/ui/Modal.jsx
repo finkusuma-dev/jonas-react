@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import { createContext } from 'react';
 import { useContext } from 'react';
+import { cloneElement } from 'react';
 
 const StyledModal = styled.div`
   position: fixed;
@@ -63,13 +64,25 @@ Modal.propTypes = {
 export const ModalContext = createContext();
 
 function Modal({ children }) {
-  const [windowOpen, setWindowOpen] = useState('');
-  const closeWindow = () => setWindowOpen('');
+  const [modalOpen, openModal] = useState('');
+  const closeModal = () => openModal('');
 
   return (
-    <ModalContext.Provider value={{ windowOpen, setWindowOpen, closeWindow }}>
+    <ModalContext.Provider value={{ modalOpen, openModal, closeModal }}>
       {children}
     </ModalContext.Provider>
+  );
+}
+
+Open.propTypes = {
+  children: PropTypes.any,
+  name: PropTypes.string,
+};
+
+function Open({ children, name }) {
+  const { openModal } = useContext(ModalContext);
+  return (
+    <div>{cloneElement(children, { onClick: () => openModal(name) })}</div>
   );
 }
 
@@ -79,16 +92,20 @@ Window.propTypes = {
 };
 
 function Window({ children, name }) {
-  const { windowOpen, closeWindow } = useContext(ModalContext);
+  const { modalOpen, closeModal } = useContext(ModalContext);
 
-  return name === windowOpen
+  return name === modalOpen
     ? createPortal(
         <Overlay>
           <StyledModal>
-            <StyledButton onClick={closeWindow}>
+            <StyledButton onClick={closeModal}>
               <HiXMark />
             </StyledButton>
-            <div>{children}</div>
+            <div>
+              {cloneElement(children, {
+                onCloseModal: () => closeModal(),
+              })}
+            </div>
           </StyledModal>
         </Overlay>,
         document.body
@@ -96,6 +113,7 @@ function Window({ children, name }) {
     : null;
 }
 
+Modal.Open = Open;
 Modal.Window = Window;
 
 export default Modal;

@@ -9,7 +9,7 @@ AddEditCabin.propTypes = {
   onCloseModal: PropTypes.func,
 };
 
-function AddEditCabin({ cabinToEdit, onCloseModal }) {
+function AddEditCabin({ cabinToEdit = null, onCloseModal }) {
   return (
     <Row>
       <Heading as="h2">

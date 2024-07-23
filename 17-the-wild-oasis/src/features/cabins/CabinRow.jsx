@@ -46,10 +46,10 @@ const Discount = styled.div`
 
 CabinRow.propTypes = {
   cabin: PropTypes.object,
-  onEditClick: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
-function CabinRow({ cabin, onEditClick }) {
+function CabinRow({ cabin, onClick }) {
   const {
     // created_at,
     // description,
@@ -86,31 +86,30 @@ function CabinRow({ cabin, onEditClick }) {
   }
 
   return (
-    <TableRow role="row">
-      <Img src={image} />
-      <Cabin>{name}</Cabin>
-      <div>Fits up to {max_capacity} guests</div>
-      <Price>{formatCurrency(regular_price)}</Price>
-      <Discount>
-        {discount ? formatCurrency(discount) : <span>&mdash;</span>}
-      </Discount>
-      <div>
-        <button disabled={isBusy} onClick={handleDuplicate}>
-          <HiSquare2Stack />
-        </button>
-        &nbsp;
-        <button
-          disabled={isBusy}
-          onClick={() => onEditClick && onEditClick(cabin)}
-        >
-          <HiPencil />
-        </button>
-        &nbsp;
-        <button disabled={isBusy} onClick={() => deleteCabin(cabinId)}>
-          <HiTrash />
-        </button>
-      </div>
-    </TableRow>
+    <>
+      <TableRow role="row">
+        <Img src={image} />
+        <Cabin>{name}</Cabin>
+        <div>Fits up to {max_capacity} guests</div>
+        <Price>{formatCurrency(regular_price)}</Price>
+        <Discount>
+          {discount ? formatCurrency(discount) : <span>&mdash;</span>}
+        </Discount>
+        <div>
+          <button disabled={isBusy} onClick={handleDuplicate}>
+            <HiSquare2Stack />
+          </button>
+          &nbsp;
+          <button disabled={isBusy} onClick={onClick}>
+            <HiPencil />
+          </button>
+          &nbsp;
+          <button disabled={isBusy} onClick={() => deleteCabin(cabinId)}>
+            <HiTrash />
+          </button>
+        </div>
+      </TableRow>
+    </>
   );
 }
 
