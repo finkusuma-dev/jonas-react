@@ -52,20 +52,23 @@ function CabinTable({ cabins }) {
           <div></div>
         </Table.Header>
 
-        {cabins.map((cabin) => (
-          <CabinRow
-            key={cabin.id}
-            cabin={cabin}
-            onEdit={() => {
-              openModal('edit-cabin');
-              setCabinToEdit(cabin);
-            }}
-            onDelete={() => {
-              openModal('delete-cabin');
-              setCabinToEdit(cabin);
-            }}
-          />
-        ))}
+        <Table.Body
+          data={cabins}
+          render={(cabin) => (
+            <CabinRow
+              key={cabin.id}
+              cabin={cabin}
+              onEdit={() => {
+                openModal('edit-cabin');
+                setCabinToEdit(cabin);
+              }}
+              onDelete={() => {
+                openModal('delete-cabin');
+                setCabinToEdit(cabin);
+              }}
+            />
+          )}
+        />
       </Table>
       <Modal.Window name="edit-cabin">
         <AddEditCabin
