@@ -1,4 +1,7 @@
-import styled from "styled-components";
+import { createContext } from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { useContext } from 'react';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -58,3 +61,57 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+const TableContext = createContext();
+
+Table.propTypes = {
+  children: PropTypes.any,
+  columns: PropTypes.string,
+};
+
+function Table({ columns, children }) {
+  return (
+    <TableContext.Provider value={columns}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+Header.propTypes = {
+  children: PropTypes.any,
+};
+function Header({ children }) {
+  const columns = useContext(TableContext);
+  return (
+    <StyledHeader role="row" as="header" columns={columns}>
+      {children}
+    </StyledHeader>
+  );
+}
+
+Row.propTypes = {
+  children: PropTypes.any,
+};
+function Row({ children }) {
+  const columns = useContext(TableContext);
+  return (
+    <StyledRow role="row" columns={columns}>
+      {children}
+    </StyledRow>
+  );
+}
+
+Body.propTypes = {
+  children: PropTypes.any,
+};
+function Body({ children }) {
+  return <StyledBody>{children}</StyledBody>;
+}
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;
+// Table.Empty = Empty;
+
+export default Table;
