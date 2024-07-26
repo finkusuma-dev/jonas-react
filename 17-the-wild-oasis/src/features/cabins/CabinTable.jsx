@@ -1,11 +1,5 @@
 import PropTypes from 'prop-types';
 import CabinRow from './CabinRow';
-import Modal, { ModalContext } from '../../ui/Modal';
-import AddEditCabin from './AddEditCabin';
-import { useContext } from 'react';
-import { useState } from 'react';
-import { useDeleteCabin } from './useDeleteCabin';
-import ConfirmDelete from '../../ui/ConfirmDelete';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 
@@ -38,9 +32,6 @@ CabinTable.propTypes = {
 };
 
 function CabinTable({ cabins }) {
-  const [cabinToEdit, setCabinToEdit] = useState(null);
-  const { closeModal, openModal } = useContext(ModalContext);
-  const { isDeleting, deleteCabin } = useDeleteCabin();
   return (
     <>
       <Menus>
@@ -56,42 +47,10 @@ function CabinTable({ cabins }) {
 
           <Table.Body
             data={cabins}
-            render={(cabin) => (
-              <CabinRow
-                key={cabin.id}
-                cabin={cabin}
-                onEdit={() => {
-                  // console.log('Edit cabin', cabin.id);
-                  openModal('edit-cabin');
-                  setCabinToEdit(cabin);
-                }}
-                onDelete={() => {
-                  openModal('delete-cabin');
-                  setCabinToEdit(cabin);
-                }}
-              />
-            )}
+            render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
           />
         </Table>
       </Menus>
-      <Modal.Window name="edit-cabin">
-        <AddEditCabin
-          cabinToEdit={cabinToEdit}
-          onCloseModal={() => {
-            closeModal();
-          }}
-        />
-      </Modal.Window>
-      <Modal.Window name="delete-cabin">
-        <ConfirmDelete
-          resourceName="cabins"
-          onConfirm={() => {
-            deleteCabin(cabinToEdit.id);
-            closeModal();
-          }}
-          disabled={isDeleting}
-        />
-      </Modal.Window>
     </>
   );
 }

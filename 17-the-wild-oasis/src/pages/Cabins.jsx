@@ -4,9 +4,9 @@ import CabinTable from '../features/cabins/CabinTable';
 import Spinner from '../ui/Spinner';
 
 import { useCabins } from '../features/cabins/useCabins';
-import AddEditCabin from '../features/cabins/AddEditCabin';
-import Modal from '../ui/Modal';
-import Button from '../ui/Button';
+import AddCabin from '../features/cabins/AddCabin';
+// import Modal from '../ui/Modal';
+// import Button from '../ui/Button';
 
 function Cabins() {
   const { isLoading, cabins } = useCabins();
@@ -21,20 +21,10 @@ function Cabins() {
         <Heading as="h1">All cabins</Heading>
         <div>Filter/Sort</div>
       </Row>
-      <Modal>
-        <Row>
-          <div>
-            <Modal.Open name="add-cabin">
-              <Button>Add new cabin</Button>
-            </Modal.Open>
-          </div>
-          <CabinTable cabins={cabins} />
-        </Row>
-
-        <Modal.Window name="add-cabin">
-          <AddEditCabin />
-        </Modal.Window>
-      </Modal>
+      <Row>
+        <AddCabin />
+        <CabinTable cabins={cabins} />
+      </Row>
     </>
   );
 }
