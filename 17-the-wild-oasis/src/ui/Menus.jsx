@@ -1,4 +1,11 @@
-import styled from "styled-components";
+import { createContext } from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import { useState } from 'react';
+import useClickOutside from '../hooks/useClickOutside';
+import { createPortal } from 'react-dom';
+import { HiEllipsisVertical } from 'react-icons/hi2';
 
 const StyledMenu = styled.div`
   display: flex;
@@ -60,3 +67,120 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const MenuContext = createContext();
+
+Menus.propTypes = {
+  children: PropTypes.any,
+  buttonList: PropTypes.array,
+};
+
+function Menus({ children, buttonList }) {
+  const [id, setId] = useState(false);
+  const [position, setPosition] = useState(null);
+
+  const close = () => setId(false);
+
+  return (
+    <MenuContext.Provider
+      value={{ buttonList, id, setId, close, position, setPosition }}
+    >
+      {children}
+    </MenuContext.Provider>
+  );
+}
+
+Menu.propTypes = {
+  children: PropTypes.any,
+};
+
+function Menu({ children }) {
+  return <StyledMenu>{children}</StyledMenu>;
+}
+
+Toggle.propTypes = {
+  id: PropTypes.number,
+};
+
+function Toggle({ id: toggleId }) {
+  const { id, setId, close, setPosition } = useContext(MenuContext);
+
+  return (
+    <StyledToggle
+      onClick={(e) => {
+        // console.log('toggle', e.target.offsetTop);
+        if (id && id === toggleId) {
+          close();
+        } else {
+          setId(toggleId);
+          const rect = e.target.closest('button').getBoundingClientRect();
+          // console.log(
+          //   'toggle rect',
+          //   rect,
+          //   'window.innerWidth',
+          //   window.innerHeight,
+          //   'window.innerWidth - rect.x',
+          //   window.innerWidth - rect.x
+          // );
+          setPosition({
+            x: window.innerWidth - rect.width - rect.x,
+            y:
+              rect.height + rect.y + 8 + 130 > window.innerHeight
+                ? window.innerHeight - 130
+                : rect.height + rect.y + 8,
+          });
+          // setPosition({ x: e.target.offsetWidth, y: e.target.offsetTop });
+        }
+      }}
+    >
+      <HiEllipsisVertical />
+    </StyledToggle>
+  );
+}
+
+List.propTypes = {
+  children: PropTypes.any,
+  id: PropTypes.number,
+};
+function List({ children, id: toggleId }) {
+  const { id, close, position } = useContext(MenuContext);
+  const ref = useClickOutside(() => close());
+
+  if (id && position && id === toggleId)
+    return createPortal(
+      <StyledList position={position} ref={ref}>
+        {/* <div>Menu {id.cabin.id}</div> */}
+        {children}
+      </StyledList>,
+      document.body
+    );
+}
+
+Button.propTypes = {
+  children: PropTypes.any,
+  onClick: PropTypes.func,
+};
+
+function Button({ children, onClick }) {
+  const { close } = useContext(MenuContext);
+
+  return (
+    <li>
+      <StyledButton
+        onClick={() => {
+          onClick();
+          close();
+        }}
+      >
+        {children}
+      </StyledButton>
+    </li>
+  );
+}
+
+Menus.Menu = Menu;
+Menus.Toggle = Toggle;
+Menus.List = List;
+Menus.Button = Button;
+
+export default Menus;

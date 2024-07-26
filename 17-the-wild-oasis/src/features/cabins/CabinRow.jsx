@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { formatCurrency } from '../../utils/helpers';
-import { useDeleteCabin } from './useDeleteCabin';
 import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 import { useInsertCabin } from './useInsertCabin';
 import Table from '../../ui/Table';
+import Menus from '../../ui/Menus';
 
 // const TableRow = styled.div`
 //   display: grid;
@@ -56,7 +56,7 @@ function CabinRow({ cabin, onEdit, onDelete }) {
     // created_at,
     // description,
     discount,
-    // id: cabinId,
+    id: cabinId,
     name,
     max_capacity,
     regular_price,
@@ -64,10 +64,7 @@ function CabinRow({ cabin, onEdit, onDelete }) {
     image,
   } = cabin;
 
-  const { isDeleting } = useDeleteCabin();
-  const { isInserting, insertCabin } = useInsertCabin();
-
-  const isBusy = isDeleting || isInserting;
+  const { insertCabin } = useInsertCabin();
 
   function handleDuplicate() {
     const newCabin = {
@@ -98,18 +95,29 @@ function CabinRow({ cabin, onEdit, onDelete }) {
           {discount ? formatCurrency(discount) : <span>&mdash;</span>}
         </Discount>
         <div>
-          <button disabled={isBusy} onClick={handleDuplicate}>
-            <HiSquare2Stack />
-          </button>
-          &nbsp;
-          <button disabled={isBusy} onClick={onEdit}>
-            <HiPencil />
-          </button>
-          &nbsp;
-          {/* <button disabled={isBusy} onClick={() => deleteCabin(cabinId)}> */}
-          <button disabled={isBusy} onClick={onDelete}>
-            <HiTrash />
-          </button>
+          <Menus.Menu>
+            <Menus.Toggle id={cabinId} />
+            <Menus.List id={cabinId}>
+              <Menus.Button onClick={handleDuplicate}>
+                <span>
+                  <HiSquare2Stack />
+                </span>
+                Duplicate
+              </Menus.Button>
+              <Menus.Button onClick={onEdit}>
+                <span>
+                  <HiPencil />
+                </span>
+                Edit
+              </Menus.Button>
+              <Menus.Button onClick={onDelete}>
+                <span>
+                  <HiTrash />
+                </span>
+                Delete
+              </Menus.Button>
+            </Menus.List>
+          </Menus.Menu>
         </div>
       </Table.Row>
     </>

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useDeleteCabin } from './useDeleteCabin';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import Table from '../../ui/Table';
+import Menus from '../../ui/Menus';
 
 // const Table = styled.div`
 //   border: 1px solid var(--color-grey-200);
@@ -42,34 +43,37 @@ function CabinTable({ cabins }) {
   const { isDeleting, deleteCabin } = useDeleteCabin();
   return (
     <>
-      <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-        <Table.Header role="row">
-          <div></div>
-          <div>Cabin</div>
-          <div>Capacity</div>
-          <div>Price</div>
-          <div>Discount</div>
-          <div></div>
-        </Table.Header>
+      <Menus>
+        <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+          <Table.Header role="row">
+            <div></div>
+            <div>Cabin</div>
+            <div>Capacity</div>
+            <div>Price</div>
+            <div>Discount</div>
+            <div></div>
+          </Table.Header>
 
-        <Table.Body
-          data={cabins}
-          render={(cabin) => (
-            <CabinRow
-              key={cabin.id}
-              cabin={cabin}
-              onEdit={() => {
-                openModal('edit-cabin');
-                setCabinToEdit(cabin);
-              }}
-              onDelete={() => {
-                openModal('delete-cabin');
-                setCabinToEdit(cabin);
-              }}
-            />
-          )}
-        />
-      </Table>
+          <Table.Body
+            data={cabins}
+            render={(cabin) => (
+              <CabinRow
+                key={cabin.id}
+                cabin={cabin}
+                onEdit={() => {
+                  // console.log('Edit cabin', cabin.id);
+                  openModal('edit-cabin');
+                  setCabinToEdit(cabin);
+                }}
+                onDelete={() => {
+                  openModal('delete-cabin');
+                  setCabinToEdit(cabin);
+                }}
+              />
+            )}
+          />
+        </Table>
+      </Menus>
       <Modal.Window name="edit-cabin">
         <AddEditCabin
           cabinToEdit={cabinToEdit}

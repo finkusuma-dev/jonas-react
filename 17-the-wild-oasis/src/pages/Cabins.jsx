@@ -16,24 +16,26 @@ function Cabins() {
   if (isLoading) return <Spinner />;
 
   return (
-    <Modal>
+    <>
       <Row type="horizontal">
         <Heading as="h1">All cabins</Heading>
         <div>Filter/Sort</div>
       </Row>
-      <>
+      <Modal>
         <Row>
-          <Modal.Open name="add-cabin">
-            <Button>Add new cabin</Button>
-          </Modal.Open>
+          <div>
+            <Modal.Open name="add-cabin">
+              <Button>Add new cabin</Button>
+            </Modal.Open>
+          </div>
           <CabinTable cabins={cabins} />
         </Row>
 
         <Modal.Window name="add-cabin">
           <AddEditCabin />
         </Modal.Window>
-      </>
-    </Modal>
+      </Modal>
+    </>
   );
 }
 

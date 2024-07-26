@@ -7,6 +7,7 @@ function useClickOutside(onClick, listenInCapturing = true) {
   useEffect(
     function () {
       function handleClick(e) {
+        // console.log('clickOutside', ref.current, e.target);
         if (ref.current && !ref.current.contains(e.target)) {
           onClick();
         }
