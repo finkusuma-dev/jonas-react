@@ -1,4 +1,7 @@
-import styled, { css } from "styled-components";
+import PropTypes from 'prop-types';
+import { useSearchParams } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+import { snakeCaseToCapFirstLetter } from '../utils/helpers';
 
 const StyledFilter = styled.div`
   border: 1px solid var(--color-grey-100);
@@ -33,3 +36,37 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+Filter.propTypes = {
+  children: PropTypes.any,
+  name: PropTypes.string,
+  options: PropTypes.array,
+};
+
+function Filter({ name, options }) {
+  console.log('Filter', name, options);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const filterValue = searchParams.get(name) || options[0];
+  return (
+    <StyledFilter>
+      {options.map((option) => (
+        <FilterButton
+          key={option}
+          active={filterValue === option}
+          onClick={() => {
+            const filter = { [name]: option };
+            // console.log('filter', filter);
+            setSearchParams(filter);
+          }}
+        >
+          {snakeCaseToCapFirstLetter(option)}
+        </FilterButton>
+      ))}
+    </StyledFilter>
+  );
+}
+
+Filter.Button = FilterButton;
+
+export default Filter;
