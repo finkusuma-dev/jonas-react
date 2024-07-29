@@ -36,3 +36,8 @@ export function capitalizeFirstLetter(string) {
 export function snakeCaseToCapFirstLetter(string) {
   return capitalizeFirstLetter(string.split('-').join(' '));
 }
+
+export function camelToUnderscore(key) {
+  var result = key.replace(/([A-Z])/g, ' $1');
+  return result.split(' ').join('_').toLowerCase();
+}

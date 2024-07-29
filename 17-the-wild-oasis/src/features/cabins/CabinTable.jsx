@@ -5,19 +5,43 @@ import CabinRow from './CabinRow';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 import { useSearchParams } from 'react-router-dom';
+import { camelToUnderscore } from '../../utils/helpers';
 
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
   const [searchParams] = useSearchParams();
   const discountFilter = searchParams.get('discount') || 'all';
 
+  const sortBy = searchParams.get('sort') || 'name-asc';
+
   console.log('cabins', cabins);
+  console.log('sortBy', sortBy);
+
   const filteredCabins = cabins?.filter(
     (cabin) =>
       discountFilter === 'all' ||
       (discountFilter == 'no-discount' && cabin.discount === 0) ||
       (discountFilter == 'with-discount' && cabin.discount > 0)
   );
+
+  const [field, direction] = sortBy.split('-');
+
+  const sortModifier = direction === 'asc' ? 1 : -1;
+
+  const sortedCabins = filteredCabins?.sort((a, b) => {
+    if (field === 'name') {
+      /// For String fields
+      return (
+        (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) * sortModifier
+      );
+    } else {
+      /// For Number fields
+      return (
+        (a[camelToUnderscore(field)] - b[camelToUnderscore(field)]) *
+        sortModifier
+      );
+    }
+  });
 
   if (isLoading) return <Spinner />;
 
@@ -35,7 +59,7 @@ function CabinTable() {
           </Table.Header>
 
           <Table.Body
-            data={filteredCabins}
+            data={sortedCabins}
             render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
           />
         </Table>

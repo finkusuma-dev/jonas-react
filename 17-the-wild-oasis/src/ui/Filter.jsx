@@ -41,6 +41,7 @@ Filter.propTypes = {
   children: PropTypes.any,
   name: PropTypes.string,
   options: PropTypes.array,
+  props: PropTypes.any,
 };
 
 function Filter({ name, options }) {
@@ -55,9 +56,9 @@ function Filter({ name, options }) {
           key={option}
           active={filterValue === option}
           onClick={() => {
-            const filter = { [name]: option };
+            searchParams.set(name, option);
             // console.log('filter', filter);
-            setSearchParams(filter);
+            setSearchParams(searchParams);
           }}
         >
           {snakeCaseToCapFirstLetter(option)}
