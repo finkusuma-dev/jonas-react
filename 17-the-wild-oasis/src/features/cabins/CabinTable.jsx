@@ -6,6 +6,7 @@ import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 import { useSearchParams } from 'react-router-dom';
 import { camelToUnderscore } from '../../utils/helpers';
+import Empty from '../../ui/Empty';
 
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
@@ -13,6 +14,8 @@ function CabinTable() {
   const discountFilter = searchParams.get('discount') || 'all';
 
   const sortBy = searchParams.get('sort') || 'name-asc';
+
+  if (!cabins?.length) return <Empty resourceName="cabins" />;
 
   console.log('cabins', cabins);
   console.log('sortBy', sortBy);
