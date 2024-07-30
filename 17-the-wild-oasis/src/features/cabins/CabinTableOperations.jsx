@@ -8,7 +8,7 @@ function CabinTableOperations() {
       <TableOperations>
         <Filter
           type="white"
-          name="discount"
+          filterField="discount"
           options={['all', 'no-discount', 'with-discount']}
         />
       </TableOperations>

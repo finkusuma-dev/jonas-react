@@ -39,16 +39,16 @@ const FilterButton = styled.button`
 
 Filter.propTypes = {
   children: PropTypes.any,
-  name: PropTypes.string,
+  filterField: PropTypes.string,
   options: PropTypes.array,
   props: PropTypes.any,
 };
 
-function Filter({ name, options }) {
-  console.log('Filter', name, options);
+function Filter({ filterField, options }) {
+  console.log('Filter', filterField, options);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filterValue = searchParams.get(name) || options[0];
+  const filterValue = searchParams.get(filterField) || options[0];
   return (
     <StyledFilter>
       {options.map((option) => (
@@ -56,7 +56,7 @@ function Filter({ name, options }) {
           key={option}
           active={filterValue === option}
           onClick={() => {
-            searchParams.set(name, option);
+            searchParams.set(filterField, option);
             // console.log('filter', filter);
             setSearchParams(searchParams);
           }}
