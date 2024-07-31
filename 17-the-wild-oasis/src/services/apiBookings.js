@@ -2,8 +2,8 @@ import { camelToUnderscore, getToday } from '../utils/helpers';
 import supabase from './supabase';
 
 export async function getBookings({ filter, sort }) {
-  console.log('getBookings filter', filter);
-  console.log('getBookings sort', sort);
+  // console.log('getBookings filter', filter);
+  // console.log('getBookings sort', sort);
 
   let query = supabase.from('bookings').select(
     `id,

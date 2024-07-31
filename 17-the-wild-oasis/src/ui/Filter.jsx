@@ -45,7 +45,7 @@ Filter.propTypes = {
 };
 
 function Filter({ filterField, options }) {
-  console.log('Filter', filterField, options);
+  // console.log('Filter', filterField, options);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filterValue = searchParams.get(filterField) || options[0];
