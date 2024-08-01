@@ -3,7 +3,7 @@ import GlobalStyles from './styles/GlobalStyles';
 import { Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import Account from './pages/Account';
-import Bookings from './pages/Bookings';
+import BookingLayout from './pages/BookingLayout';
 import Cabins from './pages/Cabins';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
@@ -15,6 +15,8 @@ import AppLayout from './ui/AppLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
+import BookingDetail from './features/bookings/BookingDetail';
+import Bookings from './features/bookings/Bookings';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,7 +42,10 @@ function App() {
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="account" element={<Account />} />
-            <Route path="bookings" element={<Bookings />} />
+            <Route path="bookings" element={<BookingLayout />}>
+              <Route index element={<Bookings />} />
+              <Route path=":bookingId" element={<BookingDetail />} />
+            </Route>
             <Route path="cabins" element={<Cabins />} />
             <Route path="login" element={<Login />} />
             <Route path="settings" element={<Settings />} />
