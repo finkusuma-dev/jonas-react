@@ -1,7 +1,8 @@
+import { PAGE_SIZE } from '../utils/constants';
 import { camelToUnderscore, getToday } from '../utils/helpers';
 import supabase from './supabase';
 
-export async function getBookings({ filter, sort }) {
+export async function getBookings({ filter, sort, page }) {
   // console.log('getBookings filter', filter);
   // console.log('getBookings sort', sort);
 
@@ -13,7 +14,10 @@ export async function getBookings({ filter, sort }) {
   num_nights,
   num_guests,
   total_price,
-  status, cabins(id, name), guests(id, full_name, email)`
+  status, cabins(id, name), guests(id, full_name, email)`,
+    {
+      count: 'exact',
+    }
   );
 
   if (filter && filter.value !== 'all') {
@@ -26,14 +30,20 @@ export async function getBookings({ filter, sort }) {
     });
   }
 
-  const { data, error } = await query;
+  if (page) {
+    const from = (page - 1) * PAGE_SIZE + 1;
+    const to = from + PAGE_SIZE - 1; // > count ? count : from + PAGE_SIZE - 1;
+    query = query.range(from - 1, to - 1);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     console.error(error);
     throw new Error('Booking not found');
   }
 
-  return data;
+  return { data, count };
 }
 
 export async function getBooking(id) {

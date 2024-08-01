@@ -16,6 +16,7 @@ function SortBy({ options }) {
       onChange={(e) => {
         searchParams.set('sort', e.target.value);
         // console.log('searchParams', searchParams);
+        searchParams.delete('page');
         setSearchParams(searchParams);
       }}
     />

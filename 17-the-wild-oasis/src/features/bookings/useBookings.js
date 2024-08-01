@@ -14,13 +14,19 @@ export function useBookings() {
   const sortBy = searchParams.get('sort') || 'startDate-desc';
   const [field, direction] = sortBy.split('-');
 
-  // const queryClient = useQueryClient();
+  const page = Number(searchParams.get('page') || 1);
+
   const {
-    data: bookings,
+    data: { data: bookings, count } = {},
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['bookings', `status=${filterValue}`, `sort=${sortBy}`],
+    queryKey: [
+      'bookings',
+      `status=${filterValue}`,
+      `sort=${sortBy}`,
+      `page=${page}`,
+    ],
     queryFn: () => {
       return getBookingsApi({
         filter: {
@@ -32,9 +38,10 @@ export function useBookings() {
           field,
           direction,
         },
+        page,
       });
     },
   });
 
-  return { bookings, isLoading, error };
+  return { bookings, count, isLoading, error };
 }

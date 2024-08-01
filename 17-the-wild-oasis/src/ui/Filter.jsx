@@ -56,6 +56,7 @@ function Filter({ filterField, options }) {
           key={option}
           active={filterValue === option}
           onClick={() => {
+            searchParams.delete('page');
             searchParams.set(filterField, option);
             // console.log('filter', filter);
             setSearchParams(searchParams);
