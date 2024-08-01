@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getBookings as getBookingsApi } from '../../services/apiBookings';
 import { useSearchParams } from 'react-router-dom';
+import { PAGE_SIZE } from '../../utils/constants';
 // import PropTypes from 'prop-types';
 
 // useBookings.propTypes = {
@@ -9,6 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 // };
 
 export function useBookings() {
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const filterValue = searchParams.get('status') || 'all';
   const sortBy = searchParams.get('sort') || 'startDate-desc';
@@ -42,6 +44,63 @@ export function useBookings() {
       });
     },
   });
+
+  const isFirstPage = page === 1;
+  const isLastPage = page === Math.ceil(count / PAGE_SIZE);
+
+  // console.log('isLastPage', isLastPage);
+
+  /// Prefetch previous page
+  if (bookings && !isFirstPage) {
+    queryClient.prefetchQuery({
+      queryKey: [
+        'bookings',
+        `status=${filterValue}`,
+        `sort=${sortBy}`,
+        `page=${page - 1}`,
+      ],
+      queryFn: () => {
+        return getBookingsApi({
+          filter: {
+            field: 'status',
+            value: filterValue,
+            operator: 'eq',
+          },
+          sort: {
+            field,
+            direction,
+          },
+          page: page - 1,
+        });
+      },
+    });
+  }
+
+  /// Prefetch next page
+  if (bookings && !isLastPage) {
+    queryClient.prefetchQuery({
+      queryKey: [
+        'bookings',
+        `status=${filterValue}`,
+        `sort=${sortBy}`,
+        `page=${page + 1}`,
+      ],
+      queryFn: () => {
+        return getBookingsApi({
+          filter: {
+            field: 'status',
+            value: filterValue,
+            operator: 'eq',
+          },
+          sort: {
+            field,
+            direction,
+          },
+          page: page + 1,
+        });
+      },
+    });
+  }
 
   return { bookings, count, isLoading, error };
 }
