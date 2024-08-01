@@ -159,9 +159,10 @@ function List({ children, id: toggleId }) {
 Button.propTypes = {
   children: PropTypes.any,
   onClick: PropTypes.func,
+  icon: PropTypes.object,
 };
 
-function Button({ children, onClick }) {
+function Button({ children, icon, onClick }) {
   const { close } = useContext(MenuContext);
 
   return (
@@ -172,7 +173,8 @@ function Button({ children, onClick }) {
           close();
         }}
       >
-        {children}
+        {icon}
+        <span>{children}</span>
       </StyledButton>
     </li>
   );
