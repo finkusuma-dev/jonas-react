@@ -1,7 +1,8 @@
 import { createContext } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -33,6 +34,12 @@ const StyledHeader = styled(CommonRow)`
 
 const StyledRow = styled(CommonRow)`
   padding: 1.2rem 2.4rem;
+
+  ${(props) =>
+    props.isActive &&
+    css`
+      background-color: var(--color-yellow-100);
+    `}
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
@@ -71,7 +78,7 @@ Table.propTypes = {
 
 function Table({ columns, children }) {
   return (
-    <TableContext.Provider value={columns}>
+    <TableContext.Provider value={{ columns }}>
       <StyledTable role="table">{children}</StyledTable>
     </TableContext.Provider>
   );
@@ -81,7 +88,7 @@ Header.propTypes = {
   children: PropTypes.any,
 };
 function Header({ children }) {
-  const columns = useContext(TableContext);
+  const { columns } = useContext(TableContext);
   return (
     <StyledHeader role="row" as="header" columns={columns}>
       {children}
@@ -91,11 +98,20 @@ function Header({ children }) {
 
 Row.propTypes = {
   children: PropTypes.any,
+  rowId: PropTypes.any,
 };
-function Row({ children }) {
-  const columns = useContext(TableContext);
+function Row({ children, rowId }) {
+  const { columns } = useContext(TableContext);
+  const [searchParams] = useSearchParams();
+  const highlightRowId = searchParams.get('hrow');
+  // console.log('hrowid', highlightRowId, rowId);
+
   return (
-    <StyledRow role="row" columns={columns}>
+    <StyledRow
+      role="row"
+      columns={columns}
+      isActive={rowId && highlightRowId == rowId}
+    >
       {children}
     </StyledRow>
   );

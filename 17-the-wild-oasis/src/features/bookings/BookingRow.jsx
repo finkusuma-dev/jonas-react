@@ -65,15 +65,17 @@ function BookingRow({
   };
 
   function handleSeeDetail() {
+    navigate(`/bookings?hrow=${bookingId}`, { replace: true });
     navigate(`/bookings/${bookingId}`);
   }
 
   function handleCheckin() {
+    navigate(`/bookings?hrow=${bookingId}`, { replace: true });
     navigate(`/checkin/${bookingId}`);
   }
 
   return (
-    <Table.Row>
+    <Table.Row rowId={bookingId}>
       <Booking>{cabinName}</Booking>
 
       <Stacked>
