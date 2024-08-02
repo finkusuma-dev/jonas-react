@@ -10,9 +10,9 @@ import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
 import Menus from '../../ui/Menus';
 import { useNavigate } from 'react-router-dom';
-import { HiEye } from 'react-icons/hi2';
+import { HiArrowDownOnSquare, HiEye } from 'react-icons/hi2';
 
-const Cabin = styled.div`
+const Booking = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
@@ -64,13 +64,17 @@ function BookingRow({
     'checked-out': 'silver',
   };
 
-  function handleClick() {
+  function handleSeeDetail() {
     navigate(`/bookings/${bookingId}`);
+  }
+
+  function handleCheckin() {
+    navigate(`/checkin/${bookingId}`);
   }
 
   return (
     <Table.Row>
-      <Cabin>{cabinName}</Cabin>
+      <Booking>{cabinName}</Booking>
 
       <Stacked>
         <span>{guestName}</span>
@@ -96,9 +100,17 @@ function BookingRow({
       <Menus.Menu>
         <Menus.Toggle id={bookingId} />
         <Menus.List id={bookingId}>
-          <Menus.Button icon={<HiEye />} onClick={handleClick}>
+          <Menus.Button icon={<HiEye />} onClick={handleSeeDetail}>
             See details
           </Menus.Button>
+          {status === 'unconfirmed' && (
+            <Menus.Button
+              icon={<HiArrowDownOnSquare />}
+              onClick={handleCheckin}
+            >
+              Check-in
+            </Menus.Button>
+          )}
         </Menus.List>
       </Menus.Menu>
     </Table.Row>
