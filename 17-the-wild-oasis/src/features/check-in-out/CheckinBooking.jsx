@@ -16,6 +16,7 @@ import Spinner from '../../ui/Spinner';
 import useCheckin from './useCheckin';
 import { formatCurrency } from '../../utils/helpers';
 import { useSettings } from '../settings/useSettings';
+import { useEffect } from 'react';
 
 const Box = styled.div`
   /* Box */
@@ -39,6 +40,11 @@ function CheckinBooking() {
   const [confirmPaid, setConfirmPaid] = useState(false);
   const [addBreakfast, setAddBreakfast] = useState(false);
   const { settings, isLoading: isLoadingSettings } = useSettings();
+
+  useEffect(
+    () => setAddBreakfast(booking?.has_breakfast),
+    [booking?.has_breakfast]
+  );
 
   if (isLoading || isLoadingSettings) return <Spinner />;
 
@@ -71,18 +77,23 @@ function CheckinBooking() {
         },
       });
     } else {
-      checkin({ id: bookingId });
+      checkin({
+        id: bookingId,
+        breakfast: {
+          has_breakfast: false,
+          breakfast_price: 0,
+          total_price: cabin_price,
+        },
+      });
     }
   }
-
-  const checkBreakfast = has_breakfast || addBreakfast;
 
   const checkPaid = (is_paid && !addBreakfast) || confirmPaid;
   const disablePaid = is_paid && !addBreakfast;
 
   const optionalBreakfastPrice = num_guests * num_nights * breakfast_price;
 
-  const totalPrice = total_price + (addBreakfast ? optionalBreakfastPrice : 0);
+  const totalPrice = cabin_price + (addBreakfast ? optionalBreakfastPrice : 0);
 
   return (
     <>
@@ -93,19 +104,19 @@ function CheckinBooking() {
 
       <BookingDataBox booking={booking} />
 
-      {!has_breakfast && (
+      {(!is_paid || !has_breakfast) && (
         <Box>
           <Checkbox
             id="confirm-breakfast"
-            checked={checkBreakfast}
-            disabled={has_breakfast}
+            checked={addBreakfast}
+            // disabled={is_paid}
             onChange={() => {
               setAddBreakfast((check) => !check);
               setConfirmPaid(false);
             }}
           >
             Want to add breakfast
-            {!has_breakfast && (
+            {(!is_paid || !has_breakfast) && (
               <span>(for {formatCurrency(optionalBreakfastPrice)})</span>
             )}
           </Checkbox>
