@@ -13,7 +13,7 @@ function BookingTable() {
 
   if (!bookings?.length) return <Empty resourceName="bookings" />;
 
-  console.log('bookings', bookings);
+  // console.log('bookings', bookings);
 
   return (
     <Menus>
