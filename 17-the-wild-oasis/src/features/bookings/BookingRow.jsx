@@ -1,7 +1,14 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
 import { format, isToday } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import {
+  HiArrowDownOnSquare,
+  HiArrowTopRightOnSquare,
+  HiEye,
+} from 'react-icons/hi2';
+
+import useCheckout from '../check-in-out/useCheckout';
 
 import Tag from '../../ui/Tag';
 import Table from '../../ui/Table';
@@ -9,8 +16,6 @@ import Table from '../../ui/Table';
 import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
 import Menus from '../../ui/Menus';
-import { useNavigate } from 'react-router-dom';
-import { HiArrowDownOnSquare, HiEye } from 'react-icons/hi2';
 
 const Booking = styled.div`
   font-size: 1.6rem;
@@ -45,11 +50,11 @@ BookingRow.propTypes = {
 function BookingRow({
   booking: {
     id: bookingId,
-    created_at,
+    // created_at,
     start_date,
     end_date,
     num_nights,
-    num_guests,
+    // num_guests,
     total_price,
     status,
     guests: { full_name: guestName, email },
@@ -57,6 +62,7 @@ function BookingRow({
   },
 }) {
   const navigate = useNavigate();
+  const {checkout} = useCheckout()
 
   const statusToTagName = {
     unconfirmed: 'blue',
@@ -72,6 +78,10 @@ function BookingRow({
   function handleCheckin() {
     navigate(`/bookings?hrow=${bookingId}`, { replace: true });
     navigate(`/checkin/${bookingId}`);
+  }
+
+  function handleCheckout() {
+    checkout(bookingId);
   }
 
   return (
@@ -112,6 +122,14 @@ function BookingRow({
               onClick={handleCheckin}
             >
               Check-in
+            </Menus.Button>
+          )}
+          {status === 'checked-in' && (
+            <Menus.Button
+              icon={<HiArrowTopRightOnSquare color="#854d0e" />}
+              onClick={handleCheckout}
+            >
+              Check-out
             </Menus.Button>
           )}
         </Menus.List>

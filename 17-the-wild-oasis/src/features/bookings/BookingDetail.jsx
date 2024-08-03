@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
+import useCheckout from '../check-in-out/useCheckout';
 
 import BookingDataBox from './BookingDataBox';
 import Row from '../../ui/Row';
@@ -12,7 +15,6 @@ import { useMoveBack } from '../../hooks/useMoveBack';
 import useBooking from './useBooking';
 import Spinner from '../../ui/Spinner';
 import ErrorFallback from '../../ui/ErrorFallback';
-import { useNavigate } from 'react-router-dom';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -22,6 +24,7 @@ const HeadingGroup = styled.div`
 
 function BookingDetail() {
   const { booking, isLoading, error } = useBooking();
+  const { checkout, isCheckingOut } = useCheckout();
   const navigate = useNavigate();
 
   const moveBack = useMoveBack();
@@ -47,6 +50,10 @@ function BookingDetail() {
     navigate(`/checkin/${bookingId}`, { replace: true });
   }
 
+  function handleCheckout() {
+    checkout(bookingId);
+  }
+
   return (
     <>
       <Row type="horizontal">
@@ -62,6 +69,15 @@ function BookingDetail() {
       <ButtonGroup>
         {status === 'unconfirmed' && (
           <Button onClick={handleCheckin}>Check in</Button>
+        )}
+        {status === 'checked-in' && (
+          <Button
+            bookingId={bookingId}
+            onClick={handleCheckout}
+            disabled={isCheckingOut}
+          >
+            Check out
+          </Button>
         )}
         <Button variation="secondary" onClick={moveBack}>
           Back
