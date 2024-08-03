@@ -8,11 +8,24 @@ function useCheckin() {
   const navigate = useNavigate();
 
   const { mutate: checkin, isLoading: isCheckinIn } = useMutation({
-    mutationFn: ({ id }) =>
-      updateBooking(id, {
-        status: 'checked-in',
-        is_paid: true,
-      }),
+    // mutationFn: ({ id, payload: { breakfastPrice = 0, totalPrice = 0 } }) => {
+    mutationFn: ({ id, breakfast = {} }) => {
+      {
+        const payload = {
+          status: 'checked-in',
+          is_paid: true,
+          ...breakfast,
+        };
+        // if (breakfastPrice) {
+        //   payload.has_breakfast = true;
+        //   payload.extras_price = breakfastPrice;
+        //   payload.total_price = totalPrice;
+        // }
+        console.log('payload', payload);
+        // return null;
+        return updateBooking(id, payload);
+      }
+    },
     onSuccess: (data) => {
       toast.success(`Checkin booking #${data.id} success`);
       queryClient.invalidateQueries({ active: true });
