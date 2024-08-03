@@ -25,6 +25,11 @@ const Box = styled.div`
   padding: 2.4rem 4rem;
 `;
 
+const Total = styled.span`
+  font-weight: bold;
+  font-size: large;
+`;
+
 function CheckinBooking() {
   const moveBack = useMoveBack();
   // const history = use/
@@ -121,12 +126,12 @@ function CheckinBooking() {
                 {addBreakfast && is_paid ? (
                   <span>
                     breakfast{' '}
-                    <strong>{formatCurrency(optionalBreakfastPrice)}</strong>.
+                    <Total> {formatCurrency(optionalBreakfastPrice)}</Total>.
                   </span>
                 ) : (
                   <span>
                     the total amount of{' '}
-                    <strong>{formatCurrency(totalPrice)}</strong>.
+                    <Total> {formatCurrency(totalPrice)}</Total>.
                   </span>
                 )}
               </p>
