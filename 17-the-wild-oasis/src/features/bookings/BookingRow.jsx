@@ -16,6 +16,7 @@ import Table from '../../ui/Table';
 import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
 import Menus from '../../ui/Menus';
+import { useSearchParams } from 'react-router-dom';
 
 const Booking = styled.div`
   font-size: 1.6rem;
@@ -62,7 +63,8 @@ function BookingRow({
   },
 }) {
   const navigate = useNavigate();
-  const {checkout} = useCheckout()
+  const { checkout } = useCheckout();
+  const [, setSearchParams] = useSearchParams();
 
   const statusToTagName = {
     unconfirmed: 'blue',
@@ -111,7 +113,16 @@ function BookingRow({
       <Amount>{formatCurrency(total_price)}</Amount>
 
       <Menus.Menu>
-        <Menus.Toggle id={bookingId} />
+        <Menus.Toggle
+          id={bookingId}
+          onClick={() => {
+            console.log('Menus.Toggle click id', bookingId);
+            setSearchParams((params) => {
+              params.set('hrow', bookingId);
+              return params;
+            });
+          }}
+        />
         <Menus.List id={bookingId}>
           <Menus.Button icon={<HiEye />} onClick={handleSeeDetail}>
             See details

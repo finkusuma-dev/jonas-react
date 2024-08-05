@@ -100,15 +100,17 @@ function Menu({ children }) {
 
 Toggle.propTypes = {
   id: PropTypes.number,
+  onClick: PropTypes.function,
 };
 
-function Toggle({ id: toggleId }) {
+function Toggle({ id: toggleId, onClick }) {
   const { id, setId, close, setPosition } = useContext(MenuContext);
 
   return (
     <StyledToggle
       onClick={(e) => {
         // console.log('toggle', e.target.offsetTop);
+        onClick && onClick(id === toggleId);
         if (id && id === toggleId) {
           close();
         } else {
