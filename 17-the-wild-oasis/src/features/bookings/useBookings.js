@@ -19,7 +19,7 @@ export function useBookings() {
   const page = Number(searchParams.get('page') || 1);
 
   const {
-    data: { data: bookings, count } = {},
+    data: { data: bookings, count, error: dataError } = {},
     isLoading,
     error,
   } = useQuery({
@@ -44,6 +44,14 @@ export function useBookings() {
       });
     },
   });
+
+  if (dataError) {
+    console.log('useBookings, dataError', dataError);
+  }
+
+  if (error) {
+    console.log('useBookings, error', error);
+  }
 
   const isFirstPage = page === 1;
   const isLastPage = page === Math.ceil(count / PAGE_SIZE);
@@ -102,5 +110,5 @@ export function useBookings() {
     });
   }
 
-  return { bookings, count, isLoading, error };
+  return { bookings, count, isLoading, error, dataError };
 }

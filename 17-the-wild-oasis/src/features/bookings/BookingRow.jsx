@@ -6,6 +6,7 @@ import {
   HiArrowDownOnSquare,
   HiArrowTopRightOnSquare,
   HiEye,
+  HiTrash,
 } from 'react-icons/hi2';
 
 import useCheckout from '../check-in-out/useCheckout';
@@ -17,6 +18,9 @@ import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
 import Menus from '../../ui/Menus';
 import { useSearchParams } from 'react-router-dom';
+import { useDeleteBooking } from './useDeleteBooking';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 
 const Booking = styled.div`
   font-size: 1.6rem;
@@ -64,6 +68,7 @@ function BookingRow({
 }) {
   const navigate = useNavigate();
   const { checkout } = useCheckout();
+  const { deleteBooking, isDeleting } = useDeleteBooking();
   const [, setSearchParams] = useSearchParams();
 
   const statusToTagName = {
@@ -73,17 +78,23 @@ function BookingRow({
   };
 
   function handleSeeDetail() {
-    navigate(`/bookings?hrow=${bookingId}`, { replace: true });
+    // navigate(`/bookings?hrow=${bookingId}`, { replace: true });
     navigate(`/bookings/${bookingId}`);
   }
 
   function handleCheckin() {
-    navigate(`/bookings?hrow=${bookingId}`, { replace: true });
+    // navigate(`/bookings?hrow=${bookingId}`, { replace: true });
     navigate(`/checkin/${bookingId}`);
   }
 
   function handleCheckout() {
     checkout(bookingId);
+  }
+
+  function handleDelete() {
+    deleteBooking(bookingId, {
+      onSuccess: (data) => console.log('Delete success', data),
+    });
   }
 
   return (
@@ -112,39 +123,60 @@ function BookingRow({
 
       <Amount>{formatCurrency(total_price)}</Amount>
 
-      <Menus.Menu>
-        <Menus.Toggle
-          id={bookingId}
-          onClick={() => {
-            console.log('Menus.Toggle click id', bookingId);
-            setSearchParams((params) => {
-              params.set('hrow', bookingId);
-              return params;
-            });
-          }}
-        />
-        <Menus.List id={bookingId}>
-          <Menus.Button icon={<HiEye />} onClick={handleSeeDetail}>
-            See details
-          </Menus.Button>
-          {status === 'unconfirmed' && (
-            <Menus.Button
-              icon={<HiArrowDownOnSquare />}
-              onClick={handleCheckin}
-            >
-              Check-in
+      <Modal>
+        <Menus.Menu>
+          <Menus.Toggle
+            id={bookingId}
+            onClick={() => {
+              console.log('Menus.Toggle click id', bookingId);
+              setSearchParams((params) => {
+                params.set('hrow', bookingId);
+                return params;
+              });
+            }}
+          />
+          <Menus.List id={bookingId}>
+            <Menus.Button icon={<HiEye />} onClick={handleSeeDetail}>
+              See details
             </Menus.Button>
-          )}
-          {status === 'checked-in' && (
-            <Menus.Button
-              icon={<HiArrowTopRightOnSquare color="#854d0e" />}
-              onClick={handleCheckout}
-            >
-              Check-out
-            </Menus.Button>
-          )}
-        </Menus.List>
-      </Menus.Menu>
+            {status === 'unconfirmed' && (
+              <Menus.Button
+                icon={<HiArrowDownOnSquare />}
+                onClick={handleCheckin}
+              >
+                Check-in
+              </Menus.Button>
+            )}
+            {status === 'checked-in' && (
+              <Menus.Button
+                icon={<HiArrowTopRightOnSquare color="#854d0e" />}
+                onClick={handleCheckout}
+              >
+                Check-out
+              </Menus.Button>
+            )}
+            {status !== 'Xchecked-outX' && (
+              <Modal.Open name="delete-booking">
+                <Menus.Button
+                  icon={<HiTrash />}
+                  // onClick={handleDelete}
+                >
+                  Delete
+                </Menus.Button>
+              </Modal.Open>
+            )}
+          </Menus.List>
+        </Menus.Menu>
+        <Modal.Window name="delete-booking">
+          <ConfirmDelete
+            resourceName="booking"
+            onConfirm={() => {
+              handleDelete(bookingId);
+            }}
+            disabled={isDeleting}
+          />
+        </Modal.Window>
+      </Modal>
     </Table.Row>
   );
 }

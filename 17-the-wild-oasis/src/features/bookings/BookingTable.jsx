@@ -5,15 +5,34 @@ import Empty from '../../ui/Empty';
 import { useBookings } from './useBookings';
 import Spinner from '../../ui/Spinner';
 import Pagination from '../../ui/Pagination';
+import { useSearchParams } from 'react-router-dom';
+import { PAGE_SIZE } from '../../utils/constants';
+import { useEffect } from 'react';
 
 function BookingTable() {
-  const { bookings, isLoading, count } = useBookings();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { bookings, isLoading, count, error, dataError } = useBookings();
+
+  useEffect(() => {
+    if (bookings) {
+      const pageCount = Math.ceil(count / PAGE_SIZE);
+      console.log('pageCount', pageCount);
+      if (bookings?.length === 0 && pageCount > 0) {
+        searchParams.set('page', pageCount);
+        setSearchParams(searchParams);
+      }
+    }
+  });
+
+  // console.log('BookingTable', bookings?.length, count);
+  console.log('BookingTable error', error);
+  console.log('BookingTable dataError', dataError);
+
+  // console.log('bookings', bookings);
 
   if (isLoading) return <Spinner />;
 
   if (!bookings?.length) return <Empty resourceName="bookings" />;
-
-  // console.log('bookings', bookings);
 
   return (
     <Menus>
