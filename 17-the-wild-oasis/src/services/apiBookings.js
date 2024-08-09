@@ -40,10 +40,11 @@ export async function getBookings({ filter, sort, page }) {
 
   if (error) {
     console.error(error);
+
     throw new Error('Booking not found');
   }
 
-  return { data, count };
+  return { data, count, error };
 }
 
 export async function getBooking(id) {
@@ -131,12 +132,23 @@ export async function updateBooking(id, obj) {
 }
 
 export async function deleteBooking(id) {
-  // REMEMBER RLS POLICIES
-  const { data, error } = await supabase.from('bookings').delete().eq('id', id);
+  const { error: deleteError } = await supabase
+    .from('bookings')
+    .delete()
+    .eq('id', id);
+  //   .select()
+  // .single();
 
-  if (error) {
-    console.error(error);
+  const { count, countError } = await supabase
+    .from('bookings')
+    .select('*', { count: 'exact', head: 'true' });
+
+  // console.log('deleteBooking api, data', data);
+
+  if (deleteError || countError) {
+    console.error(deleteError);
     throw new Error('Booking could not be deleted');
   }
-  return data;
+
+  return { count };
 }
