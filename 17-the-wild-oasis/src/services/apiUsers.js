@@ -9,17 +9,15 @@ export async function login({ email, password }) {
 
   if (error) throw new Error(error.message);
 
-  // console.log('Login api', data, 'error', error);
-
-  return { data, error };
+  return { data };
 }
 export async function logout() {
-  // console.log('login', email, password);
   const { data, error } = await supabase.auth.signOut();
 
   // console.log('Logout api', data, 'error', error);
+  if (error) throw new Error(error.message);
 
-  return { data, error };
+  return { data };
 }
 
 export async function loggedUser() {
@@ -37,6 +35,7 @@ export async function loggedUser() {
   } = await supabase.auth.getUser();
 
   // console.log('LoggedUser user', user, error);
+  if (error) throw new Error(error.message);
 
-  return { user, error };
+  return { user };
 }

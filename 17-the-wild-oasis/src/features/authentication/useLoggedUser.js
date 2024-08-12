@@ -9,7 +9,7 @@ function useLoggedUser() {
     // staleTime: 5 * 60 * 1000,
   });
 
-  console.log('useLoggedUser', data?.user);
+  // console.log('useLoggedUser', data?.user);
 
   return {
     user: data?.user,

@@ -1,9 +1,7 @@
 import styled from 'styled-components';
-import useLogout from '../features/authentication/useLogout';
-import Button from './Button';
 import Row from '../ui/Row';
-import { useEffect } from 'react';
 import ProtectedRoute from './ProtectedRoute';
+import Logout from '../features/authentication/Logout';
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -12,18 +10,6 @@ const StyledHeader = styled.header`
   /* grid-column: 1/-1; */
 `;
 function Header() {
-  const { logout, isLoggingOut, error: logoutError } = useLogout();
-
-  useEffect(() => {
-    if (!isLoggingOut) {
-      if (logoutError) console.log('Logging out error', logoutError);
-    }
-  });
-
-  function handleLogout() {
-    logout();
-  }
-
   return (
     <StyledHeader>
       <Row type="horizontal">
@@ -31,7 +17,8 @@ function Header() {
         <div></div>
         <Row type="horizontal">
           <ProtectedRoute.User />
-          &nbsp;<Button onClick={handleLogout}>Logout</Button>
+          <Logout />
+          {/* &nbsp;<Button onClick={handleLogout}>Logout</Button> */}
         </Row>
       </Row>
     </StyledHeader>

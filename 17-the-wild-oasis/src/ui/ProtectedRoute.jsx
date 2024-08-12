@@ -24,9 +24,10 @@ function ProtectedRoute({ children }) {
 
   useEffect(() => {
     if (!isLoading) {
+      // console.log('Protected route useEffect run');
       if (getUserError) console.log('getUser error', getUserError);
 
-      if (!isAuthenticated) navigate('/login');
+      if (!isAuthenticated) navigate('/login', { replace: true });
     }
   }, [isLoading, isAuthenticated, getUserError, navigate]);
 

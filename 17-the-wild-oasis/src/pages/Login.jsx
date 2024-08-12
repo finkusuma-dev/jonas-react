@@ -26,7 +26,7 @@ function Login() {
     if (!isLoading) {
       if (error) console.log('useGetUser error', error);
       // console.log('Login user', user);
-      if (isAuthenticated) navigate('/');
+      if (isAuthenticated) navigate('/', { replace: true });
     }
   }, [user, isAuthenticated, error, isLoading, navigate]);
 
