@@ -39,3 +39,22 @@ export async function loggedUser() {
 
   return { user };
 }
+
+export async function signUp({ email, password, fullName }) {
+  let { data, error } = await supabase.auth.signUp(
+    {
+      email: email,
+      password: password,
+    },
+    {
+      data: {
+        fullName,
+        avatar: '',
+      },
+    }
+  );
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
