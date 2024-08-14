@@ -1,4 +1,4 @@
-import supabase from './supabase';
+import supabase, { supabaseUrl } from './supabase';
 
 export async function login({ email, password }) {
   // console.log('login', email, password);
@@ -57,4 +57,61 @@ export async function signUp({ email, password, fullName }) {
   if (error) throw new Error(error.message);
 
   return data;
+}
+export async function updateUser({ password, fullName, avatar }) {
+  /// Update password
+  if (password) {
+    const { dataPassword, errorPassword } = await supabase.auth.updateUser({
+      password: password,
+    });
+
+    console.log('dataPassword', dataPassword);
+
+    if (errorPassword) throw new Error(errorPassword.message);
+
+    return dataPassword;
+  }
+  /// Update Data
+  else {
+    let imagePath;
+
+    /// 2. Upload avatar if it's an object
+    if (typeof avatar === 'object') {
+      const imageName = `${Math.floor(Math.random() * 1000000000)}-${
+        avatar.name
+      }`.replace(/\//g, '');
+
+      console.log('imageName', imageName);
+
+      imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${imageName}`;
+
+      var { error: errorStorage } = await supabase.storage
+        .from('avatars')
+        .upload(imageName, avatar);
+
+      // console.log('dataStorage', dataStorage, errorStorage);
+    }
+
+    /// Update fullName & avatar.
+    /// Update avatar to the new image if it's not a string && error uploading image
+    const { data: dataUser, error: errorUser } = await supabase.auth.updateUser(
+      {
+        data: {
+          fullName,
+          avatar:
+            typeof avatar !== 'string' && !errorStorage ? imagePath : avatar,
+        },
+      }
+    );
+
+    console.log('dataUser', dataUser);
+
+    if (errorStorage) {
+      console.log('errorStorage', errorStorage);
+      throw new Error('Avatar image cannot be uploaded');
+    }
+    if (errorUser) throw new Error(errorUser.message);
+
+    return dataUser;
+  }
 }
