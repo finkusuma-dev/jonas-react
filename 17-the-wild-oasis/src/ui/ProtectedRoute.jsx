@@ -11,7 +11,7 @@ ProtectedRoute.propTypes = {
   children: PropTypes.any,
 };
 
-const ProtectedContext = createContext();
+export const ProtectedContext = createContext();
 
 function ProtectedRoute({ children }) {
   const {
@@ -45,9 +45,18 @@ function User() {
 
   if (!user) return null;
 
-  return <div>{user.email}</div>;
+  return <span>{user.email}</span>;
+}
+
+function Avatar() {
+  const { user } = useContext(ProtectedContext);
+
+  if (!user) return null;
+
+  return <span>{user.avatar}</span>;
 }
 
 ProtectedRoute.User = User;
+ProtectedRoute.Avatar = Avatar;
 
 export default ProtectedRoute;
