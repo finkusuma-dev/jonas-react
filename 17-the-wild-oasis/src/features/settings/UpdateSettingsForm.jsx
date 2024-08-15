@@ -8,6 +8,9 @@ import Input from '../../ui/Input';
 
 function UpdateSettingsForm() {
   const { settings, isLoading } = useSettings();
+  const { updateSetting, isUpdating } = useUpdateSetting();
+
+  if (isLoading) return <Spinner />;
 
   const {
     min_booking_length,
@@ -15,10 +18,6 @@ function UpdateSettingsForm() {
     max_guests_per_booking,
     breakfast_price,
   } = settings;
-
-  const { updateSetting, isUpdating } = useUpdateSetting();
-
-  if (isLoading) return <Spinner />;
 
   function handleBlur(e, field) {
     const { value } = e.target;
