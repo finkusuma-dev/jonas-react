@@ -15,6 +15,7 @@ function UpdatePasswordForm() {
   const { update, isUpdating } = useUpdateUser();
 
   function onSubmit({ password }) {
+    if (!password.length) return;
     console.log('UpdatePasswordForm onSubmit', password);
     update({ password }, { onSuccess: reset });
   }

@@ -9,6 +9,7 @@ import Input from '../../ui/Input';
 import useLoggedUser from './useLoggedUser';
 import { useUpdateUser } from './useUpdateUser';
 import styled from 'styled-components';
+import { useRef } from 'react';
 
 const Image = styled.img`
   width: 150px;
@@ -34,29 +35,52 @@ function UpdateUserDataForm() {
   } = useLoggedUser();
 
   const { update, isUpdating } = useUpdateUser();
+  const formRef = useRef(0);
 
   const [fullName, setFullName] = useState(currentFullName);
   const [avatar, setAvatar] = useState(currentAvatar);
 
-  console.log('avatar', avatar);
+  const isChanged = fullName !== currentFullName || avatar !== currentAvatar;
+
+  // console.log('avatar', avatar);
+  // console.log('currentAvatar', currentAvatar);
 
   const avatarPreview =
     typeof avatar !== 'string' && avatar.name && URL.createObjectURL(avatar);
 
-  console.log('avatar', avatar);
-  console.log('avatarPreview', avatarPreview);
+  // console.log('avatar', avatar);
+  // console.log('avatarPreview', avatarPreview);
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log('fullName', fullName, 'avatar', avatar, typeof avatar);
-    update({
-      fullName,
-      avatar,
-    });
+
+    if (!fullName.length) return;
+
+    // console.log('fullName', fullName, 'avatar', avatar, typeof avatar);
+    update(
+      {
+        fullName,
+        avatar,
+      },
+      {
+        onSuccess: (data) => {
+          console.log('onsuccess user', data.user);
+          setAvatar(data.user.user_metadata.avatar);
+          e.target.reset();
+        },
+      }
+    );
+  }
+
+  function handleReset() {
+    // console.log('formRef', formRef.current, 'e.target', e.target);
+    formRef.current.reset();
+    setFullName(currentFullName);
+    setAvatar(currentAvatar);
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} ref={formRef}>
       <FormRow label="Email address">
         <Input value={email} disabled />
       </FormRow>
@@ -83,10 +107,15 @@ function UpdateUserDataForm() {
         </div>
       </FormRow>
       <FormRow>
-        <Button type="reset" variation="secondary" disabled={isUpdating}>
+        <Button
+          type="reset"
+          variation="secondary"
+          disabled={isUpdating || !isChanged}
+          onClick={handleReset}
+        >
           Cancel
         </Button>
-        <Button disabled={isUpdating}>Update account</Button>
+        <Button disabled={isUpdating || !isChanged}>Update account</Button>
       </FormRow>
     </Form>
   );

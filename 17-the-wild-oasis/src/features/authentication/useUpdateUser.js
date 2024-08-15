@@ -13,9 +13,6 @@ function useUpdateUser() {
       toast.success('User update is successfully Updated');
 
       queryClient.invalidateQueries(['loggedUser']);
-
-      // Manually set cache
-      // queryClient.setQueryData('user', user);
     },
     onError: (err) => toast.error(err.message),
   });
