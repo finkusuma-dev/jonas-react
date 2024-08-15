@@ -31,7 +31,7 @@ function UpdateUserDataForm() {
         fullName: currentFullName,
         avatar: currentAvatar = null,
       },
-    },
+    } = {},
   } = useLoggedUser();
 
   const { update, isUpdating } = useUpdateUser();
