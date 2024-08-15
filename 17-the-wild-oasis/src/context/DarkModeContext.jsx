@@ -1,7 +1,8 @@
 import { createContext } from 'react';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import { useContext } from 'react';
+import { useEffect } from 'react';
 
 const DarkModeContext = createContext();
 
@@ -10,24 +11,22 @@ DarkModeProvider.propTypes = {
 };
 
 function DarkModeProvider({ children }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, 'isDarkMode');
 
-  function toggleDarkMode() {
-    console.log('toggleDarkMode');
-
-    setIsDarkMode((dark) => {
-      // console.log('isDarkMode', isDarkMode);
-
-      return !dark;
-    });
-
-    if (!isDarkMode) {
+  useEffect(() => {
+    if (isDarkMode) {
       document.documentElement.classList.add('dark-mode');
       document.documentElement.classList.remove('light-mode');
     } else {
       document.documentElement.classList.add('light-mode');
       document.documentElement.classList.remove('dark-mode');
     }
+  }, [isDarkMode]);
+
+  function toggleDarkMode() {
+    // console.log('toggleDarkMode');
+
+    setIsDarkMode((dark) => !dark);
   }
 
   return (
