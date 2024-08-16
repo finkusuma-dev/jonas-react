@@ -68,8 +68,8 @@ export async function getBookingsAfterDate(date) {
     .from('bookings')
     .select('created_at, total_price, extras_price')
     .gte('created_at', date)
-    .lte('created_at', getToday({ end: true }));
-
+    .lte('created_at', getToday({ end: true }))
+    .order('created_at');
   if (error) {
     console.error(error);
     throw new Error('Bookings could not get loaded');
@@ -85,8 +85,8 @@ export async function getStaysAfterDate(date) {
     // .select('*')
     .select('*, guests(full_name)')
     .gte('start_date', date)
-    .lte('start_date', getToday());
-
+    .lte('start_date', getToday())
+    .order('start_date');
   if (error) {
     console.error(error);
     throw new Error('Stays could not get loaded');
