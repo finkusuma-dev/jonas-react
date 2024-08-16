@@ -44,27 +44,49 @@ Filter.propTypes = {
   props: PropTypes.any,
 };
 
+/**
+ * Options can be:
+ * Array of string: ['option-1','option-2']
+ *  or
+ * Array of object that has value & label: [{value: 'option-1', label:'Option 1'} ]
+ */
 function Filter({ filterField, options }) {
   // console.log('Filter', filterField, options);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filterValue = searchParams.get(filterField) || options[0];
+  let filterValue = '';
+  if (typeof options[0] === 'string') {
+    filterValue = searchParams.get(filterField) || options[0];
+  } else {
+    filterValue = searchParams.get(filterField) || options[0].value;
+  }
+
   return (
     <StyledFilter>
-      {options.map((option) => (
-        <FilterButton
-          key={option}
-          active={filterValue === option}
-          onClick={() => {
-            searchParams.delete('page');
-            searchParams.set(filterField, option);
-            // console.log('filter', filter);
-            setSearchParams(searchParams);
-          }}
-        >
-          {snakeCaseToCapFirstLetter(option)}
-        </FilterButton>
-      ))}
+      {options.map((option) => {
+        const value = typeof option === 'string' ? option : option.value;
+        const label =
+          typeof option === 'string'
+            ? snakeCaseToCapFirstLetter(option)
+            : option.label;
+
+        //console.log(`Filter option, ${filterValue} ? ${value}, ${label}`);
+
+        return (
+          <FilterButton
+            key={value}
+            active={filterValue == value}
+            onClick={() => {
+              searchParams.delete('page');
+              searchParams.set(filterField, value);
+              // console.log('filter', filter);
+              setSearchParams(searchParams);
+            }}
+          >
+            {label}
+          </FilterButton>
+        );
+      })}
     </StyledFilter>
   );
 }
