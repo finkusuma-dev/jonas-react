@@ -18,6 +18,7 @@ function LoginForm() {
     e.preventDefault();
 
     if (!email || !password) return;
+    if (login === undefined) return;
 
     const { error } = login({ email, password });
 
