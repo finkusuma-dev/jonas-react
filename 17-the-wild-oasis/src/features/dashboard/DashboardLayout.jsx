@@ -6,11 +6,12 @@ import { useRecentStays } from './useRecentStays';
 import { useCabins } from '../../features/cabins/useCabins';
 import { useSearchParams } from 'react-router-dom';
 import SalesChart from './SalesChart';
+import DurationChart from './DurationChart';
 
 const StyledDashboardLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto 34rem auto;
+  grid-template-rows: auto 40rem auto;
   gap: 2.4rem;
 `;
 
@@ -32,7 +33,7 @@ function DashboardLayout() {
         numDays={numDays}
       />
       <div>Today&apos;s activity</div>
-      <div>Chart stays duration</div>
+      <DurationChart confirmedStays={confirmedStays} />
       <SalesChart bookings={bookings} numDays={numDays} />
     </StyledDashboardLayout>
   );
