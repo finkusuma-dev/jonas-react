@@ -19,7 +19,7 @@ function DashboardLayout() {
   const { confirmedStays, isLoading2 } = useRecentStays();
   const { cabins, isLoading3 } = useCabins();
   const [searchParams] = useSearchParams();
-  const numDays = searchParams.get('last') || 7;
+  const numDays = Number(searchParams.get('last')) || 7;
 
   if (isLoading || isLoading2 || isLoading3) return <Spinner />;
 
