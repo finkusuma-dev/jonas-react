@@ -99,6 +99,9 @@ function SalesChart({ bookings, numDays }) {
     ),
   }));
 
+  const fromDate = format(allDates[0], 'dd MMM yyyy');
+  const toDate = format(allDates[allDates.length - 1], 'dd MMM yyyy');
+
   // console.log('data with dates', data);
   // console.log('data', bookings);
   // console.log('data', data);
@@ -118,7 +121,9 @@ function SalesChart({ bookings, numDays }) {
       };
   return (
     <StyledSalesChart>
-      <Heading as="h2">Sales</Heading>
+      <Heading as="h2">
+        Sales: {fromDate} &mdash; {toDate}
+      </Heading>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data}>
           <XAxis
