@@ -163,39 +163,40 @@ function prepareData(startData, stays, isDarkMode) {
   /// Assign dataStart to data.
   /// Using {... obj } so it copies the object's content and not the reference to the obj.
   /// This is needed to initiate the data because we will mutate the data.
-  let data = [...startData.map((obj) => ({ ...obj }))];
-
-  for (let i = 0; i < data.length; i++) {
+  const data = startData.map((obj, i, arr) => {
     /// Create duration Label. Using IIFE here :).
-    data[i].durationLabel = (() => {
-      if (i === 0) return `${data[i].duration} night`; // 1 night
-      else if (i === data.length - 1)
-        return `${data[i - 1].duration}+ nights`; // 21+ nights
-      else if (data[i - 1].duration + 1 === data[i].duration)
-        return `${data[i].duration} nights`; // 2 nights, 3 nights
-      else return `${data[i - 1].duration + 1}-${data[i].duration} nights`; // 4-5 nights
+    const durationLabel = (() => {
+      // 1 night
+      if (i === 0) return `${arr[i].duration} night`;
+      // 21+ nights
+      else if (i === arr.length - 1) return `${arr[i - 1].duration}+ nights`;
+      // 2 nights, 3 nights
+      else if (arr[i - 1].duration + 1 === arr[i].duration)
+        return `${arr[i].duration} nights`;
+      // 4-5 nights
+      else return `${arr[i - 1].duration + 1}-${arr[i].duration} nights`;
     })();
 
     /// Set color based on dark mode
-    data[i].color = isDarkMode ? data[i].colorDark : data[i].colorLight;
-  }
+    const color = isDarkMode ? arr[i].colorDark : arr[i].colorLight;
+
+    return { ...obj, durationLabel, color };
+  });
 
   /// Calculate value
   stays?.forEach((stay) => {
     const num = stay?.num_nights;
 
-    /// Loop through the data to compare with the duration
-    /// and then break once condition is met.
-    for (let i = 0; i < data?.length; i++) {
-      if (num <= data?.[i].duration) {
-        data[i].value++;
-        break;
-      }
+    /// Find the first item.duration equal to num
+    const matchingItem = data.find((item) => num <= item.duration);
+
+    if (matchingItem) {
+      matchingItem.value++;
     }
   });
 
   /// Remove any data element where value = 0
-  return data.filter((el) => el.value > 0);
+  return data.filter((item) => item.value > 0);
 }
 
 // function prepareData0(startData, stays) {
@@ -235,13 +236,13 @@ function DurationChart({ confirmedStays }) {
 
   // console.log(
   //   // prepareData0(
-  //   //   isDarkMode ? startDataDark : startDataLight,
+  //   //   startDataDark, //isDarkMode ? startDataDark : startDataLight,
   //   //   confirmedStays
   //   // ).map((el) => ({
   //   //   duration: el.duration,
   //   //   value: el.value,
   //   // })),
-  //   prepareData(dataStart, confirmedStays, isDarkMode).map((el) => ({
+  //   prepareData(startData, confirmedStays, isDarkMode).map((el) => ({
   //     durationLabel: el.durationLabel,
   //     value: el.value,
   //   }))
