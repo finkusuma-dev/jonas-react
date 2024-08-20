@@ -41,10 +41,9 @@ function CheckinBooking() {
   const [addBreakfast, setAddBreakfast] = useState(false);
   const { settings, isLoading: isLoadingSettings } = useSettings();
 
-  useEffect(
-    () => setAddBreakfast(booking?.has_breakfast),
-    [booking?.has_breakfast]
-  );
+  useEffect(() => {
+    setAddBreakfast(booking?.has_breakfast);
+  }, [booking?.has_breakfast]);
 
   if (isLoading || isLoadingSettings) return <Spinner />;
 
@@ -87,8 +86,35 @@ function CheckinBooking() {
     }
   }
 
+  /// Conditions:
+  ///
+  /// 1. Havent paid, doesn't have breakfast.
+  ///    - Hide checkin.
+  ///    - show confirm payment (cabin).
+  ///    - Show add breakfast.
+  ///       - If breakfast is added, show confirm payment (cabin & breakfast).
+  ///         - If confirm paid, show checkin.
+  /// 2. Havent paid, has breakfast.
+  ///    - Hide checkin.
+  ///    - show confirm payment (cabin & breakfast).
+  ///    - Show cancel breakfast.
+  ///       - if breakfast is canceled, show confirm payment (cabin)
+  ///         - If confirm paid, show checkin
+  /// 3. Paid, doesn't have breakfast.
+  ///    - Show checkin
+  ///    - Show add breakfast.
+  ///       - if breakfast is added, show confirm payment (breakfast), hide checkin.
+  ///         - If confirm paid, show checkin
+  /// 4. Paid, has breakfast.
+  ///    - Show checkin.
+
+  const showAddBreakfast = !is_paid || !has_breakfast;
+  const showConfirmPayment =
+    !is_paid || (is_paid && !has_breakfast && addBreakfast);
+  const showCheckIn =
+    (is_paid && (has_breakfast || !addBreakfast)) || confirmPaid;
+
   const checkPaid = (is_paid && !addBreakfast) || confirmPaid;
-  const disablePaid = is_paid && !addBreakfast;
 
   const optionalBreakfastPrice = num_guests * num_nights * breakfast_price;
 
@@ -103,12 +129,11 @@ function CheckinBooking() {
 
       <BookingDataBox booking={booking} />
 
-      {(!is_paid || !has_breakfast) && (
+      {showAddBreakfast && (
         <Box>
           <Checkbox
             id="confirm-breakfast"
             checked={addBreakfast}
-            // disabled={is_paid}
             onChange={() => {
               setAddBreakfast((check) => !check);
               setConfirmPaid(false);
@@ -122,29 +147,33 @@ function CheckinBooking() {
         </Box>
       )}
 
-      {(!is_paid || addBreakfast) && (
+      {showConfirmPayment && (
         <Box>
           <Checkbox
             id="confirm"
             checked={checkPaid}
-            disabled={disablePaid}
+            // disabled={disablePaid}
             onChange={() => setConfirmPaid((paid) => !paid)}
           >
             <Row>
+              {/* Confirm payment for breakfast price only or total price */}
               <p>
                 I confirm that {full_name} has paid for{' '}
-                {addBreakfast && is_paid ? (
+                {is_paid && addBreakfast ? (
+                  /* Confirm only for breakfast price when it's paid but then breakfast is added */
                   <span>
                     breakfast{' '}
                     <Total> {formatCurrency(optionalBreakfastPrice)}</Total>.
                   </span>
                 ) : (
+                  /* Confirm for total price */
                   <span>
                     the total amount of{' '}
                     <Total> {formatCurrency(totalPrice)}</Total>.
                   </span>
                 )}
               </p>
+              {/*If breakfast is added, show extra info of cabin & breakfast prices */}
               {addBreakfast && (
                 <p>
                   (cabin: {formatCurrency(cabin_price)} + breakfast:{' '}
@@ -157,7 +186,7 @@ function CheckinBooking() {
       )}
 
       <ButtonGroup>
-        {status === 'unconfirmed' && checkPaid && (
+        {status === 'unconfirmed' && showCheckIn && (
           <Button onClick={handleCheckin} disabled={isCheckingIn}>
             Check in booking #{bookingId}
           </Button>
