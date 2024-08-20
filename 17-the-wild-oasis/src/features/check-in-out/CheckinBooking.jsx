@@ -72,7 +72,7 @@ function CheckinBooking() {
         id: bookingId,
         breakfast: {
           has_breakfast: true,
-          breakfast_price: optionalBreakfastPrice,
+          extras_price: optionalBreakfastPrice,
           total_price: totalPrice,
         },
       });
@@ -81,7 +81,7 @@ function CheckinBooking() {
         id: bookingId,
         breakfast: {
           has_breakfast: false,
-          breakfast_price: 0,
+          extras_price: 0,
           total_price: cabin_price,
         },
       });
