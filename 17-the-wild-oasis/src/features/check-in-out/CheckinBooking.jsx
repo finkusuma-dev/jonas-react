@@ -59,7 +59,6 @@ function CheckinBooking() {
     is_paid,
     // guests,
     cabin_price,
-    total_price,
     num_guests,
     num_nights,
     has_breakfast,

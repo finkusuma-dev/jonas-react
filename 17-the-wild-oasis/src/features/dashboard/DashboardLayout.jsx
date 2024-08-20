@@ -7,6 +7,7 @@ import { useCabins } from '../../features/cabins/useCabins';
 import { useSearchParams } from 'react-router-dom';
 import SalesChart from './SalesChart';
 import DurationChart from './DurationChart';
+import TodayActivity from '../check-in-out/TodayActivity';
 
 const StyledDashboardLayout = styled.div`
   display: grid;
@@ -32,7 +33,7 @@ function DashboardLayout() {
         numCabins={cabins?.length}
         numDays={numDays}
       />
-      <div>Today&apos;s activity</div>
+      <TodayActivity />
       <DurationChart confirmedStays={confirmedStays} />
       <SalesChart bookings={bookings} numDays={numDays} />
     </StyledDashboardLayout>
