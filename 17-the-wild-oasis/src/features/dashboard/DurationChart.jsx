@@ -249,6 +249,36 @@ function DurationChart({ confirmedStays }) {
   // );
 
   const data = prepareData(startData, confirmedStays, isDarkMode);
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+    name,
+    value,
+    payload,
+  }) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 1.7;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    // console.log('renderCustomizedLabel payload', payload);
+    return (
+      <text
+        x={x}
+        y={y}
+        fontSize="16px"
+        fill={payload.color}
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+      >
+        {`${payload.durationLabel}: ${value}`}
+      </text>
+    );
+  };
 
   return (
     <ChartBox>
@@ -259,21 +289,38 @@ function DurationChart({ confirmedStays }) {
             data={data}
             nameKey="duration"
             dataKey="value"
-            innerRadius={85}
-            outerRadius={110}
+            innerRadius={'40%'}
+            outerRadius={'55%'}
             paddingAngle={3}
             cx="50%"
             cy="45%"
-            label={({ index, value }) =>
-              `${data[index].durationLabel}: ${value}`
-            }
+            label={renderCustomizedLabel}
             labelLine={false}
           >
             {data?.map((item) => (
               <Cell key={item.duration} fill={item.color} stroke={item.color} />
             ))}
           </Pie>
-          {/* <Tooltip /> */}
+          <Tooltip
+            content={({ active, payload, label }) => {
+              if (active && payload && payload.length) {
+                // console.log(`${active}, ${label}`, payload);
+                return (
+                  <div
+                    style={{
+                      backgroundColor: 'var(--color-grey-0)',
+                      color: 'var(--color-grey-700)',
+                      padding: '5px',
+                      border: '1px solid #ccc',
+                    }}
+                  >
+                    <p>{`${payload[0].payload.durationLabel}: ${payload[0].payload.value}`}</p>
+                  </div>
+                );
+              }
+              return null;
+            }}
+          />
         </PieChart>
       </ResponsiveContainer>
     </ChartBox>
