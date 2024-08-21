@@ -15,10 +15,12 @@ function CabinTable() {
 
   const sortBy = searchParams.get('sort') || 'name-asc';
 
+  if (isLoading) return <Spinner />;
+
   if (!cabins?.length) return <Empty resourceName="cabins" />;
 
-  console.log('cabins', cabins);
-  console.log('sortBy', sortBy);
+  // console.log('cabins', cabins);
+  // console.log('sortBy', sortBy);
 
   const filteredCabins = cabins?.filter(
     (cabin) =>
@@ -45,8 +47,6 @@ function CabinTable() {
       );
     }
   });
-
-  if (isLoading) return <Spinner />;
 
   return (
     <>
