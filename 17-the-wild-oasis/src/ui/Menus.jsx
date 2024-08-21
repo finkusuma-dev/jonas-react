@@ -100,7 +100,7 @@ function Menu({ children }) {
 
 Toggle.propTypes = {
   id: PropTypes.number,
-  onClick: PropTypes.function,
+  onClick: PropTypes.func,
 };
 
 function Toggle({ id: toggleId, onClick }) {
@@ -109,11 +109,14 @@ function Toggle({ id: toggleId, onClick }) {
   return (
     <StyledToggle
       onClick={(e) => {
-        // console.log('toggle', e.target.offsetTop);
+        e.stopPropagation();
+        // console.log('toggle click');
+        // console.log('toggle', e.target.offsetTop)
         onClick && onClick(id === toggleId);
         if (id && id === toggleId) {
           close();
         } else {
+          // console.log('set id', toggleId);
           setId(toggleId);
           const rect = e.target.closest('button').getBoundingClientRect();
           // console.log(
@@ -146,7 +149,9 @@ List.propTypes = {
 };
 function List({ children, id: toggleId }) {
   const { id, close, position } = useContext(MenuContext);
-  const ref = useClickOutside(() => close());
+  const ref = useClickOutside(() => {
+    close();
+  }, false);
 
   if (id && position && id === toggleId)
     return createPortal(
