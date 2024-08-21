@@ -267,13 +267,13 @@ function DurationChart({ confirmedStays }) {
             label={({ index, value }) =>
               `${data[index].durationLabel}: ${value}`
             }
-            // labelLine={false}
+            labelLine={false}
           >
             {data?.map((item) => (
               <Cell key={item.duration} fill={item.color} stroke={item.color} />
             ))}
           </Pie>
-          <Tooltip />
+          {/* <Tooltip /> */}
         </PieChart>
       </ResponsiveContainer>
     </ChartBox>
