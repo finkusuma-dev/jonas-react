@@ -52,7 +52,7 @@ function BookingDetail() {
   const { id: bookingId, status } = booking;
 
   function handleCheckin() {
-    navigate(`/checkin/${bookingId}`, { replace: true });
+    navigate(`/checkin/${bookingId}`);
   }
 
   function handleCheckout() {
