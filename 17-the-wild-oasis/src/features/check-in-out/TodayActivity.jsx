@@ -54,7 +54,7 @@ function TodayActivity() {
         {isLoading ? (
           <Spinner />
         ) : !todayActivities?.length ? (
-          <NoActivity />
+          <NoActivity>No activity today...</NoActivity>
         ) : (
           <TodayList>
             {todayActivities
