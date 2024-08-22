@@ -83,7 +83,7 @@ export async function updateCabinApi(cabin, cabinId) {
     };
   }
 
-  console.log('updateCabin', cabinData, 'cabinId', cabinId);
+  // console.log('updateCabin', cabinData, 'cabinId', cabinId);
 
   /// 1. Insert new cabin
   let query = supabase.from('cabins');
