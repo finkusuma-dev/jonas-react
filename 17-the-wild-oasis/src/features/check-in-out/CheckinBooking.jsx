@@ -54,14 +54,14 @@ function CheckinBooking() {
 
   const {
     id: bookingId,
-    status,
-    isPaid,
+    status: dbStatus,
+    isPaid: dbIsPaid,
     // guests,
-    cabinPrice,
-    numGuests,
-    numNights,
-    hasBreakfast,
-    guests: { fullName },
+    cabinPrice: dbCabinPrice,
+    numGuests: dbNumGuests,
+    numNights: dbNumNights,
+    hasBreakfast: dbHasBreakfast,
+    guests: { fullName: dbGuestFullName },
   } = booking;
 
   function handleCheckin() {
@@ -80,7 +80,7 @@ function CheckinBooking() {
         breakfast: {
           hasBreakfast: false,
           extrasPrice: 0,
-          totalPrice: cabinPrice,
+          totalPrice: dbCabinPrice,
         },
       });
     }
@@ -108,17 +108,15 @@ function CheckinBooking() {
   /// 4. Paid, has breakfast.
   ///    - Show checkin.
 
-  const showAddBreakfast = !isPaid || !hasBreakfast;
+  const showAddBreakfast = !dbIsPaid || !dbHasBreakfast;
   const showConfirmPayment =
-    !isPaid || (isPaid && !hasBreakfast && addBreakfast);
+    !dbIsPaid || (dbIsPaid && !dbHasBreakfast && addBreakfast);
   const showCheckIn =
-    (isPaid && (hasBreakfast || !addBreakfast)) || confirmPaid;
+    (dbIsPaid && (dbHasBreakfast || !addBreakfast)) || confirmPaid;
 
-  const checkPaid = (isPaid && !addBreakfast) || confirmPaid;
-
-  const optionalBreakfastPrice = numGuests * numNights * breakfastPrice;
-
-  const totalPrice = cabinPrice + (addBreakfast ? optionalBreakfastPrice : 0);
+  const checkPaid = (dbIsPaid && !addBreakfast) || confirmPaid;
+  const optionalBreakfastPrice = dbNumGuests * dbNumNights * breakfastPrice;
+  const totalPrice = dbCabinPrice + (addBreakfast ? optionalBreakfastPrice : 0);
 
   return (
     <>
@@ -140,7 +138,7 @@ function CheckinBooking() {
             }}
           >
             Want to add breakfast
-            {(!isPaid || !hasBreakfast) && (
+            {(!dbIsPaid || !dbHasBreakfast) && (
               <span>(for {formatCurrency(optionalBreakfastPrice)})</span>
             )}
           </Checkbox>
@@ -158,9 +156,9 @@ function CheckinBooking() {
             <Row>
               {/* Confirm payment for breakfast price only or total price */}
               <p>
-                I confirm that {fullName} has paid for{' '}
-                {isPaid && addBreakfast ? (
-                  /* Confirm only for breakfast price when it's paid but then breakfast is added */
+                I confirm that {dbGuestFullName} has paid for{' '}
+                {dbIsPaid && addBreakfast ? (
+                  /* Confirm only for breakfast price when it's paid but breakfast is added */
                   <span>
                     breakfast{' '}
                     <Total> {formatCurrency(optionalBreakfastPrice)}</Total>.
@@ -176,7 +174,7 @@ function CheckinBooking() {
               {/*If breakfast is added, show extra info of cabin & breakfast prices */}
               {addBreakfast && (
                 <p>
-                  (cabin: {formatCurrency(cabinPrice)} + breakfast:{' '}
+                  (cabin: {formatCurrency(dbCabinPrice)} + breakfast:{' '}
                   {formatCurrency(optionalBreakfastPrice)})
                 </p>
               )}
@@ -186,7 +184,7 @@ function CheckinBooking() {
       )}
 
       <ButtonGroup>
-        {status === 'unconfirmed' && showCheckIn && (
+        {dbStatus === 'unconfirmed' && showCheckIn && (
           <Button onClick={handleCheckin} disabled={isCheckingIn}>
             Check in booking #{bookingId}
           </Button>
