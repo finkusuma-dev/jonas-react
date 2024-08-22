@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import styled from 'styled-components';
+import GlobalTableStateProvider from '../context/GlobalTableStateContext';
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -31,7 +32,9 @@ function AppLayout() {
       <Sidebar />
       <Main>
         <Container>
-          <Outlet />
+          <GlobalTableStateProvider>
+            <Outlet />
+          </GlobalTableStateProvider>
         </Container>
       </Main>
     </StyledAppLayout>

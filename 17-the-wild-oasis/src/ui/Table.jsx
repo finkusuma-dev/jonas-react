@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useGlobalTableState } from '../context/GlobalTableStateContext';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -76,11 +76,12 @@ const TableContext = createContext();
 Table.propTypes = {
   children: PropTypes.any,
   columns: PropTypes.string,
+  name: PropTypes.string,
 };
 
-function Table({ columns, children }) {
+function Table({ children, name = '', columns }) {
   return (
-    <TableContext.Provider value={{ columns }}>
+    <TableContext.Provider value={{ columns, name }}>
       <StyledTable role="table">{children}</StyledTable>
     </TableContext.Provider>
   );
@@ -103,16 +104,20 @@ Row.propTypes = {
   rowId: PropTypes.any,
 };
 function Row({ children, rowId }) {
-  const { columns } = useContext(TableContext);
-  const [searchParams] = useSearchParams();
-  const highlightRowId = searchParams.get('hrow');
+  const { columns, name } = useContext(TableContext);
+  // const [searchParams] = useSearchParams();
+  const { getTableState } = useGlobalTableState();
+
+  const tableState = getTableState(name);
+  // const highlightRowId = searchParams.get('hrow');
+
   // console.log('hrowid', highlightRowId, rowId);
 
   return (
     <StyledRow
       role="row"
       columns={columns}
-      isActive={rowId && highlightRowId == rowId}
+      isActive={rowId && tableState?.highlightRow == rowId}
     >
       {children}
     </StyledRow>

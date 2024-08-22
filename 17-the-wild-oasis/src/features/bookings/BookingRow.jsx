@@ -17,10 +17,10 @@ import Table from '../../ui/Table';
 import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
 import Menus from '../../ui/Menus';
-import { useSearchParams } from 'react-router-dom';
 import { useDeleteBooking } from './useDeleteBooking';
 import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
+import { useGlobalTableState } from '../../context/GlobalTableStateContext';
 
 const Booking = styled.div`
   font-size: 1.6rem;
@@ -69,7 +69,7 @@ function BookingRow({
   const navigate = useNavigate();
   const { checkout } = useCheckout();
   const { deleteBooking, isDeleting } = useDeleteBooking();
-  const [, setSearchParams] = useSearchParams();
+  const { setTableState } = useGlobalTableState();
 
   const statusToTagName = {
     unconfirmed: 'blue',
@@ -93,7 +93,9 @@ function BookingRow({
 
   function handleDelete() {
     deleteBooking(bookingId, {
-      onSuccess: (data) => console.log('Delete success', data),
+      onSuccess: (data) => {
+        console.log('Delete success', data);
+      },
     });
   }
 
@@ -129,10 +131,14 @@ function BookingRow({
             id={bookingId}
             onClick={() => {
               console.log('Menus.Toggle click id', bookingId);
-              setSearchParams((params) => {
-                params.set('hrow', bookingId);
-                return params;
+              setTableState({
+                table: 'bookings',
+                highlightRow: bookingId,
               });
+              // setSearchParams((params) => {
+              //   params.set('hrow', bookingId);
+              //   return params;
+              // });
             }}
           />
           <Menus.List id={bookingId}>
