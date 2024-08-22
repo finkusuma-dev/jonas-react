@@ -111,16 +111,16 @@ BookingDataBox.propTypes = {
 function BookingDataBox({ booking }) {
   const {
     created_at,
-    start_date,
-    end_date,
-    num_nights,
-    num_guests,
-    cabin_price,
-    extras_price,
-    total_price,
-    has_breakfast,
+    startDate,
+    endDate,
+    numNights,
+    numGuests,
+    cabinPrice,
+    extrasPrice,
+    totalPrice,
+    hasBreakfast,
     observations,
-    is_paid,
+    isPaid,
     guests: { fullName: guest_name, email, country, countryFlag, nationalID },
     cabins: { name: cabin_name },
   } = booking;
@@ -131,16 +131,16 @@ function BookingDataBox({ booking }) {
         <div>
           <HiOutlineHomeModern />
           <p>
-            {num_nights} nights in Cabin <span>{cabin_name}</span>
+            {numNights} nights in Cabin <span>{cabin_name}</span>
           </p>
         </div>
 
         <p>
-          {format(new Date(start_date), 'EEE, MMM dd yyyy')} (
-          {isToday(new Date(start_date))
+          {format(new Date(startDate), 'EEE, MMM dd yyyy')} (
+          {isToday(new Date(startDate))
             ? 'Today'
-            : formatDistanceFromNow(start_date)}
-          ) &mdash; {format(new Date(end_date), 'EEE, MMM dd yyyy')}
+            : formatDistanceFromNow(startDate)}
+          ) &mdash; {format(new Date(endDate), 'EEE, MMM dd yyyy')}
         </p>
       </Header>
 
@@ -148,7 +148,7 @@ function BookingDataBox({ booking }) {
         <Guest>
           {countryFlag && <Flag src={countryFlag} alt={`Flag of ${country}`} />}
           <p>
-            {guest_name} {num_guests > 1 ? `+ ${num_guests - 1} guests` : ''}
+            {guest_name} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ''}
           </p>
           <span>&bull;</span>
           <p>{email}</p>
@@ -166,20 +166,20 @@ function BookingDataBox({ booking }) {
         )}
 
         <DataItem icon={<HiOutlineCheckCircle />} label="Breakfast included?">
-          {has_breakfast ? 'Yes' : 'No'}
+          {hasBreakfast ? 'Yes' : 'No'}
         </DataItem>
 
-        <Price isPaid={is_paid}>
+        <Price isPaid={isPaid}>
           <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total price`}>
-            {formatCurrency(total_price)}
+            {formatCurrency(totalPrice)}
 
-            {has_breakfast &&
-              ` (${formatCurrency(cabin_price)} cabin + ${formatCurrency(
-                extras_price
+            {hasBreakfast &&
+              ` (${formatCurrency(cabinPrice)} cabin + ${formatCurrency(
+                extrasPrice
               )} breakfast)`}
           </DataItem>
 
-          <p>{is_paid ? 'Paid' : 'Will pay at property'}</p>
+          <p>{isPaid ? 'Paid' : 'Will pay at property'}</p>
         </Price>
       </Section>
 

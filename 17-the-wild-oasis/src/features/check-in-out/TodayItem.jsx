@@ -33,7 +33,7 @@ function TodayItem({ item }) {
   const {
     id,
     status,
-    num_nights,
+    numNights,
     guests: { fullName, nationality, countryFlag },
   } = item;
 
@@ -46,7 +46,7 @@ function TodayItem({ item }) {
       </>
       {<Flag src={countryFlag} alt={`Flag of ${nationality}`} />}
       <Guest>{fullName}</Guest>
-      <div>{num_nights} nights</div>
+      <div>{numNights} nights</div>
       {status === 'unconfirmed' && (
         <Button size="small" as={Link} to={`/checkin/${id}`}>
           Check in

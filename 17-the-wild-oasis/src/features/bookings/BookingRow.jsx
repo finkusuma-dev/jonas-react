@@ -56,11 +56,11 @@ function BookingRow({
   booking: {
     id: bookingId,
     // created_at,
-    start_date,
-    end_date,
-    num_nights,
-    // num_guests,
-    total_price,
+    startDate,
+    endDate,
+    numNights,
+    // numGuests,
+    totalPrice,
     status,
     guests: { fullName: guestName, email },
     cabins: { name: cabinName },
@@ -108,20 +108,20 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(start_date))
+          {isToday(new Date(startDate))
             ? 'Today'
-            : formatDistanceFromNow(start_date)}{' '}
-          &rarr; {num_nights} night stay
+            : formatDistanceFromNow(startDate)}{' '}
+          &rarr; {numNights} night stay
         </span>
         <span>
-          {format(new Date(start_date), 'MMM dd yyyy')} &mdash;{' '}
-          {format(new Date(end_date), 'MMM dd yyyy')}
+          {format(new Date(startDate), 'MMM dd yyyy')} &mdash;{' '}
+          {format(new Date(endDate), 'MMM dd yyyy')}
         </span>
       </Stacked>
 
       <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
 
-      <Amount>{formatCurrency(total_price)}</Amount>
+      <Amount>{formatCurrency(totalPrice)}</Amount>
 
       <Modal>
         <Menus.Menu>

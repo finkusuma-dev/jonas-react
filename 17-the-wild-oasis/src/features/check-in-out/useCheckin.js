@@ -13,13 +13,13 @@ function useCheckin() {
       {
         const payload = {
           status: 'checked-in',
-          is_paid: true,
+          isPaid: true,
           ...breakfast,
         };
         // if (breakfastPrice) {
-        //   payload.has_breakfast = true;
-        //   payload.extras_price = breakfastPrice;
-        //   payload.total_price = totalPrice;
+        //   payload.hasBreakfast = true;
+        //   payload.extrasPrice = breakfastPrice;
+        //   payload.totalPrice = totalPrice;
         // }
         console.log('payload', payload);
         // return null;

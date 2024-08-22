@@ -185,7 +185,7 @@ function prepareData(startData, stays, isDarkMode) {
 
   /// Calculate value
   stays?.forEach((stay) => {
-    const num = stay?.num_nights;
+    const num = stay?.numNights;
 
     /// Find the first item.duration equal to num
     const matchingItem = data.find((item) => num <= item.duration);
@@ -210,7 +210,7 @@ function prepareData(startData, stays, isDarkMode) {
 
 //   const data = stays
 //     ?.reduce((arr, cur) => {
-//       const num = cur.num_nights;
+//       const num = cur.numNights;
 //       if (num === 1) return incArrayValue(arr, '1 night');
 //       if (num === 2) return incArrayValue(arr, '2 nights');
 //       if (num === 3) return incArrayValue(arr, '3 nights');

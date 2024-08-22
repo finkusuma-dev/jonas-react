@@ -42,8 +42,8 @@ function CheckinBooking() {
   const { settings, isLoading: isLoadingSettings } = useSettings();
 
   useEffect(() => {
-    setAddBreakfast(booking?.has_breakfast);
-  }, [booking?.has_breakfast]);
+    setAddBreakfast(booking?.hasBreakfast);
+  }, [booking?.hasBreakfast]);
 
   if (isLoading || isLoadingSettings) return <Spinner />;
 
@@ -55,12 +55,12 @@ function CheckinBooking() {
   const {
     id: bookingId,
     status,
-    is_paid,
+    isPaid,
     // guests,
-    cabin_price,
-    num_guests,
-    num_nights,
-    has_breakfast,
+    cabinPrice,
+    numGuests,
+    numNights,
+    hasBreakfast,
     guests: { fullName },
   } = booking;
 
@@ -69,18 +69,18 @@ function CheckinBooking() {
       checkin({
         id: bookingId,
         breakfast: {
-          has_breakfast: true,
-          extras_price: optionalBreakfastPrice,
-          total_price: totalPrice,
+          hasBreakfast: true,
+          extrasPrice: optionalBreakfastPrice,
+          totalPrice: totalPrice,
         },
       });
     } else {
       checkin({
         id: bookingId,
         breakfast: {
-          has_breakfast: false,
-          extras_price: 0,
-          total_price: cabin_price,
+          hasBreakfast: false,
+          extrasPrice: 0,
+          totalPrice: cabinPrice,
         },
       });
     }
@@ -108,17 +108,17 @@ function CheckinBooking() {
   /// 4. Paid, has breakfast.
   ///    - Show checkin.
 
-  const showAddBreakfast = !is_paid || !has_breakfast;
+  const showAddBreakfast = !isPaid || !hasBreakfast;
   const showConfirmPayment =
-    !is_paid || (is_paid && !has_breakfast && addBreakfast);
+    !isPaid || (isPaid && !hasBreakfast && addBreakfast);
   const showCheckIn =
-    (is_paid && (has_breakfast || !addBreakfast)) || confirmPaid;
+    (isPaid && (hasBreakfast || !addBreakfast)) || confirmPaid;
 
-  const checkPaid = (is_paid && !addBreakfast) || confirmPaid;
+  const checkPaid = (isPaid && !addBreakfast) || confirmPaid;
 
-  const optionalBreakfastPrice = num_guests * num_nights * breakfast_price;
+  const optionalBreakfastPrice = numGuests * numNights * breakfast_price;
 
-  const totalPrice = cabin_price + (addBreakfast ? optionalBreakfastPrice : 0);
+  const totalPrice = cabinPrice + (addBreakfast ? optionalBreakfastPrice : 0);
 
   return (
     <>
@@ -140,7 +140,7 @@ function CheckinBooking() {
             }}
           >
             Want to add breakfast
-            {(!is_paid || !has_breakfast) && (
+            {(!isPaid || !hasBreakfast) && (
               <span>(for {formatCurrency(optionalBreakfastPrice)})</span>
             )}
           </Checkbox>
@@ -159,7 +159,7 @@ function CheckinBooking() {
               {/* Confirm payment for breakfast price only or total price */}
               <p>
                 I confirm that {fullName} has paid for{' '}
-                {is_paid && addBreakfast ? (
+                {isPaid && addBreakfast ? (
                   /* Confirm only for breakfast price when it's paid but then breakfast is added */
                   <span>
                     breakfast{' '}
@@ -176,7 +176,7 @@ function CheckinBooking() {
               {/*If breakfast is added, show extra info of cabin & breakfast prices */}
               {addBreakfast && (
                 <p>
-                  (cabin: {formatCurrency(cabin_price)} + breakfast:{' '}
+                  (cabin: {formatCurrency(cabinPrice)} + breakfast:{' '}
                   {formatCurrency(optionalBreakfastPrice)})
                 </p>
               )}

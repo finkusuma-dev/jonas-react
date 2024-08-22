@@ -22,12 +22,12 @@ function Stats({ bookings, confirmedStays, numCabins, numDays }) {
   // console.log('stays', stays);
 
   const numBookings = bookings?.length;
-  const totalSales = bookings?.reduce((acc, item) => acc + item.total_price, 0);
+  const totalSales = bookings?.reduce((acc, item) => acc + item.totalPrice, 0);
 
   const numStays = confirmedStays?.length;
 
   const occupancyRate =
-    confirmedStays?.reduce((acc, item) => acc + item.num_nights, 0) /
+    confirmedStays?.reduce((acc, item) => acc + item.numNights, 0) /
     (numCabins * numDays);
 
   // console.log('occupancy', occupancy);

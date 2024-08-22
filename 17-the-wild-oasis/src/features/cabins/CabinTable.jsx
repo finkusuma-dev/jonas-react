@@ -5,7 +5,6 @@ import CabinRow from './CabinRow';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 import { useSearchParams } from 'react-router-dom';
-import { camelToUnderscore } from '../../utils/helpers';
 import Empty from '../../ui/Empty';
 
 function CabinTable() {
@@ -41,10 +40,7 @@ function CabinTable() {
       );
     } else {
       /// For Number fields
-      return (
-        (a[camelToUnderscore(field)] - b[camelToUnderscore(field)]) *
-        sortModifier
-      );
+      return (a[field] - b[field]) * sortModifier;
     }
   });
 

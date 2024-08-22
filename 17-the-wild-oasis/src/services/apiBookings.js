@@ -1,31 +1,30 @@
 import { PAGE_SIZE } from '../utils/constants';
-import { camelToUnderscore, getToday } from '../utils/helpers';
+import { getToday } from '../utils/helpers';
 import supabase from './supabase';
 
 export async function getBookings({ filter, sort, page }) {
-  // console.log('getBookings filter', filter);
-  // console.log('getBookings sort', sort);
-
   let query = supabase.from('bookings').select(
     `id,
-  created_at,
-  start_date,
-  end_date,
-  num_nights,
-  num_guests,
-  total_price,
-  status, cabins(id, name), guests(id, fullName, email)`,
+    created_at,
+    startDate,
+    endDate,
+    numNights,
+    numGuests,
+    totalPrice,
+    status, cabins(id, name), guests(id, fullName, email)`,
     {
       count: 'exact',
     }
   );
+
+  // console.log('getBookings filter', filter, 'sort', sort);
 
   if (filter && filter.value !== 'all') {
     query = query[filter.operator ?? 'eq'](filter.field, filter.value);
   }
 
   if (sort) {
-    query = query.order(camelToUnderscore(sort.field), {
+    query = query.order(sort.field, {
       ascending: sort.direction === 'asc',
     });
   }
@@ -66,7 +65,7 @@ export async function getBooking(id) {
 export async function getBookingsAfterDate(date) {
   const { data, error } = await supabase
     .from('bookings')
-    .select('created_at, total_price, extras_price')
+    .select('created_at, totalPrice, extrasPrice')
     .gte('created_at', date)
     .lte('created_at', getToday({ end: true }))
     .order('created_at');
@@ -84,9 +83,9 @@ export async function getStaysAfterDate(date) {
     .from('bookings')
     // .select('*')
     .select('*, guests(fullName)')
-    .gte('start_date', date)
-    .lte('start_date', getToday())
-    .order('start_date');
+    .gte('startDate', date)
+    .lte('startDate', getToday())
+    .order('startDate');
   if (error) {
     console.error(error);
     throw new Error('Stays could not get loaded');
@@ -101,7 +100,7 @@ export async function getStaysTodayActivity() {
     .from('bookings')
     .select('*, guests(fullName, nationality, countryFlag)')
     .or(
-      `and(status.eq.unconfirmed,start_date.eq.${getToday()}),and(status.eq.checked-in,end_date.eq.${getToday()})`
+      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`
     )
     .order('created_at');
 
