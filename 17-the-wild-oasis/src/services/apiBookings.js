@@ -14,7 +14,7 @@ export async function getBookings({ filter, sort, page }) {
   num_nights,
   num_guests,
   total_price,
-  status, cabins(id, name), guests(id, full_name, email)`,
+  status, cabins(id, name), guests(id, fullName, email)`,
     {
       count: 'exact',
     }
@@ -83,7 +83,7 @@ export async function getStaysAfterDate(date) {
   const { data, error } = await supabase
     .from('bookings')
     // .select('*')
-    .select('*, guests(full_name)')
+    .select('*, guests(fullName)')
     .gte('start_date', date)
     .lte('start_date', getToday())
     .order('start_date');
@@ -99,7 +99,7 @@ export async function getStaysAfterDate(date) {
 export async function getStaysTodayActivity() {
   const { data, error } = await supabase
     .from('bookings')
-    .select('*, guests(full_name, nationality, country_flag)')
+    .select('*, guests(fullName, nationality, countryFlag)')
     .or(
       `and(status.eq.unconfirmed,start_date.eq.${getToday()}),and(status.eq.checked-in,end_date.eq.${getToday()})`
     )

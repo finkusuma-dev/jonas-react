@@ -61,7 +61,7 @@ function CheckinBooking() {
     num_guests,
     num_nights,
     has_breakfast,
-    guests: { full_name },
+    guests: { fullName },
   } = booking;
 
   function handleCheckin() {
@@ -158,7 +158,7 @@ function CheckinBooking() {
             <Row>
               {/* Confirm payment for breakfast price only or total price */}
               <p>
-                I confirm that {full_name} has paid for{' '}
+                I confirm that {fullName} has paid for{' '}
                 {is_paid && addBreakfast ? (
                   /* Confirm only for breakfast price when it's paid but then breakfast is added */
                   <span>

@@ -34,7 +34,7 @@ function TodayItem({ item }) {
     id,
     status,
     num_nights,
-    guests: { full_name, nationality, country_flag },
+    guests: { fullName, nationality, countryFlag },
   } = item;
 
   // console.log('item', item);
@@ -44,8 +44,8 @@ function TodayItem({ item }) {
         {status === 'unconfirmed' && <Tag type="green">Arriving</Tag>}
         {status === 'checked-in' && <Tag type="yellow">Departing</Tag>}
       </>
-      {<Flag src={country_flag} alt={`Flag of ${nationality}`} />}
-      <Guest>{full_name}</Guest>
+      {<Flag src={countryFlag} alt={`Flag of ${nationality}`} />}
+      <Guest>{fullName}</Guest>
       <div>{num_nights} nights</div>
       {status === 'unconfirmed' && (
         <Button size="small" as={Link} to={`/checkin/${id}`}>
