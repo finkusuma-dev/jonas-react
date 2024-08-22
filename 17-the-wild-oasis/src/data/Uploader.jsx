@@ -132,7 +132,7 @@ function Uploader() {
     <div
       style={{
         marginTop: 'auto',
-        backgroundColor: '#e0e7ff',
+        backgroundColor: 'var(--color-indigo-100)', //'#e0e7ff',
         padding: '8px',
         borderRadius: '5px',
         textAlign: 'center',
@@ -144,11 +144,11 @@ function Uploader() {
       <h3>SAMPLE DATA</h3>
 
       <Button onClick={uploadAll} disabled={isLoading}>
-        Upload ALL
+        Reset ALL Data
       </Button>
 
       <Button onClick={uploadBookings} disabled={isLoading}>
-        Upload bookings ONLY
+        Reset bookings ONLY
       </Button>
     </div>
   );
