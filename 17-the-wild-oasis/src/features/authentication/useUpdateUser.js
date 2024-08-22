@@ -10,7 +10,7 @@ function useUpdateUser() {
       updateUser({ password, fullName, avatar }),
     onSuccess: (user) => {
       console.log('new user data', user);
-      toast.success('User update is successfully Updated');
+      toast.success('Your account is successfully Updated');
 
       queryClient.invalidateQueries(['loggedUser']);
     },
