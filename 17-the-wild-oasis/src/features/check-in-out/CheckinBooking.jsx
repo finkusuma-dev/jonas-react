@@ -47,7 +47,7 @@ function CheckinBooking() {
 
   if (isLoading || isLoadingSettings) return <Spinner />;
 
-  const { breakfast_price } = settings;
+  const { breakfastPrice } = settings;
 
   // console.log('settings', settings);
   // console.log('CheckinBooking', booking);
@@ -116,7 +116,7 @@ function CheckinBooking() {
 
   const checkPaid = (isPaid && !addBreakfast) || confirmPaid;
 
-  const optionalBreakfastPrice = numGuests * numNights * breakfast_price;
+  const optionalBreakfastPrice = numGuests * numNights * breakfastPrice;
 
   const totalPrice = cabinPrice + (addBreakfast ? optionalBreakfastPrice : 0);
 
