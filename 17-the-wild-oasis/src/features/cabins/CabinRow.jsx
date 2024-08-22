@@ -62,8 +62,8 @@ function CabinRow({ cabin, onEdit, onDelete }) {
     discount,
     id: cabinId,
     name,
-    max_capacity,
-    regular_price,
+    maxCapacity,
+    regularPrice,
     description,
     image,
   } = cabin;
@@ -75,8 +75,8 @@ function CabinRow({ cabin, onEdit, onDelete }) {
     const newCabin = {
       name: `Copy of ${name}`,
       discount,
-      max_capacity,
-      regular_price,
+      maxCapacity,
+      regularPrice,
       description,
       image,
     };
@@ -93,8 +93,8 @@ function CabinRow({ cabin, onEdit, onDelete }) {
     <Table.Row role="row">
       <Img src={image} />
       <Cabin>{name}</Cabin>
-      <div>Fits up to {max_capacity} guests</div>
-      <Price>{formatCurrency(regular_price)}</Price>
+      <div>Fits up to {maxCapacity} guests</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
       <Discount>
         {discount ? formatCurrency(discount) : <span>&mdash;</span>}
       </Discount>

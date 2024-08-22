@@ -129,16 +129,13 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
         />
       </FormRow>
 
-      <FormRow
-        label="Maximum capacity"
-        errorMsg={errors?.max_capacity?.message}
-      >
+      <FormRow label="Maximum capacity" errorMsg={errors?.maxCapacity?.message}>
         <Input
           id="maxCapacity"
           type="number"
-          // defaultValue={cabinToEdit?.max_capacity}
+          // defaultValue={cabinToEdit?.maxCapacity}
           disabled={isBusy}
-          {...register('max_capacity', {
+          {...register('maxCapacity', {
             required: 'This field is required',
             min: {
               value: 1,
@@ -148,13 +145,13 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
         />
       </FormRow>
 
-      <FormRow label="Regular price" errorMsg={errors?.regular_price?.message}>
+      <FormRow label="Regular price" errorMsg={errors?.regularPrice?.message}>
         <Input
           id="regularPrice"
           type="number"
-          // defaultValue={cabinToEdit?.regular_price}
+          // defaultValue={cabinToEdit?.regularPrice}
           disabled={isBusy}
-          {...register('regular_price', {
+          {...register('regularPrice', {
             required: 'This field is required',
           })}
         />
@@ -170,7 +167,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
             required: 'This field is required',
             validate: (value) =>
               Number.parseFloat(value) <=
-                Number.parseFloat(getValues().regular_price) ||
+                Number.parseFloat(getValues().regularPrice) ||
               'Discount must be less or equal than regular price',
           })}
         />
