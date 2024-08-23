@@ -161,7 +161,7 @@ function BookingRow({
                 Check-out
               </Menus.Button>
             )}
-            {status !== 'Xchecked-outX' && (
+            {
               <Modal.Open name="delete-booking">
                 <Menus.Button
                   icon={<HiTrash />}
@@ -170,7 +170,7 @@ function BookingRow({
                   Delete
                 </Menus.Button>
               </Modal.Open>
-            )}
+            }
           </Menus.List>
         </Menus.Menu>
         <Modal.Window name="delete-booking">
