@@ -1,12 +1,12 @@
 # Image Preview
 
-Added image preview on the cabin & user profile form so you can see the preview of current image on the database or selected image you want to upload.
+Shows image preview on the cabin form & user's profile form to can see the preview of the current image or selected image you want to upload.
 
 ![image preview](https://drive.google.com/thumbnail?id=1Y9qKwiGW4Z8mIAEPC291r-CKqVtJNerW&sz=w600)
 
-## Codes
+## Code
 
-CreateCabinForm.jsx
+/src/features/cabins/CreateCabinForm.jsx
 
 ```jsx
 
@@ -14,6 +14,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
 
   ...
 
+  // Add a new state for the image preview
   const [imagePreview, setImagePreview] = useState(cabinToEdit?.image);
 
   ...
@@ -23,6 +24,9 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
     ...
     <FormRow label="Description" errorMsg={errors?.description?.message}>
       <div>
+        {/* Add Image (stylized img) component.
+         *  Dont forget to wrap this component and the next component in a div.
+        */}
         {(imagePreview) && (
           <Image
             src={imagePreview}
@@ -36,6 +40,8 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
           disabled={isBusy}
           {...register('image', {
             required: isEdit ? false : 'This field is required',
+
+            // Handle FileInput onChange event handler and set the image preview
             onChange: (e) => {
               setImagePreview(URL.createObjectURL(e.target.files[0]));
             },
@@ -49,7 +55,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
 
 }
 
-// Image style
+// Specify the stlyle of the Image component
 const Image = styled.img`
   width: 150px;
   height: auto;
@@ -62,7 +68,7 @@ const Image = styled.img`
 
 ```
 
-updateUserDataForm.jsx
+/src/features/authentication/updateUserDataForm.jsx
 
 ```jsx
 function UpdateUserDataForm() {

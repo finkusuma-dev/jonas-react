@@ -1,30 +1,28 @@
 # Global Table State Context
 
-This is the new context I created for tables related features. When trying to create the new [highlight table row](changes/row_table_highlight.md) feature, I feel the need of saving some table related data somewhere up.
+This is the new context I created to save table-related variables for the features.
 
 ## The Story
 
-At first I used `useSearchParams()` hook to save this data on the url. So when showing the popup menu I set the `searchParams`, so the url will be:
+At first, while working on the [row table highlight](changes/row_table_highlight.md) feature, I used `useSearchParams()` hook to save the `highlight row` in the url. When displaying the popup menu, I set the `hrow`, so the url becomes:
 
 > **http:/localhost:5173/bookings?hrow=213**
 
-_Note: `hrow` for highlighted row._
+Then, in the `<Table.Row>` component, I retrieved the `hrow` value using `searchParams.get('hrow')` and compare it with current `booking.id` to determine which row to highlight.
 
-Then on the `<Table.Row>` component, I read the `hrow` using `searchParams.get('hrow')` and compare it with current `booking.id` to make it highlighted.
+After finishing the row highlighting feature, I worked on the next feature: [auto-navigate to previous page](/docs/changes/auto_navigate_prev_page.md). And this feature also required to save the `count` data (from React Query) somewhere up. I thought that this feature was different with the previous one. It was acceptable to save highlighted row state in the URL, but it's not okay doing the same for the `count` data. The reason is that user can modify this `count` value freely (in the url) and it will disrupt the functionality of the feature. While It's okay if a row is not highlighted, it's not okay for the auto-navigate feature to fail.
 
-After it was finished, I worked on the next feature: [auto-navigate to previous page](/docs/changes/auto_navigate_prev_page.md) and it's also required to save the data `count` (from React Query) somewhere up. I thought for this feature it was different. It was okay to save highlighted row state on the url, but it's not okay doing the same for the data count. Because user can modify this value freely (on the url) and it will mess up how the feature works. It's okay if a row is not highlighted, but it's not okay for the auto-navigate feature to fail.
-
-Looking at these requirements and problems hence why the context is created.
+Given these requirements and potential issues, hence why the context is created.
 
 ## The Context
 
-This context is used by two features, and it only requires two states related with each of the features. State `highlightRow` for **highlight table row** and state `count` for **auto-navigate to previous page**. And another state to save the current table name.
+This context is used by two features, each requiring its own state: `highlightRow` for **highlight table row** and `count` for **auto-navigate to previous page**. Additionally, there's state to save the current table name.
 
-So total it only needs 3 states. But if I was only creating those 3 states, it will limit the features to only 1 table on the page. If in the future I need to show 2 tables on the page, both planned to have these features, there will be an issue.
+In total it only requires 3 states. However, if I were to define just these 3 states, it would limit the features to a single table on the page. If in the future, I need to display multiple tables on the page, all to have these features, this approach will cause issues.
 
 ### The State
 
-So I designed the state to be able to save the data for multiple tables. The state will be array of object like this:
+I designed the state to support multiple tables by storing array of objects. This allow each table to have its own set of state.
 
 ```json
 [
@@ -37,28 +35,35 @@ So I designed the state to be able to save the data for multiple tables. The sta
 ]
 ```
 
-Because the state contains multiple objects it needs to have functions to easily get and set the state for certain table. The `getTableState` and `setTableState` functions are made for this. Below are examples of how to use it for certain feature:
+To manage this, I created the `getTableState` and `setTableState` functions to easily get and set the state of a specific table. Below are examples of how to use these functions:
 
 - Save highlighted row for bookings table:
+
   ```js
   setTableState({ table: 'bookings', highlightRow: booking?.id });
   ```
+
 - Get highlighted row for bookings table:
+
   ```js
   const { highlightRow } = getTableState('bookings');
   ```
+
 - Save bookings data count from React Query:
+
   ```js
   setTableState({ table: 'bookings', count });
   ```
+
 - Get bookings data count:
+
   ```js
   const { count } = getTableState('bookings');
   ```
 
 ## Setup
 
-You can put the Provider on **App.jsx** after the `<ProtectedRoute>`.
+Place the `<GlobalTableStateProvider/>` inside **App.jsx** within the `<ProtectedRoute/>`, and wrap it around the `<AppLayout/>`.
 
 ```jsx
 import GlobalTableStateProvider from './context/GlobalTableStateContext';
@@ -78,38 +83,54 @@ import GlobalTableStateProvider from './context/GlobalTableStateContext';
   ...
 ```
 
-## Codes
+## Code
 
 GlobalTableStateContext.jsx
 
 ```jsx
+import { useContext } from 'react';
+import { useState } from 'react';
+import { createContext } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback } from 'react';
+
 const TableStateContext = createContext();
 
-function GlobalTableStateProvider({ children }) {
-  const [tables, setTables] = useState([]);
+GlobalTableStateProvider.propTypes = {
+  children: PropTypes.any,
+};
 
+function GlobalTableStateProvider({ children }) {
+  // Define the tableStates
+  const [tableStates, setTableStates] = useState([]);
+
+  // getTableState function
   const getTableState = useCallback(
     (tableName) => {
-      if (tables === undefined) return {};
-      return tables?.find((el) => el.table === tableName) ?? {};
+      if (tableStates === undefined) return {};
+
+      // console.log('tables', tables);
+
+      return tableStates?.find((el) => el.table === tableName) ?? {};
     },
-    [tables]
+    [tableStates]
   );
 
-  const setTableState = useCallback((newTable) => {
+  // setTableState function
+  const setTableState = useCallback((newTableState) => {
     const {
       table: tableName = '',
-      // highlightRow, // highlight row id
-      // count //dataCount
-    } = newTable ?? {};
+      // highlightRow, // to save highlighted row id
+      // count // to save the data count
+    } = newTableState ?? {};
 
-    setTables((tables) => {
+    setTableStates((tables) => {
       if (tables.length > 0 && tables?.find((el) => el.table === tableName)) {
         return tables?.map((table) =>
-          table?.table === tableName ? { ...table, ...newTable } : table
+          table?.table === tableName ? { ...table, ...newTableState } : table
         );
       } else {
-        return [...tables, newTable];
+        return [...tables, newTableState];
       }
     });
   }, []);
