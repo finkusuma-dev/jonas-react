@@ -20,6 +20,7 @@ import Bookings from './features/bookings/Bookings';
 import Checkin from './pages/Checkin';
 import ProtectedRoute from './ui/ProtectedRoute';
 import DarkModeProvider from './context/DarkModeContext';
+import GlobalTableStateProvider from './context/GlobalTableStateContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,7 +46,9 @@ function App() {
             <Route
               element={
                 <ProtectedRoute>
-                  <AppLayout />
+                  <GlobalTableStateProvider>
+                    <AppLayout />
+                  </GlobalTableStateProvider>
                 </ProtectedRoute>
               }
             >

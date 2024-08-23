@@ -32,9 +32,7 @@ function AppLayout() {
       <Sidebar />
       <Main>
         <Container>
-          <GlobalTableStateProvider>
-            <Outlet />
-          </GlobalTableStateProvider>
+          <Outlet />
         </Container>
       </Main>
     </StyledAppLayout>
