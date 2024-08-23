@@ -38,15 +38,16 @@ function UpdateUserDataForm() {
   const formRef = useRef(0);
 
   const [fullName, setFullName] = useState(currentFullName);
-  const [avatar, setAvatar] = useState(currentAvatar);
+  const [avatarPreview, setAvatarPreview] = useState(currentAvatar);
 
-  const isChanged = fullName !== currentFullName || avatar !== currentAvatar;
+  const isChanged =
+    fullName !== currentFullName || avatarPreview !== currentAvatar;
 
-  // console.log('avatar', avatar);
+  // console.log('avatar', avatarPreview);
   // console.log('currentAvatar', currentAvatar);
 
-  const avatarPreview =
-    typeof avatar !== 'string' && avatar.name && URL.createObjectURL(avatar);
+  // const avatarPreview = avatarPreview;
+  // typeof avatar !== 'string' && avatar.name && URL.createObjectURL(avatar);
 
   // console.log('avatar', avatar);
   // console.log('avatarPreview', avatarPreview);
@@ -60,12 +61,12 @@ function UpdateUserDataForm() {
     update(
       {
         fullName,
-        avatar,
+        avatar: avatarPreview,
       },
       {
         onSuccess: (data) => {
           console.log('onsuccess user', data.user);
-          setAvatar(data.user.user_metadata.avatar);
+          setAvatarPreview(data.user.user_metadata.avatar);
           e.target.reset();
         },
       }
@@ -76,7 +77,7 @@ function UpdateUserDataForm() {
     // console.log('formRef', formRef.current, 'e.target', e.target);
     formRef.current.reset();
     setFullName(currentFullName);
-    setAvatar(currentAvatar);
+    setAvatarPreview(currentAvatar);
   }
 
   return (
@@ -95,13 +96,15 @@ function UpdateUserDataForm() {
       </FormRow>
       <FormRow label="Avatar image">
         <div>
-          {(avatarPreview || avatar) && (
-            <Image src={avatarPreview || avatar} defaultValue={avatar} />
+          {avatarPreview && (
+            <Image src={avatarPreview} defaultValue={avatarPreview} />
           )}
           <FileInput
             id="avatar"
             accept="image/*"
-            onChange={(e) => setAvatar(e.target.files[0])}
+            onChange={(e) =>
+              setAvatarPreview(URL.createObjectURL(e.target.files[0]))
+            }
             disabled={isUpdating}
           />
         </div>

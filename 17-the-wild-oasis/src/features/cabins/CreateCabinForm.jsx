@@ -47,7 +47,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
   const { isUpdating, updateCabin } = useUpdateCabin();
 
   /// Other hook
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(cabinToEdit?.image);
 
   const isBusy = isUpdating || isInserting;
 
@@ -151,11 +151,8 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
 
       <FormRow label="Description" errorMsg={errors?.description?.message}>
         <div>
-          {(imagePreview || cabinToEdit?.image) && (
-            <Image
-              src={imagePreview || cabinToEdit?.image}
-              defaultValue={cabinToEdit?.image}
-            />
+          {imagePreview && (
+            <Image src={imagePreview} defaultValue={imagePreview} />
           )}
 
           <FileInput
