@@ -39,8 +39,6 @@ const StyledRow = styled(CommonRow)`
     props.isActive &&
     css`
       background-color: var(--color-grey-100);
-      /* border-top: 1px solid var(--color-grey-400);
-      border-bottom: 1px solid var(--color-grey-400); */
     `}
 
   &:not(:last-child) {
