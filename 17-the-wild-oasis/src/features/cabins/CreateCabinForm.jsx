@@ -13,42 +13,6 @@ import FormRow from '../../ui/FormRow';
 import { useInsertCabin } from './useInsertCabin';
 import { useUpdateCabin } from './useUpdateCabin';
 
-const StyledFormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-`;
-
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
-
 const Image = styled.img`
   width: 150px;
   height: auto;
@@ -83,7 +47,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
   const { isUpdating, updateCabin } = useUpdateCabin();
 
   /// Other hook
-  const [previewImgUrl, setPreviewImgUrl] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const isBusy = isUpdating || isInserting;
 
@@ -185,12 +149,11 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
         />
       </FormRow>
 
-      <StyledFormRow>
-        <Label htmlFor="image">Cabin photo</Label>
+      <FormRow label="Description" errorMsg={errors?.description?.message}>
         <div>
-          {(previewImgUrl || cabinToEdit?.image) && (
+          {(imagePreview || cabinToEdit?.image) && (
             <Image
-              src={previewImgUrl || cabinToEdit?.image}
+              src={imagePreview || cabinToEdit?.image}
               defaultValue={cabinToEdit?.image}
             />
           )}
@@ -204,13 +167,12 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
               onChange: (e) => {
                 /// Preview selected image
                 // console.log('url', URL.createObjectURL(e.target.files[0]));
-                setPreviewImgUrl(URL.createObjectURL(e.target.files[0]));
+                setImagePreview(URL.createObjectURL(e.target.files[0]));
               },
             })}
           />
         </div>
-        {errors?.image?.message && <Error>{errors?.image?.message}</Error>}
-      </StyledFormRow>
+      </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
