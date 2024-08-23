@@ -6,11 +6,11 @@ Make a row highlighted on the table when clicking menu popup. This can also be u
 
 **Row table highlight** and [Navigate to previous page](auto_navigate_previous_page.md) features are both using the new Global Table State Context. This context saves variables for the tables. Variable used particularly for **Row table highlight** feature is `highlightRow`.
 
-You can read how to setup Global Table State Context [here](/docs/global_table_state_context.md#setup).
+You can read how to setup Global Table State Context [here](../global_table_state_context.md#setup).
 
 ## Codes
 
-After setup The Global Table State Context you can add the codes below.
+After setup the context you can add the codes below.
 
 - /src/features/booking/BookingRow.jsx:
 
@@ -34,9 +34,9 @@ After setup The Global Table State Context you can add the codes below.
 - /src/ui/Table.jsx:
   Steps:
 
-  - 1 Add a new `name` param on the `Table` component to specify table name. Then put it on the Provider's value. We need to provide this table name for the `Row` component.
-  - 2 On the `Row` component, read the table name. And use it to get the table state using `getTableState(tableName)`
-  - 3 Add a new `isActive` property on `StyledRow` component, and use the `tableState?.highlightedRow` to compare with `rowId`, and set `isActive` to true.
+  1. Add a new `name` param on the `Table` component to specify table name. Then put it on the Provider's value. We need to provide this table name for the `Row` component.
+  2. On the `Row` component, read the table name. And use it to get the table state using `getTableState(tableName)`
+  3. Add a new `isActive` property on `StyledRow` component, and use the `tableState?.highlightedRow` to compare with `rowId`, and set `isActive` to true.
 
   ```jsx
   // 1.

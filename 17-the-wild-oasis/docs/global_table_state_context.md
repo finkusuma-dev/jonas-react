@@ -1,6 +1,6 @@
 # Global Table State Context
 
-This is the new context I created for tables related features. When trying to create the new [highlight table row](/docs/changes/row_table_highlight.md) feature, I feel the need of saving some table related data somewhere up.
+This is the new context I created for tables related features. When trying to create the new [highlight table row](changes/row_table_highlight.md) feature, I feel the need of saving some table related data somewhere up.
 
 ## The Story
 
