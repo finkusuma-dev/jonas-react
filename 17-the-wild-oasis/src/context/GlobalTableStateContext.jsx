@@ -45,7 +45,6 @@ function GlobalTableStateProvider({ children }) {
   return (
     <TableStateContext.Provider
       value={{
-        tables,
         getTableState,
         setTableState,
       }}
