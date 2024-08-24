@@ -1,8 +1,11 @@
-import styled from 'styled-components';
+import { useEffect } from 'react';
 import { useState } from 'react';
-import { useMoveBack } from '../../hooks/useMoveBack';
+import styled from 'styled-components';
 
-import BookingDataBox from '../../features/bookings/BookingDataBox';
+import BookingDataBox from '../bookings/BookingDataBox';
+import useBooking from '../bookings/useBooking';
+import useCheckin from './useCheckin';
+import { useMoveBack } from '../../hooks/useMoveBack';
 
 import Row from '../../ui/Row';
 import Heading from '../../ui/Heading';
@@ -10,13 +13,10 @@ import ButtonGroup from '../../ui/ButtonGroup';
 import Button from '../../ui/Button';
 import ButtonText from '../../ui/ButtonText';
 import Checkbox from '../../ui/Checkbox';
-
-import useBooking from '../bookings/useBooking';
 import Spinner from '../../ui/Spinner';
-import useCheckin from './useCheckin';
+
 import { formatCurrency } from '../../utils/helpers';
 import { useSettings } from '../settings/useSettings';
-import { useEffect } from 'react';
 
 const Box = styled.div`
   /* Box */
@@ -52,6 +52,9 @@ function CheckinBooking() {
   // console.log('settings', settings);
   // console.log('CheckinBooking', booking);
 
+  // Here prefixing most of the database fields with 'db'.
+  // To easily differentiate between remote states and local states/variables,
+  // as the code a bit more complex.
   const {
     id: bookingId,
     status: dbStatus,
@@ -86,7 +89,7 @@ function CheckinBooking() {
     }
   }
 
-  /// Conditions:
+  /// Conditions of the check-in process:
   ///
   /// 1. Havent paid, doesn't have breakfast.
   ///    - Hide checkin.
@@ -108,6 +111,7 @@ function CheckinBooking() {
   /// 4. Paid, has breakfast.
   ///    - Show checkin.
 
+  /// Creating which components are shown or hidden from the conditions above.
   const showAddBreakfast = !dbIsPaid || !dbHasBreakfast;
   const showConfirmPayment =
     !dbIsPaid || (dbIsPaid && !dbHasBreakfast && addBreakfast);
@@ -138,6 +142,7 @@ function CheckinBooking() {
             }}
           >
             Want to add breakfast
+            {/* Add additional info of breakfast price */}
             {(!dbIsPaid || !dbHasBreakfast) && (
               <span>(for {formatCurrency(optionalBreakfastPrice)})</span>
             )}
@@ -150,21 +155,20 @@ function CheckinBooking() {
           <Checkbox
             id="confirm"
             checked={checkPaid}
-            // disabled={disablePaid}
             onChange={() => setConfirmPaid((paid) => !paid)}
           >
             <Row>
-              {/* Confirm payment for breakfast price only or total price */}
+              {/* Confirm payment */}
               <p>
                 I confirm that {dbGuestFullName} has paid for{' '}
                 {dbIsPaid && addBreakfast ? (
-                  /* Confirm only for breakfast price when it's paid but breakfast is added */
+                  /* Confirm only for breakfast price when it's paid but then breakfast is added */
                   <span>
                     breakfast{' '}
                     <Total> {formatCurrency(optionalBreakfastPrice)}</Total>.
                   </span>
                 ) : (
-                  /* Confirm for total price */
+                  /* Else confirm for total price */
                   <span>
                     the total amount of{' '}
                     <Total> {formatCurrency(totalPrice)}</Total>.
