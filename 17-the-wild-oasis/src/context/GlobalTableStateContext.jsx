@@ -11,33 +11,36 @@ GlobalTableStateProvider.propTypes = {
 };
 
 function GlobalTableStateProvider({ children }) {
-  const [tables, setTables] = useState([]);
+  const [tableStates, setTableStates] = useState([]);
 
   const getTableState = useCallback(
     (tableName) => {
-      if (tables === undefined) return {};
+      if (tableStates === undefined) return {};
 
       // console.log('tables', tables);
 
-      return tables?.find((el) => el.table === tableName) ?? {};
+      return tableStates?.find((el) => el.table === tableName) ?? {};
     },
-    [tables]
+    [tableStates]
   );
 
-  const setTableState = useCallback((newTable) => {
+  const setTableState = useCallback((newTableState) => {
     const {
       table: tableName = '',
       // highlightRow, // highlightRowId
       // count //dataCount
-    } = newTable ?? {};
+    } = newTableState ?? {};
 
-    setTables((tables) => {
-      if (tables.length > 0 && tables?.find((el) => el.table === tableName)) {
-        return tables?.map((table) =>
-          table?.table === tableName ? { ...table, ...newTable } : table
+    setTableStates((tableStates) => {
+      if (
+        tableStates.length > 0 &&
+        tableStates?.find((el) => el.table === tableName)
+      ) {
+        return tableStates?.map((el) =>
+          el?.table === tableName ? { ...el, ...newTableState } : el
         );
       } else {
-        return [...tables, newTable];
+        return [...tableStates, newTableState];
       }
     });
   }, []);
