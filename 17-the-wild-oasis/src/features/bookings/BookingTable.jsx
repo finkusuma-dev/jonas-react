@@ -25,21 +25,24 @@ function BookingTable() {
 
     const page = searchParams.get('page');
 
-    if (bookingTableState?.count !== count) {
-      console.log(
-        'booking tableState count',
-        bookingTableState?.count,
-        'current db count',
-        count,
-        'page',
-        page
-      );
+    // console.log(
+    //   'bookingTableState?.count',
+    //   bookingTableState?.count,
+    //   'current db count',
+    //   count,
+    //   'page',
+    //   page
+    // );
 
+    if (bookingTableState?.count !== count) {
+      //FIXME: This potentially can cause issue, when add booking and
+      // the new booking is the only row on the page.
       if (
         page &&
         page > 1 &&
         page > Math.ceil((bookingTableState?.count - 1) / PAGE_SIZE)
       ) {
+        // console.log('goto prev page');
         searchParams.set('page', page - 1);
         setSearchParams(searchParams);
         return;
