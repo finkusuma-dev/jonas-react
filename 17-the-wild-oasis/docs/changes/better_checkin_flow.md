@@ -25,7 +25,7 @@ There are 2 things to note:
 
    If the guest wants to add breakfast, on activating the add breakfast checkbox, the check-in button will be hidden to remove it from the user's task. The confirm payment checkbox will then be shown with the breakfast price, so the user can focus on confirming only for the additional payment. Also, extra information is added at the bottom, showing each of the cabin & breakfast prices.
 
-### 3. When the booking is not paid and don't have breakfast
+### 3. When the booking isn't paid and doesn't include breakfast
 
 ![booking not paid, no breakfast](https://drive.google.com/thumbnail?id=1OAqI2y1dX_1M8WfN8JT_6JhWAtxInYtv&sz=w1000)
 
@@ -37,7 +37,7 @@ There are 3 things to note:
 
 Once the confirm checkbox is activated, the check-in button will be shown again. There is nothing particularly special here, aside from hiding and showing the check-in button.
 
-### 4. When the booking is not paid and has breakfast
+### 4. When the booking isn't paid and include breakfast
 
 ![booking not paid, has breakfast](https://drive.google.com/thumbnail?id=1eyqn7u4lWPZKVUXKKCdKur_ZpCGaV0Sn&sz=w1000)
 
