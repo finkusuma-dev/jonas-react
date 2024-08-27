@@ -19,24 +19,24 @@ function SpanHighlight({
 }) {
   const i = String(children).indexOf(highlightString);
 
-  // console.log('i', i, 'children', children, typeof children);
-  console.log('highlightString', highlightString);
+  /// Children can be array of string, when passing more than 1 react variables as children
+  /// Example: {firstName}, {LastName}
+  const text = Array.isArray(children) ? children.join('') : children;
+
+  // console.log('children', children, typeof children, children[0]);
+  // console.log('highlightString', highlightString);
 
   if (i === -1) return <span>{children}</span>;
 
-  const before = String(children).substring(0, i);
-  const after = String(children).substring(i + highlightString.length);
-  console.log('SpanHighlight', children, before, highlightString, after);
+  const before = String(text).substring(0, i);
+  const after = String(text).substring(i + highlightString.length);
+  // console.log('SpanHighlight', children, before, highlightString, after);
 
   return (
     <span>
-      {/* <span> */}
       {before}
-      {/* </span> */}
       <StyledSpan style={style}>{highlightString}</StyledSpan>
-      {/* <span> */}
       {after}
-      {/* //</span> */}
     </span>
   );
 }

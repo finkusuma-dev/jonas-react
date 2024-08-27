@@ -35,7 +35,7 @@ function Guests() {
                   color: 'white',
                 }}
               >
-                {`${el.email} - ${el.fullName}`}
+                {el.email} - {el.fullName}
               </SpanHighlight>
             )}
           />
