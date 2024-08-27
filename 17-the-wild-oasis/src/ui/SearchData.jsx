@@ -45,9 +45,19 @@ SearchData.propTypes = {
   placeholder: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   render: PropTypes.func,
+  asTable: PropTypes.bool,
+  maxResults: PropTypes.number,
 };
 
-function SearchData({ data, searchField, onSelect, render, placeholder }) {
+function SearchData({
+  data,
+  searchField,
+  onSelect,
+  render,
+  placeholder,
+  asTable = false,
+  maxResults = 7,
+}) {
   const [search, setSearch] = useState('');
   const [results, setResult] = useState(data);
   const [isShowResult, setIsShowResult] = useState(false);
@@ -91,15 +101,17 @@ function SearchData({ data, searchField, onSelect, render, placeholder }) {
 
     if (searchString.length < 2) setResult([]);
     else {
-      setResult(
-        data.filter((el) =>
+      const d = data
+        .filter((el) =>
           typeof el === 'string'
             ? String(el).includes(searchString)
             : searchField !== undefined && el[searchField]
             ? String(el[searchField])?.includes(searchString)
             : false
         )
-      );
+        /// limit to only maxResult
+        .filter((el, i) => i < maxResults);
+      setResult(d);
     }
     setIsShowResult(true);
     setResultActiveIdx(null);
@@ -182,25 +194,38 @@ function SearchData({ data, searchField, onSelect, render, placeholder }) {
       />
       {isShowResult && results.length > 0 && (
         <ResultBox ref={refResults}>
-          <ul>
-            {results.map((result, i) => (
-              <li key={i}>
-                <Result
-                  isActive={i == resultActiveIdx}
-                  onClick={() => handleResultClick(i)}
-                >
-                  {typeof result === 'string'
-                    ? result
-                    : render !== undefined
-                    ? render(result, i)
-                    : ''}
-                </Result>
-              </li>
-            ))}
-          </ul>
+          {!asTable
+            ? createList(results, resultActiveIdx, handleResultClick, render)
+            : null}
         </ResultBox>
       )}
     </Box>
+  );
+}
+
+function createList(
+  results,
+  resultActiveIdx,
+  handleResultClick,
+  renderListItem
+) {
+  return (
+    <ul>
+      {results.map((result, i) => (
+        <li key={i}>
+          <Result
+            isActive={i == resultActiveIdx}
+            onClick={() => handleResultClick(i)}
+          >
+            {typeof result === 'string'
+              ? result
+              : renderListItem !== undefined
+              ? renderListItem(result, i)
+              : ''}
+          </Result>
+        </li>
+      ))}
+    </ul>
   );
 }
 
