@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import styled, { css } from 'styled-components';
 import Input from './Input';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
 const Box = styled.div`
   position: relative;
@@ -37,23 +39,52 @@ const Result = styled.div`
 
 // const fakeData = ['dog', 'cat', 'horse', 'giraffe'];
 
-SearchInput.propTypes = {
-  data: PropTypes.array,
-  field: PropTypes.string, // prop to search if data.element is an object
-  onSelect: PropTypes.func,
+SearchData.propTypes = {
+  data: PropTypes.array.isRequired,
+  searchField: PropTypes.string, // prop to search if data.element is an object
+  placeholder: PropTypes.string,
+  onSelect: PropTypes.func.isRequired,
   render: PropTypes.func,
 };
 
-function SearchInput({ data, field, onSelect, render }) {
+function SearchData({ data, searchField, onSelect, render, placeholder }) {
   const [search, setSearch] = useState('');
   const [results, setResult] = useState(data);
-  const [showResult, setShowResult] = useState(false);
+  const [isShowResult, setIsShowResult] = useState(false);
   const [resultActiveIdx, setResultActiveIdx] = useState(null);
+  const refInput = useRef();
+  const refResults = useRef();
+
+  useEffect(
+    /// Custom click outside, used to close the list
+    /// Not using useClickOutside because we need to trigger it outside of 2 components
+    function () {
+      function handleClick(e) {
+        // e.stopPropagation();
+        // console.log('clickOutside', ref.current, e.target);
+        if (
+          isShowResult &&
+          refInput.current &&
+          refResults.current &&
+          !refInput.current.contains(e.target) &&
+          !refResults.current.contains(e.target)
+        ) {
+          // console.log('Click outside');
+          setIsShowResult(false);
+        }
+      }
+
+      document.addEventListener('click', handleClick, false);
+
+      return () => document.removeEventListener('click', handleClick);
+    },
+    [isShowResult]
+  );
 
   // console.log('results', results);
   //console.log('resultActiveIdx', resultActiveIdx);
 
-  function handleSearch(e) {
+  function handleSearchChange(e) {
     // console.log('handleSearch', e.target.value);
     const searchString = e.target.value;
     setSearch(searchString);
@@ -64,21 +95,25 @@ function SearchInput({ data, field, onSelect, render }) {
         data.filter((el) =>
           typeof el === 'string'
             ? String(el).includes(searchString)
-            : field !== undefined && el[field]
-            ? String(el[field])?.includes(searchString)
+            : searchField !== undefined && el[searchField]
+            ? String(el[searchField])?.includes(searchString)
             : false
         )
       );
     }
-    setShowResult(true);
+    setIsShowResult(true);
     setResultActiveIdx(null);
   }
 
+  /// Handle keys:
+  /// Arrow down, arrow up = navigate through items
+  /// Enter = select item
+  /// Escape = close the list
   function handleKeyDown(e) {
-    console.log('handleKeyDown', e.key);
+    // console.log('handleKeyDown', e.key);
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (!showResult) return setShowResult(true);
+      if (!isShowResult) return setIsShowResult(true);
       setResultActiveIdx((idx) => {
         if (idx === null) return 0;
         else if (idx + 1 < results.length) {
@@ -88,57 +123,51 @@ function SearchInput({ data, field, onSelect, render }) {
       });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (!showResult) return setShowResult(true);
+      if (!isShowResult) return setIsShowResult(true);
       setResultActiveIdx((idx) => {
         if (idx - 1 > -1) return idx - 1;
         return idx;
       });
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      setShowResult(false);
+      setIsShowResult(false);
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      setShowResult(false);
-      const selectedIdx = data.findIndex((el) =>
-        typeof el === 'string'
-          ? el === results[resultActiveIdx]
-          : field && el[field]
-          ? el[field] === results[resultActiveIdx][field]
-          : false
-      );
-
-      console.log('selectedIdx', selectedIdx);
-
-      const selectedText =
-        typeof data[selectedIdx] === 'string'
-          ? data[selectedIdx]
-          : field
-          ? data[selectedIdx][field]
-          : '';
-      const selectedObj =
-        typeof data[selectedIdx] === 'string'
-          ? data[selectedIdx]
-          : data[selectedIdx];
-      console.log('selected', selectedText);
-      setSearch(selectedText);
-      if (onSelect && onSelect(selectedIdx, selectedObj)) setShowResult(false);
+      select(resultActiveIdx);
     }
   }
 
+  /// User clicks the list
   function handleResultClick(idx) {
     setResultActiveIdx(idx);
-    setShowResult(false);
-    const selected = data.find((el) =>
+    select(idx);
+  }
+
+  function select(resultIdx) {
+    setIsShowResult(false);
+    const dataIdx = data.findIndex((el) =>
       typeof el === 'string'
-        ? el === results[idx]
-        : field && el[field]
-        ? el[field] === results[idx][field]
+        ? el === results[resultIdx]
+        : searchField && el[searchField]
+        ? el[searchField] === results[resultIdx][searchField]
         : false
     );
+
+    // console.log('selectedIdx', selectedIdx);
+
     const selectedText =
-      typeof selected === 'string' ? selected : field ? selected[field] : '';
+      typeof data[dataIdx] === 'string'
+        ? data[dataIdx]
+        : searchField
+        ? data[dataIdx][searchField]
+        : '';
+    const selectedObj =
+      typeof data[dataIdx] === 'string' ? data[dataIdx] : data[dataIdx];
+    // console.log('selected', selectedText);
     setSearch(selectedText);
-    if (onSelect && onSelect(selected)) setShowResult(false);
+    if (onSelect) {
+      onSelect(dataIdx, selectedObj);
+    }
   }
 
   return (
@@ -146,12 +175,13 @@ function SearchInput({ data, field, onSelect, render }) {
       <Input
         type="text"
         value={search}
-        onChange={handleSearch}
+        onChange={handleSearchChange}
         onKeyDown={handleKeyDown}
-        placeholder="Search for data"
-      ></Input>
-      {showResult && results.length > 0 && (
-        <ResultBox>
+        placeholder={placeholder || 'Search for data'}
+        ref={refInput}
+      />
+      {isShowResult && results.length > 0 && (
+        <ResultBox ref={refResults}>
           <ul>
             {results.map((result, i) => (
               <li key={i}>
@@ -174,4 +204,4 @@ function SearchInput({ data, field, onSelect, render }) {
   );
 }
 
-export default SearchInput;
+export default SearchData;

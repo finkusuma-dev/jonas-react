@@ -1,6 +1,6 @@
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
-import SearchInput from '../ui/SearchInput';
+import SearchData from '../ui/SearchData';
 
 function Guests() {
   return (
@@ -8,7 +8,7 @@ function Guests() {
       <Heading as="h1">Guest</Heading>
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
         <span>Guest</span>
-        <SearchInput
+        <SearchData
           // data={['dog', 'cat', 'giraw', 'giraffe']}
           data={[
             { name: 'dog', color: 'white' },
@@ -16,7 +16,8 @@ function Guests() {
             { name: 'giraw', color: 'none' },
             { name: 'giraffe', color: 'orange' },
           ]}
-          field="name"
+          searchField="name"
+          placeholder="Search for animal"
           onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
           render={(el, i) => (
             <div key={i}>
