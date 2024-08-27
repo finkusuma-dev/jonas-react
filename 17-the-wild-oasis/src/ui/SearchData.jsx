@@ -14,7 +14,7 @@ const ResultBox = styled.div`
   position: absolute;
   top: 45px;
   left: 0;
-  max-width: 400px;
+  width: 500px;
   border: 1px solid var(--color-grey-300);
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-sm);
