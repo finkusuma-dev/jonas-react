@@ -31,7 +31,7 @@ const Result = styled.div`
       props.isActive === true &&
       css`
         background-color: var(--color-brand-500);
-        color: white;
+        color: var(--color-grey-0);
       `
     );
   }}
@@ -58,16 +58,19 @@ function SearchData({
   asTable = false,
   maxResults = 7,
 }) {
-  const [search, setSearch] = useState('');
+  const [searchText, setSearchText] = useState('');
+  const [inputText, setInputText] = useState('');
   const [results, setResult] = useState(data);
   const [isShowResult, setIsShowResult] = useState(false);
   const [resultActiveIdx, setResultActiveIdx] = useState(null);
+
+  /// Ref to use with Custom click outside
   const refInput = useRef();
   const refResults = useRef();
 
   useEffect(
     /// Custom click outside, used to close the list
-    /// Not using useClickOutside because we need to trigger it outside of 2 components
+    /// Not using useClickOutside because needs to trigger it outside of 2 components
     function () {
       function handleClick(e) {
         // e.stopPropagation();
@@ -95,9 +98,10 @@ function SearchData({
   //console.log('resultActiveIdx', resultActiveIdx);
 
   function handleSearchChange(e) {
-    // console.log('handleSearch', e.target.value);
+    console.log('handleSearch', e.target.value);
     const searchString = e.target.value;
-    setSearch(searchString);
+    setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
+    setSearchText(searchString); // searchText only changes on handleSearchChange.
 
     if (searchString.length < 2) setResult([]);
     else {
@@ -176,7 +180,7 @@ function SearchData({
     const selectedObj =
       typeof data[dataIdx] === 'string' ? data[dataIdx] : data[dataIdx];
     // console.log('selected', selectedText);
-    setSearch(selectedText);
+    setInputText(selectedText);
     if (onSelect) {
       onSelect(dataIdx, selectedObj);
     }
@@ -186,7 +190,7 @@ function SearchData({
     <Box>
       <Input
         type="text"
-        value={search}
+        value={inputText}
         onChange={handleSearchChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder || 'Search for data'}
@@ -195,7 +199,13 @@ function SearchData({
       {isShowResult && results.length > 0 && (
         <ResultBox ref={refResults}>
           {!asTable
-            ? createList(results, resultActiveIdx, handleResultClick, render)
+            ? createList(
+                searchText,
+                results,
+                resultActiveIdx,
+                handleResultClick,
+                render
+              )
             : null}
         </ResultBox>
       )}
@@ -204,10 +214,11 @@ function SearchData({
 }
 
 function createList(
+  searchText,
   results,
   resultActiveIdx,
   handleResultClick,
-  renderListItem
+  render
 ) {
   return (
     <ul>
@@ -219,8 +230,8 @@ function createList(
           >
             {typeof result === 'string'
               ? result
-              : renderListItem !== undefined
-              ? renderListItem(result, i)
+              : render !== undefined
+              ? render(result, i, searchText)
               : ''}
           </Result>
         </li>
