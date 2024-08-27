@@ -3,6 +3,8 @@ import {
   HiOutlineCalendarDays,
   HiOutlineCog6Tooth,
   HiOutlineHomeModern,
+  HiOutlineUser,
+  HiOutlineUserGroup,
 } from 'react-icons/hi2';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
@@ -70,8 +72,12 @@ function MainNav() {
             <span>Cabins</span>
           </StyledNavLink>
           <StyledNavLink to="/users">
-            <HiOutlineUsers />
+            <HiOutlineUser />
             <span>User</span>
+          </StyledNavLink>
+          <StyledNavLink to="/guests">
+            <HiOutlineUserGroup />
+            <span>Guests</span>
           </StyledNavLink>
           <StyledNavLink to="/settings">
             <HiOutlineCog6Tooth />
