@@ -10,19 +10,23 @@ const Box = styled.div`
   position: relative;
 `;
 
-const ResultBox = styled.div`
+const ListBox = styled.div`
   position: absolute;
   top: 45px;
   left: 0;
-  width: 500px;
-  border: 1px solid var(--color-grey-300);
+  width: ${(props) => props.width || 'auto'};
+  z-index: 100;
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-sm);
-  padding: 0.8rem 0;
   box-shadow: var(--shadow-sm);
+  font-size: 1.4rem;
+  //
+  position: absolute;
+  border: 1px solid var(--color-grey-300);
+  padding: 0.8rem 0;
 `;
 
-const Result = styled.div`
+const Item = styled.li`
   cursor: pointer;
   padding: 0.5rem 1.2rem;
   ${(props) => {
@@ -34,35 +38,50 @@ const Result = styled.div`
         color: var(--color-grey-0);
       `
     );
+  }};
+  ${(props) => {
+    return (
+      props.columns &&
+      css`
+        display: grid;
+        grid-template-columns: ${props.columns};
+      `
+    );
   }}
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-grey-100);
+  }
 `;
 
 // const fakeData = ['dog', 'cat', 'horse', 'giraffe'];
 
 SearchData.propTypes = {
   data: PropTypes.array.isRequired,
-  searchField: PropTypes.string, // prop to search if data.element is an object
+  searchProp: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
-  render: PropTypes.func,
-  asTable: PropTypes.bool,
+  renderItem: PropTypes.func,
   maxResults: PropTypes.number,
+  listWidth: PropTypes.number,
+  listColumns: PropTypes.string,
 };
 
 function SearchData({
   data,
-  searchField,
+  searchProp,
   onSelect,
-  render,
+  renderItem,
   placeholder,
-  asTable = false,
   maxResults = 7,
+  listWidth,
+  listColumns,
 }) {
   const [searchText, setSearchText] = useState('');
   const [inputText, setInputText] = useState('');
-  const [results, setResult] = useState(data);
-  const [isShowResult, setIsShowResult] = useState(false);
-  const [resultActiveIdx, setResultActiveIdx] = useState(null);
+  const [list, setList] = useState(data);
+  const [isShowList, setIsShowList] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(null);
 
   /// Ref to use with Custom click outside
   const refInput = useRef();
@@ -76,14 +95,14 @@ function SearchData({
         // e.stopPropagation();
         // console.log('clickOutside', ref.current, e.target);
         if (
-          isShowResult &&
+          isShowList &&
           refInput.current &&
           refResults.current &&
           !refInput.current.contains(e.target) &&
           !refResults.current.contains(e.target)
         ) {
           // console.log('Click outside');
-          setIsShowResult(false);
+          setIsShowList(false);
         }
       }
 
@@ -91,7 +110,7 @@ function SearchData({
 
       return () => document.removeEventListener('click', handleClick);
     },
-    [isShowResult]
+    [isShowList]
   );
 
   // console.log('results', results);
@@ -103,22 +122,23 @@ function SearchData({
     setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
     setSearchText(searchString); // searchText only changes on handleSearchChange.
 
-    if (searchString.length < 2) setResult([]);
+    if (searchString.length < 2) setList([]);
     else {
-      const d = data
+      const alist = data
         .filter((el) =>
           typeof el === 'string'
             ? String(el).includes(searchString)
-            : searchField !== undefined && el[searchField]
-            ? String(el[searchField])?.includes(searchString)
+            : searchProp !== undefined && el[searchProp]
+            ? String(el[searchProp]).includes(searchString)
             : false
         )
         /// limit to only maxResult
         .filter((el, i) => i < maxResults);
-      setResult(d);
+      console.log('list', list);
+      setList(alist);
     }
-    setIsShowResult(true);
-    setResultActiveIdx(null);
+    setIsShowList(true);
+    setActiveIdx(null);
   }
 
   /// Handle keys:
@@ -129,43 +149,44 @@ function SearchData({
     // console.log('handleKeyDown', e.key);
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (!isShowResult) return setIsShowResult(true);
-      setResultActiveIdx((idx) => {
-        if (idx === null) return 0;
-        else if (idx + 1 < results.length) {
-          return idx + 1;
+      if (!isShowList) return setIsShowList(true);
+      setActiveIdx((i) => {
+        if (i === null) return 0;
+        else if (i + 1 < list.length) {
+          return i + 1;
         }
-        return idx;
+        return i;
       });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (!isShowResult) return setIsShowResult(true);
-      setResultActiveIdx((idx) => {
-        if (idx - 1 > -1) return idx - 1;
-        return idx;
+      if (!isShowList) return setIsShowList(true);
+
+      setActiveIdx((i) => {
+        if (i - 1 > -1) return i - 1;
+        return i;
       });
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      setIsShowResult(false);
+      setIsShowList(false);
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      select(resultActiveIdx);
+      selectItem(activeIdx);
     }
   }
 
   /// User clicks the list
-  function handleResultClick(idx) {
-    setResultActiveIdx(idx);
-    select(idx);
+  function handleItemClick(idx) {
+    setActiveIdx(idx);
+    selectItem(idx);
   }
 
-  function select(resultIdx) {
-    setIsShowResult(false);
-    const dataIdx = data.findIndex((el) =>
-      typeof el === 'string'
-        ? el === results[resultIdx]
-        : searchField && el[searchField]
-        ? el[searchField] === results[resultIdx][searchField]
+  function selectItem(itemIdx) {
+    setIsShowList(false);
+    const dataIdx = data.findIndex((obj) =>
+      typeof obj === 'string'
+        ? obj === list[itemIdx]
+        : searchProp !== undefined && obj[searchProp]
+        ? obj[searchProp] === list[itemIdx][searchProp]
         : false
     );
 
@@ -174,13 +195,13 @@ function SearchData({
     const selectedText =
       typeof data[dataIdx] === 'string'
         ? data[dataIdx]
-        : searchField
-        ? data[dataIdx][searchField]
+        : searchProp !== undefined
+        ? data[dataIdx][searchProp]
         : '';
-    const selectedObj =
-      typeof data[dataIdx] === 'string' ? data[dataIdx] : data[dataIdx];
-    // console.log('selected', selectedText);
+    const selectedObj = data[dataIdx];
+
     setInputText(selectedText);
+
     if (onSelect) {
       onSelect(dataIdx, selectedObj);
     }
@@ -196,45 +217,84 @@ function SearchData({
         placeholder={placeholder || 'Search for data'}
         ref={refInput}
       />
-      {isShowResult && results.length > 0 && (
-        <ResultBox ref={refResults}>
-          {!asTable
-            ? createList(
+      {isShowList && list.length > 0 && (
+        <>
+          {!listColumns ? (
+            <ListBox ref={refResults} width={listWidth}>
+              {renderList({
                 searchText,
-                results,
-                resultActiveIdx,
-                handleResultClick,
-                render
-              )
-            : null}
-        </ResultBox>
+                list,
+                activeIdx,
+                handleItemClick,
+                renderItem,
+              })}
+            </ListBox>
+          ) : (
+            <ListBox ref={refResults} width={listWidth}>
+              {renderTable({
+                searchText,
+                list,
+                activeIdx,
+                handleItemClick,
+                renderItem,
+                listColumns,
+              })}
+            </ListBox>
+          )}
+        </>
       )}
     </Box>
   );
 }
 
-function createList(
+function renderList({
   searchText,
-  results,
-  resultActiveIdx,
-  handleResultClick,
-  render
-) {
+  list,
+  activeIdx,
+  handleItemClick,
+  renderItem,
+}) {
   return (
     <ul>
-      {results.map((result, i) => (
-        <li key={i}>
-          <Result
-            isActive={i == resultActiveIdx}
-            onClick={() => handleResultClick(i)}
-          >
-            {typeof result === 'string'
-              ? result
-              : render !== undefined
-              ? render(result, i, searchText)
-              : ''}
-          </Result>
-        </li>
+      {list.map((item, i) => (
+        <Item
+          key={i}
+          isActive={i == activeIdx}
+          onClick={() => handleItemClick(i)}
+        >
+          {typeof item === 'string'
+            ? item
+            : renderItem !== undefined
+            ? renderItem(item, i, searchText)
+            : ''}
+        </Item>
+      ))}
+    </ul>
+  );
+}
+function renderTable({
+  searchText,
+  list,
+  activeIdx,
+  handleItemClick,
+  renderItem,
+  listColumns,
+}) {
+  return (
+    <ul>
+      {list.map((item, i) => (
+        <Item
+          key={i}
+          isActive={i == activeIdx}
+          onClick={() => handleItemClick(i)}
+          columns={listColumns}
+        >
+          {typeof item === 'string'
+            ? item
+            : renderItem !== undefined
+            ? renderItem(item, i, searchText)
+            : ''}
+        </Item>
       ))}
     </ul>
   );

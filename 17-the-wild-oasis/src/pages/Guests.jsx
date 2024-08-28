@@ -23,10 +23,10 @@ function Guests() {
             //   { name: 'giraffe', color: 'orange' },
             // ]}
             data={guests}
-            searchField="email"
+            searchProp="email"
             placeholder="Insert email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
-            render={(el, i, searchText) => (
+            renderItem={(item, i, searchText) => (
               <SpanHighlight
                 key={i}
                 highlightString={searchText}
@@ -35,11 +35,43 @@ function Guests() {
                   color: 'white',
                 }}
               >
-                {el.email} - {el.fullName}
+                {item.email} - {item.fullName}
               </SpanHighlight>
             )}
           />
         </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span>Email</span>
+          <SearchData
+            data={guests}
+            searchProp="email"
+            placeholder="Insert email"
+            listWidth="70rem"
+            listColumns="1fr 1fr 0.7fr 0.3fr"
+            renderItem={(item, i, searchText) => (
+              <>
+                <SpanHighlight
+                  key={i}
+                  highlightString={searchText}
+                  style={{
+                    backgroundColor: 'var(--color-brand-700)',
+                    color: 'white',
+                  }}
+                >
+                  {item.email}
+                </SpanHighlight>
+                <div>{item.fullName}</div>
+                <div>{item.nationality}</div>
+                <div>
+                  <img src={item.countryFlag} width="20rem" />
+                </div>
+              </>
+            )}
+            onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
+          />
+        </div>
+
         <div> Next line</div>
       </Row>
       <SpanHighlight
