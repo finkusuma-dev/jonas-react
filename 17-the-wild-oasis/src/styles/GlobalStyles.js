@@ -159,6 +159,11 @@ select:focus {
   outline-offset: -1px;
 }
 
+input::selection {
+  background-color: var(--color-brand-500);
+  color: white;
+}
+
 /* Parent selector, finally 😃 */
 button:has(svg) {
   line-height: 0;
