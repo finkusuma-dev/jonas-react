@@ -54,6 +54,7 @@ const Item = styled.div`
       css`
         display: grid;
         grid-template-columns: ${props.columns};
+        align-items: center;
       `
     );
   }}
@@ -136,6 +137,7 @@ function SearchData({
     if (searchString.length < 2) setList([]);
     else {
       const alist = data
+        /// Filter items based on the search string
         .filter((el) =>
           typeof el === 'string'
             ? String(el).includes(searchString)
@@ -143,9 +145,49 @@ function SearchData({
             ? String(el[searchProp]).includes(searchString)
             : false
         )
-        /// limit to only maxResult
+        /// Sort items based on the index where the search string is found
+        .sort((a, b) => {
+          const aString =
+            typeof el === 'string'
+              ? String(a)
+              : searchProp !== undefined && a[searchProp];
+
+          const bString =
+            typeof el === 'string'
+              ? String(b)
+              : searchProp !== undefined && b[searchProp];
+          const aIdx = aString.indexOf(searchString);
+          const bIdx = bString.indexOf(searchString);
+
+          if (aIdx !== bIdx) {
+            /// If idx are not the same, simply substract the idx.
+            /// Ex: [li]ght !== f[li]ght.
+            /// 'light' should appear before 'flight'.
+            return aIdx - bIdx;
+          } else {
+            /// If idx are the same, compare the remaining word
+            /// Ex: [li]ght === [li]brary. Compare 'ght' with 'brary'
+            /// In this case 'library' should appear before 'light'
+            ///
+            const restAString = String(aString).substring(
+              aString.indexOf(searchString) + searchString.length
+            );
+            const restbString = String(bString).substring(
+              bString.indexOf(searchString) + searchString.length
+            );
+            const res =
+              restAString < restbString
+                ? -1
+                : restAString > restbString
+                ? 1
+                : 0;
+            // console.log('rest a:b', restAString, restbString, res);
+            return res;
+          }
+        })
+        /// Limit the number of items to only less or equal than maxResult
         .filter((el, i) => i < maxResults);
-      console.log('list', list);
+      // console.log('list', list);
       setList(alist);
     }
     setIsShowList(true);
@@ -182,6 +224,8 @@ function SearchData({
     } else if (e.key === 'Enter') {
       e.preventDefault();
       selectItem(activeIdx);
+    } else if (e.key === 'Tab') {
+      setIsShowList(false);
     }
   }
 
@@ -189,6 +233,12 @@ function SearchData({
   function handleItemClick(idx) {
     setActiveIdx(idx);
     selectItem(idx);
+  }
+
+  function handleBlur() {
+    /// Closing the list onBlur create an issue: Cannot click the list item to select it.
+    // console.log('handleBlur', e);
+    // setIsShowList(false);
   }
 
   function selectItem(itemIdx) {
@@ -225,24 +275,21 @@ function SearchData({
         value={inputText}
         onChange={handleSearchChange}
         onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         placeholder={placeholder || 'Search for data'}
         ref={refInput}
       />
       {isShowList && list.length > 0 && (
-        <>
-          {!asTable ? (
-            <ListBox ref={refResults} width={listWidth}>
-              {renderList({
+        <ListBox ref={refResults} width={listWidth}>
+          {!asTable
+            ? renderList({
                 searchText,
                 list,
                 activeIdx,
                 handleItemClick,
                 renderItem,
-              })}
-            </ListBox>
-          ) : (
-            <ListBox ref={refResults} width={listWidth}>
-              {renderTable({
+              })
+            : renderTable({
                 searchText,
                 list,
                 activeIdx,
@@ -250,9 +297,7 @@ function SearchData({
                 renderItem,
                 tableColumns,
               })}
-            </ListBox>
-          )}
-        </>
+        </ListBox>
       )}
     </Box>
   );
