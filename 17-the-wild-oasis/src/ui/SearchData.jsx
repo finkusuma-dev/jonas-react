@@ -76,6 +76,7 @@ SearchData.propTypes = {
   listWidth: PropTypes.number,
   asTable: PropTypes.bool,
   tableColumns: PropTypes.array,
+  autoComplete: PropTypes.bool,
 };
 
 function SearchData({
@@ -88,12 +89,14 @@ function SearchData({
   listWidth,
   asTable = false,
   tableColumns = [],
+  autoComplete = false,
 }) {
   const [searchText, setSearchText] = useState('');
   const [inputText, setInputText] = useState('');
   const [list, setList] = useState(data);
   const [isShowList, setIsShowList] = useState(false);
   const [activeIdx, setActiveIdx] = useState(null);
+  const [isAutoComplete, setIsAutoComplete] = useState(false);
 
   /// Ref to use with Custom click outside
   const refInput = useRef();
@@ -125,6 +128,15 @@ function SearchData({
     [isShowList]
   );
 
+  /// AUTO COMPLETE part, step 3:
+  /// Mark selection for autocomplete
+  useEffect(() => {
+    if (autoComplete && isAutoComplete && inputText.indexOf(searchText) === 0) {
+      // console.log('setSelectionRange', searchText.length, inputText.length);
+      refInput.current.setSelectionRange(searchText.length, inputText.length);
+    }
+  }, [autoComplete, isAutoComplete, searchText, inputText]);
+
   // console.log('results', results);
   //console.log('resultActiveIdx', resultActiveIdx);
 
@@ -147,15 +159,8 @@ function SearchData({
         )
         /// Sort items based on the index where the search string is found
         .sort((a, b) => {
-          const aString =
-            typeof el === 'string'
-              ? String(a)
-              : searchProp !== undefined && a[searchProp];
-
-          const bString =
-            typeof el === 'string'
-              ? String(b)
-              : searchProp !== undefined && b[searchProp];
+          const aString = getSearchedTextFromItem(a);
+          const bString = getSearchedTextFromItem(b);
           const aIdx = aString.indexOf(searchString);
           const bIdx = bString.indexOf(searchString);
 
@@ -187,9 +192,22 @@ function SearchData({
         })
         /// Limit the number of items to only less or equal than maxResult
         .filter((el, i) => i < maxResults);
-      // console.log('list', list);
+
+      /// AUTO COMPLETE part, step 2:
+      /// Set input text for autocomplete
+      if (autoComplete) {
+        if (isAutoComplete && alist.length > 0) {
+          const str = getSearchedTextFromItem(alist[0]);
+
+          if (str.indexOf(searchString) === 0) {
+            setInputText(str);
+          }
+        }
+      }
+
       setList(alist);
     }
+
     setIsShowList(true);
     setActiveIdx(null);
   }
@@ -199,7 +217,7 @@ function SearchData({
   /// Enter = select item
   /// Escape = close the list
   function handleKeyDown(e) {
-    // console.log('handleKeyDown', e.key);
+    console.log('handleKeyDown', e.key, e.keyCode);
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (!isShowList) return setIsShowList(true);
@@ -227,6 +245,41 @@ function SearchData({
     } else if (e.key === 'Tab') {
       setIsShowList(false);
     }
+    // console.log('setIsAutoComplete', e.keyCode);
+
+    /// AUTO COMPLETE part, step 1: determine isAutoComplete on keyDown event
+    /// Prevent autocomplete for keycode <= 47.
+    if (autoComplete) {
+      const selectedText = e.target.value.substring(
+        e.target.selectionStart,
+        e.target.selectionEnd
+      );
+
+      const firstItem = list.length > 0 ? getSearchedTextFromItem(list[0]) : '';
+      // console.log(
+      //   ' > ',
+      //   searchText,
+      //   ' + ',
+      //   selectedText,
+      //   ' === ',
+      //   firstItem,
+      //   searchText + selectedText === firstItem
+      // );
+      /// if current selected text is from autocomplete, set the next autocomplete
+      if (
+        selectedText.length === 0 ||
+        searchText + selectedText === firstItem
+      ) {
+        setIsAutoComplete(e.keyCode > 47);
+      }
+    }
+
+    // console.log(
+    //   'get selection range',
+    //   e.target.value.substring(e.target.selectionStart, e.target.selectionEnd),
+    //   'searchText',
+    //   searchText
+    // );
   }
 
   /// User clicks the list
@@ -236,7 +289,7 @@ function SearchData({
   }
 
   function handleBlur() {
-    /// Closing the list onBlur create an issue: Cannot click the list item to select it.
+    /// NOTE: Closing the list onBlur create an issue: Cannot click the list item to select it.
     // console.log('handleBlur', e);
     // setIsShowList(false);
   }
@@ -266,6 +319,14 @@ function SearchData({
     if (onSelect) {
       onSelect(dataIdx, selectedObj);
     }
+  }
+
+  function getSearchedTextFromItem(item) {
+    /// Data search text is item itself if it's a string,
+    /// Otherwise it's defined by searchProp, data searchText = item[searchProp]
+    return typeof item === 'string'
+      ? item
+      : searchProp !== undefined && item[searchProp];
   }
 
   return (

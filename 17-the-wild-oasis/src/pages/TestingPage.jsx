@@ -52,6 +52,7 @@ function TestingPage() {
             searchProp="email"
             placeholder="Insert email"
             listWidth="70rem"
+            autoComplete={true}
             asTable={true}
             tableColumns={[
               {
