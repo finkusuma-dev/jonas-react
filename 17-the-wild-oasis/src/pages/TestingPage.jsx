@@ -10,7 +10,7 @@ const StyledContainer = styled.div`
 `;
 
 function TestingPage() {
-  const { guests = {}, isLoading } = useGuests();
+  const { guests = {} } = useGuests();
 
   return (
     <StyledContainer>
@@ -52,7 +52,24 @@ function TestingPage() {
             searchProp="email"
             placeholder="Insert email"
             listWidth="70rem"
-            listColumns="1fr 1fr 0.7fr 0.1fr"
+            asTable={true}
+            tableColumns={[
+              {
+                header: 'Email',
+              },
+              {
+                header: 'Full Name',
+              },
+              {
+                header: 'National ID',
+                width: '0.7fr',
+              },
+              {
+                header: 'Country',
+                width: '0.3fr',
+                align: 'center',
+              },
+            ]}
             renderItem={(item, i, searchText) => (
               <>
                 <Highlight
@@ -67,7 +84,7 @@ function TestingPage() {
                 </Highlight>
                 <div>{item.fullName}</div>
                 <div>{item.nationality}</div>
-                <div>
+                <div style={{ justifySelf: 'center' }}>
                   <img src={item.countryFlag} width="20rem" />
                 </div>
               </>

@@ -26,7 +26,16 @@ const ListBox = styled.div`
   padding: 0.8rem 0;
 `;
 
-const Item = styled.li`
+const TableHeaders = styled.div`
+  margin-top: -0.8rem;
+  padding: 0.5rem 1.2rem;
+  display: grid;
+  grid-template-columns: ${(props) => props.columns};
+  background-color: var(--color-grey-300);
+  color: black;
+`;
+
+const Item = styled.div`
   cursor: pointer;
   padding: 0.5rem 1.2rem;
   ${(props) => {
@@ -64,7 +73,8 @@ SearchData.propTypes = {
   renderItem: PropTypes.func,
   maxResults: PropTypes.number,
   listWidth: PropTypes.number,
-  listColumns: PropTypes.string,
+  asTable: PropTypes.bool,
+  tableColumns: PropTypes.array,
 };
 
 function SearchData({
@@ -75,7 +85,8 @@ function SearchData({
   placeholder,
   maxResults = 7,
   listWidth,
-  listColumns,
+  asTable = false,
+  tableColumns = [],
 }) {
   const [searchText, setSearchText] = useState('');
   const [inputText, setInputText] = useState('');
@@ -219,7 +230,7 @@ function SearchData({
       />
       {isShowList && list.length > 0 && (
         <>
-          {!listColumns ? (
+          {!asTable ? (
             <ListBox ref={refResults} width={listWidth}>
               {renderList({
                 searchText,
@@ -237,7 +248,7 @@ function SearchData({
                 activeIdx,
                 handleItemClick,
                 renderItem,
-                listColumns,
+                tableColumns,
               })}
             </ListBox>
           )}
@@ -278,25 +289,41 @@ function renderTable({
   activeIdx,
   handleItemClick,
   renderItem,
-  listColumns,
+  tableColumns,
 }) {
+  const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
   return (
-    <ul>
-      {list.map((item, i) => (
-        <Item
-          key={i}
-          isActive={i == activeIdx}
-          onClick={() => handleItemClick(i)}
-          columns={listColumns}
-        >
-          {typeof item === 'string'
-            ? item
-            : renderItem !== undefined
-            ? renderItem(item, i, searchText)
-            : ''}
-        </Item>
-      ))}
-    </ul>
+    <>
+      {tableColumns.some((item) => 'header' in item) && (
+        <TableHeaders columns={columns} role="row" as="header">
+          {tableColumns.map((item) => (
+            <div
+              key={item.header}
+              style={{ justifySelf: item.align ?? 'left' }}
+            >
+              {item.header ?? ''}
+            </div>
+          ))}
+        </TableHeaders>
+      )}
+      <div>
+        {list.map((item, i) => (
+          <Item
+            key={i}
+            role="row"
+            isActive={i == activeIdx}
+            onClick={() => handleItemClick(i)}
+            columns={columns}
+          >
+            {typeof item === 'string'
+              ? item
+              : renderItem !== undefined
+              ? renderItem(item, i, searchText)
+              : ''}
+          </Item>
+        ))}
+      </div>
+    </>
   );
 }
 
