@@ -3,13 +3,13 @@ import styled from 'styled-components';
 
 const StyledSpan = styled.span``;
 
-SpanHighlight.propTypes = {
+Highlight.propTypes = {
   children: PropTypes.any,
   highlightString: PropTypes.string,
   style: PropTypes.object,
 };
 
-function SpanHighlight({
+function Highlight({
   children,
   highlightString,
   style = {
@@ -41,4 +41,4 @@ function SpanHighlight({
   );
 }
 
-export default SpanHighlight;
+export default Highlight;

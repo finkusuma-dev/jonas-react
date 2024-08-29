@@ -2,7 +2,7 @@ import useGuests from '../features/guests/useGuests';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 import SearchData from '../ui/SearchData';
-import SpanHighlight from '../ui/SpanHighlight';
+import Highlight from '../ui/Highlight';
 
 function Guests() {
   const { guests = {}, isLoading } = useGuests();
@@ -27,7 +27,7 @@ function Guests() {
             placeholder="Insert email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
             renderItem={(item, i, searchText) => (
-              <SpanHighlight
+              <Highlight
                 key={i}
                 highlightString={searchText}
                 style={{
@@ -36,7 +36,7 @@ function Guests() {
                 }}
               >
                 {item.email} - {item.fullName}
-              </SpanHighlight>
+              </Highlight>
             )}
           />
         </div>
@@ -48,10 +48,10 @@ function Guests() {
             searchProp="email"
             placeholder="Insert email"
             listWidth="70rem"
-            listColumns="1fr 1fr 0.7fr 0.3fr"
+            listColumns="1fr 1fr 0.7fr 0.1fr"
             renderItem={(item, i, searchText) => (
               <>
-                <SpanHighlight
+                <Highlight
                   key={i}
                   highlightString={searchText}
                   style={{
@@ -60,7 +60,7 @@ function Guests() {
                   }}
                 >
                   {item.email}
-                </SpanHighlight>
+                </Highlight>
                 <div>{item.fullName}</div>
                 <div>{item.nationality}</div>
                 <div>
@@ -74,7 +74,7 @@ function Guests() {
 
         <div> Next line</div>
       </Row>
-      <SpanHighlight
+      <Highlight
         highlightString="dee"
         style={{
           backgroundColor: 'var(--color-brand-200)',
@@ -82,7 +82,7 @@ function Guests() {
         }}
       >
         Raindeer
-      </SpanHighlight>
+      </Highlight>
     </>
   );
 }
