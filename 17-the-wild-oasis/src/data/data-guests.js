@@ -48,7 +48,7 @@ export const guests = [
   // GPT
   {
     fullName: 'Emma Watson',
-    email: 'emma@gmail.com',
+    email: 'emmawatson@gmail.com',
     nationality: 'United Kingdom',
     nationalID: '1234578901',
     countryFlag: 'https://flagcdn.com/gb.svg',
