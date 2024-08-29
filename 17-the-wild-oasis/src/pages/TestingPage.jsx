@@ -76,7 +76,19 @@ function TestingPage() {
           />
         </div>
 
-
+        <div>
+          <select inputMode="search">
+            <option>Giraffe</option>
+            <option>Elephant</option>
+          </select>
+        </div>
+        <div>
+          <input type="text" name="city" list="cityname" autoComplete="true" />
+          <datalist id="cityname">
+            <option value="Boston">Boston</option>
+            <option value="Cambridge">Cambridge</option>
+          </datalist>
+        </div>
         <Highlight
           highlightString="dee"
           style={{
