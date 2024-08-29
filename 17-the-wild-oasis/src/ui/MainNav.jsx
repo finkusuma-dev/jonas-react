@@ -83,6 +83,10 @@ function MainNav() {
             <HiOutlineCog6Tooth />
             <span>Settings</span>
           </StyledNavLink>
+          <StyledNavLink to="/testing-page">
+            <HiOutlineCog6Tooth />
+            <span>Test</span>
+          </StyledNavLink>
         </ul>
       </NavList>
     </main>
