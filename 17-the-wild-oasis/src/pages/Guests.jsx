@@ -1,8 +1,6 @@
 import useGuests from '../features/guests/useGuests';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
-import SearchData from '../ui/SearchData';
-import Highlight from '../ui/Highlight';
 
 function Guests() {
   const { guests = {}, isLoading } = useGuests();
