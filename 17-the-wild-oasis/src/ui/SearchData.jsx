@@ -100,7 +100,7 @@ function SearchData({
 
   /// Ref to use with Custom click outside
   const refInput = useRef();
-  const refResults = useRef();
+  const refListBox = useRef();
 
   useEffect(
     /// Custom click outside, used to close the list
@@ -112,9 +112,9 @@ function SearchData({
         if (
           isShowList &&
           refInput.current &&
-          refResults.current &&
+          refListBox.current &&
           !refInput.current.contains(e.target) &&
-          !refResults.current.contains(e.target)
+          !refListBox.current.contains(e.target)
         ) {
           // console.log('Click outside');
           setIsShowList(false);
@@ -366,7 +366,7 @@ function SearchData({
         ref={refInput}
       />
       {isShowList && list.length > 0 && (
-        <ListBox ref={refResults} width={listWidth}>
+        <ListBox ref={refListBox} width={listWidth}>
           {!asTable
             ? renderList({
                 searchText,
