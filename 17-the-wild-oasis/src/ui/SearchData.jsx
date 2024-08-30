@@ -12,9 +12,28 @@ const Box = styled.div`
 
 const ListBox = styled.div`
   position: absolute;
-  top: 45px;
+  ${(props) => {
+    if (props.window?.top) {
+      return css`
+        top: ${props.window.top};
+        max-height: ${props.window.maxHeight};
+      `;
+    } else if (props.window.bottom) {
+      return css`
+        bottom: ${props.window.bottom};
+        max-height: ${props.window.maxHeight};
+      `;
+    }
+    return css`
+      top: 45px;
+      max-height: 260px;
+    `;
+  }};
+
   left: 0;
   width: ${(props) => props.width || 'auto'};
+  /* max-height: ${(props) => props.maxHeight || '260px'}; */
+  overflow: scroll;
   z-index: 100;
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-sm);
@@ -29,6 +48,11 @@ const ListBox = styled.div`
 const TableHeaders = styled.div`
   margin-top: -0.8rem;
   padding: 0.5rem 1.2rem;
+  position: sticky;
+  top: -0.8rem;
+  z-index: 100;
+  /* left: 0;
+  right: 0; */
   display: grid;
   grid-template-columns: ${(props) => props.columns};
   background-color: var(--color-grey-300);
@@ -97,6 +121,8 @@ function SearchData({
   const [isShowList, setIsShowList] = useState(false);
   const [activeIdx, setActiveIdx] = useState(null);
   const [isApplyAutoComplete, setIsApplyAutoComplete] = useState(false);
+
+  const [listWindow, setListWindow] = useState({});
 
   /// Ref to use with Custom click outside
   const refInput = useRef();
@@ -212,7 +238,7 @@ function SearchData({
       setList(alist);
     }
 
-    setIsShowList(true);
+    showList();
     setActiveIdx(null);
   }
 
@@ -224,7 +250,7 @@ function SearchData({
     console.log('handleKeyDown', e.key, e.keyCode);
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (!isShowList) return setIsShowList(true);
+      if (!isShowList) return showList();
       setActiveIdx((i) => {
         if (i === null) return 0;
         else if (i + 1 < list.length) {
@@ -234,7 +260,7 @@ function SearchData({
       });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (!isShowList) return setIsShowList(true);
+      if (!isShowList) return showList();
 
       setActiveIdx((i) => {
         if (i - 1 > -1) return i - 1;
@@ -315,6 +341,41 @@ function SearchData({
     // setIsShowList(false);
   }
 
+  function showList() {
+    setIsShowList(true);
+
+    // if (refListBox.current) {/
+    const rectInput = refInput.current.getBoundingClientRect();
+    const topSpace = rectInput.top;
+    const bottomSpace = window.innerHeight - rectInput.bottom;
+    // const rectList = refListBox.current.getBoundingClientRect();
+    // console.log('window.innerHeight', window.innerHeight);
+    // console.log('Input rect', rect);
+    // console.log('rectList', rectList.height);
+
+    console.log(
+      'Top space',
+      rectInput.top,
+      'Bottom space',
+      window.innerHeight - rectInput.bottom
+    );
+    const isOnBottom = 130 <= bottomSpace || bottomSpace > topSpace;
+    //window.innerHeight - rect.bottom > rect.top;
+    // console.log('isOnBottom', isOnBottom);
+    setListWindow(
+      isOnBottom
+        ? {
+            top: rectInput.height + 4 + 'px',
+            maxHeight: window.innerHeight - rectInput.bottom - 8 + 'px',
+          }
+        : {
+            bottom: rectInput.height + 4 + 'px',
+            maxHeight: rectInput.top - 8 + 'px',
+          }
+    );
+    // }
+  }
+
   function selectItem(itemIdx) {
     setIsShowList(false);
     const dataIdx = data.findIndex((obj) =>
@@ -347,8 +408,8 @@ function SearchData({
   }
 
   function getSearchedTextFromItem(item) {
-    /// Data search text is item itself if it's a string,
-    /// Otherwise it's defined by searchProp, data searchText = item[searchProp]
+    /// Searched text is item itself if it's a string,
+    /// Otherwise it's defined by searchProp, searched text = item[searchProp]
     return typeof item === 'string'
       ? item
       : searchProp !== undefined && item[searchProp];
@@ -366,7 +427,7 @@ function SearchData({
         ref={refInput}
       />
       {isShowList && list.length > 0 && (
-        <ListBox ref={refListBox} width={listWidth}>
+        <ListBox ref={refListBox} width={listWidth} window={listWindow}>
           {!asTable
             ? renderList({
                 searchText,

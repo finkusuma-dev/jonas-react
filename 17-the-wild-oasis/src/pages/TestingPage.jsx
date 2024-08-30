@@ -45,7 +45,15 @@ function TestingPage() {
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+            marginTop: '300px',
+            marginBottom: '300px',
+          }}
+        >
           <span>Email</span>
           <SearchData
             data={guests}
