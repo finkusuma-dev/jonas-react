@@ -331,8 +331,12 @@ function SearchData({
 
   /// User clicks the list
   function handleItemClick(idx) {
-    setActiveIdx(idx);
     selectItem(idx);
+    refInput.current.focus();
+  }
+
+  function handleItemMouseDown(idx) {
+    setActiveIdx(idx);
   }
 
   function handleBlur() {
@@ -434,6 +438,7 @@ function SearchData({
                 list,
                 activeIdx,
                 handleItemClick,
+                handleItemMouseDown,
                 renderItem,
               })
             : renderTable({
@@ -441,6 +446,7 @@ function SearchData({
                 list,
                 activeIdx,
                 handleItemClick,
+                handleItemMouseDown,
                 renderItem,
                 tableColumns,
               })}
@@ -455,6 +461,7 @@ function renderList({
   list,
   activeIdx,
   handleItemClick,
+  handleItemMouseDown,
   renderItem,
 }) {
   return (
@@ -464,6 +471,7 @@ function renderList({
           key={i}
           isActive={i == activeIdx}
           onClick={() => handleItemClick(i)}
+          onMouseDown={()=>handleItemMouseDown(i)}
         >
           {typeof item === 'string'
             ? item
@@ -480,6 +488,7 @@ function renderTable({
   list,
   activeIdx,
   handleItemClick,
+  handleItemMouseDown,
   renderItem,
   tableColumns,
 }) {
@@ -505,6 +514,7 @@ function renderTable({
             role="row"
             isActive={i == activeIdx}
             onClick={() => handleItemClick(i)}
+            onMouseDown={() => handleItemMouseDown(i)}
             columns={columns}
           >
             {typeof item === 'string'
