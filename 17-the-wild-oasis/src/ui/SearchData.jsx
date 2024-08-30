@@ -96,7 +96,7 @@ function SearchData({
   const [list, setList] = useState(data);
   const [isShowList, setIsShowList] = useState(false);
   const [activeIdx, setActiveIdx] = useState(null);
-  const [isAutoComplete, setIsAutoComplete] = useState(false);
+  const [isApplyAutoComplete, setIsApplyAutoComplete] = useState(false);
 
   /// Ref to use with Custom click outside
   const refInput = useRef();
@@ -131,11 +131,15 @@ function SearchData({
   /// AUTO COMPLETE part, step 3:
   /// Mark selection for autocomplete
   useEffect(() => {
-    if (autoComplete && isAutoComplete && inputText.indexOf(searchText) === 0) {
+    if (
+      autoComplete &&
+      isApplyAutoComplete &&
+      inputText.indexOf(searchText) === 0
+    ) {
       // console.log('setSelectionRange', searchText.length, inputText.length);
       refInput.current.setSelectionRange(searchText.length, inputText.length);
     }
-  }, [autoComplete, isAutoComplete, searchText, inputText]);
+  }, [autoComplete, isApplyAutoComplete, searchText, inputText]);
 
   // console.log('results', results);
   //console.log('resultActiveIdx', resultActiveIdx);
@@ -196,7 +200,7 @@ function SearchData({
       /// AUTO COMPLETE part, step 2:
       /// Set input text for autocomplete
       if (autoComplete) {
-        if (isAutoComplete && alist.length > 0) {
+        if (isApplyAutoComplete && alist.length > 0) {
           const str = getSearchedTextFromItem(alist[0]);
 
           if (str.indexOf(searchString) === 0) {
@@ -270,7 +274,7 @@ function SearchData({
         selectedText.length === 0 ||
         searchText + selectedText === firstItem
       ) {
-        setIsAutoComplete(e.keyCode > 47);
+        setIsApplyAutoComplete(e.keyCode > 47);
       }
     }
 
