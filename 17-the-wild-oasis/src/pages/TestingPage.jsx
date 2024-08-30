@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import useGuests from '../features/guests/useGuests';
 import Heading from '../ui/Heading';
 import Highlight from '../ui/Highlight';
-import SearchData from '../ui/SearchData';
+import SearchData from '../ui/components/SearchData';
 import Row from '../ui/Row';
 
 const StyledContainer = styled.div`

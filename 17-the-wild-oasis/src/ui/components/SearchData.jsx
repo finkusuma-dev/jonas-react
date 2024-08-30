@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import styled, { css } from 'styled-components';
-import Input from './Input';
+import Input from '../Input';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 
