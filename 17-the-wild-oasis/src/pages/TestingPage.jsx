@@ -4,16 +4,27 @@ import Heading from '../ui/Heading';
 import Highlight from '../ui/Highlight';
 import SearchData from '../ui/components/SearchData';
 import Row from '../ui/Row';
+import ButtonIcon from '../ui/ButtonIcon';
+import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const StyledContainer = styled.div`
+  background-color: var(--color-grey-50);
   padding: 4rem 4.8rem 6.4rem;
 `;
 
 function TestingPage() {
   const { guests = {} } = useGuests();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
     <StyledContainer>
+      <ButtonIcon
+        onClick={toggleDarkMode}
+        style={{ position: 'fixed', right: '1.5rem', top: '1.5rem' }}
+      >
+        {isDarkMode ? <HiOutlineSun /> : <HiOutlineMoon />}
+      </ButtonIcon>
       <Row>
         <Heading as="h1">Testing Page</Heading>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
