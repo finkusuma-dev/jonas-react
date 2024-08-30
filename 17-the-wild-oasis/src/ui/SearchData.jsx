@@ -145,7 +145,7 @@ function SearchData({
   //console.log('resultActiveIdx', resultActiveIdx);
 
   function handleSearchChange(e) {
-    console.log('handleSearch', e.target.value);
+    // console.log('handleSearch', e.target.value);
     const searchString = e.target.value;
     setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
     setSearchText(searchString); // searchText only changes on handleSearchChange.
@@ -245,7 +245,14 @@ function SearchData({
       setIsShowList(false);
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      selectItem(activeIdx);
+      if (activeIdx) {
+        selectItem(activeIdx);
+      } else if (
+        list.length > 0 &&
+        getSearchedTextFromItem(list[0]).indexOf(searchText) === 0
+      ) {
+        selectItem(0);
+      }
     } else if (e.key === 'Tab') {
       setIsShowList(false);
     }
@@ -254,6 +261,16 @@ function SearchData({
     /// AUTO COMPLETE part, step 1: determine isAutoComplete on keyDown event
     /// Prevent autocomplete for keycode <= 47.
     if (autoComplete) {
+      // console.log(
+      //   'e.target.selectionStart',
+      //   e.target.selectionStart,
+      //   searchText.length
+      // );
+
+      /// Only autocomplete when cursor is on the end of searchText
+      if (e.target.selectionStart !== searchText.length) {
+        return setIsApplyAutoComplete(false);
+      }
       const selectedText = e.target.value.substring(
         e.target.selectionStart,
         e.target.selectionEnd
@@ -319,6 +336,10 @@ function SearchData({
     const selectedObj = data[dataIdx];
 
     setInputText(selectedText);
+    refInput.current.setSelectionRange(
+      selectedText.length,
+      selectedText.length
+    );
 
     if (onSelect) {
       onSelect(dataIdx, selectedObj);
