@@ -28,7 +28,7 @@ function TestingPage() {
             // ]}
             data={guests}
             searchProp="email"
-            placeholder="Insert email"
+            placeholder="Search email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
             renderItem={(item, i, searchText) => (
               <Highlight
@@ -58,7 +58,7 @@ function TestingPage() {
           <SearchData
             data={guests}
             searchProp="email"
-            placeholder="Insert email"
+            placeholder="Search email"
             listWidth="70rem"
             autoComplete={true}
             asTable={true}
