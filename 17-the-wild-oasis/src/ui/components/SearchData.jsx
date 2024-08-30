@@ -55,8 +55,8 @@ const TableHeaders = styled.div`
   right: 0; */
   display: grid;
   grid-template-columns: ${(props) => props.columns};
-  background-color: var(--color-grey-300);
-  color: black;
+  background-color: var(--color-grey-200);
+  color: var(--color-grey-700);
 `;
 
 const Item = styled.div`
@@ -471,7 +471,7 @@ function renderList({
           key={i}
           isActive={i == activeIdx}
           onClick={() => handleItemClick(i)}
-          onMouseDown={()=>handleItemMouseDown(i)}
+          onMouseDown={() => handleItemMouseDown(i)}
         >
           {typeof item === 'string'
             ? item
