@@ -2,9 +2,10 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import styled, { css } from 'styled-components';
-import Input from '../Input';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import Input from '../Input';
+import { usePosition } from './usePosition';
 
 const Box = styled.div`
   position: relative;
@@ -13,15 +14,15 @@ const Box = styled.div`
 const ListBox = styled.div`
   position: absolute;
   ${(props) => {
-    if (props.window?.top) {
+    if (props.position?.top) {
       return css`
-        top: ${props.window.top};
-        max-height: ${props.window.maxHeight};
+        top: ${props.position.top};
+        max-height: ${props.position.maxHeight};
       `;
-    } else if (props.window.bottom) {
+    } else if (props.position.bottom) {
       return css`
-        bottom: ${props.window.bottom};
-        max-height: ${props.window.maxHeight};
+        bottom: ${props.position.bottom};
+        max-height: ${props.position.maxHeight};
       `;
     }
     return css`
@@ -121,12 +122,14 @@ function SearchData({
   const [isShowList, setIsShowList] = useState(false);
   const [activeIdx, setActiveIdx] = useState(null);
   const [isApplyAutoComplete, setIsApplyAutoComplete] = useState(false);
-
-  const [listWindow, setListWindow] = useState({});
-
-  /// Ref to use with Custom click outside
   const refInput = useRef();
   const refListBox = useRef();
+
+  const { position, calculatePosition } = usePosition({
+    refAnchorElement: refInput,
+  });
+
+  /// Ref to use with Custom click outside
 
   useEffect(
     /// Custom click outside, used to close the list
@@ -248,6 +251,8 @@ function SearchData({
   /// Escape = close the list
   function handleKeyDown(e) {
     console.log('handleKeyDown', e.key, e.keyCode);
+
+    ///TODO: Scroll into view on pressing ArrowDown & ArrowUp
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (!isShowList) return showList();
@@ -348,36 +353,7 @@ function SearchData({
   function showList() {
     setIsShowList(true);
 
-    // if (refListBox.current) {/
-    const rectInput = refInput.current.getBoundingClientRect();
-    const topSpace = rectInput.top;
-    const bottomSpace = window.innerHeight - rectInput.bottom;
-    // const rectList = refListBox.current.getBoundingClientRect();
-    // console.log('window.innerHeight', window.innerHeight);
-    // console.log('Input rect', rect);
-    // console.log('rectList', rectList.height);
-
-    console.log(
-      'Top space',
-      rectInput.top,
-      'Bottom space',
-      window.innerHeight - rectInput.bottom
-    );
-    const isOnBottom = 130 <= bottomSpace || bottomSpace > topSpace;
-    //window.innerHeight - rect.bottom > rect.top;
-    // console.log('isOnBottom', isOnBottom);
-    setListWindow(
-      isOnBottom
-        ? {
-            top: rectInput.height + 4 + 'px',
-            maxHeight: window.innerHeight - rectInput.bottom - 8 + 'px',
-          }
-        : {
-            bottom: rectInput.height + 4 + 'px',
-            maxHeight: rectInput.top - 8 + 'px',
-          }
-    );
-    // }
+    calculatePosition();
   }
 
   function selectItem(itemIdx) {
@@ -431,7 +407,7 @@ function SearchData({
         ref={refInput}
       />
       {isShowList && list.length > 0 && (
-        <ListBox ref={refListBox} width={listWidth} window={listWindow}>
+        <ListBox ref={refListBox} width={listWidth} position={position}>
           {!asTable
             ? renderList({
                 searchText,
