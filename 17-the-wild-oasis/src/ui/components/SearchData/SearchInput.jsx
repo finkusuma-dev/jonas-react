@@ -12,17 +12,6 @@ function SearchInput() {
     maxResults,
     data,
 
-    //state
-    // list,
-    // setList,
-    // activeIdx,
-    // setActiveIdx,
-    // inputText,
-    // setInputText,
-    // searchText,
-    // setSearchText,
-    // isShowList,
-    // setIsShowList,
     state,
     dispatch,
 

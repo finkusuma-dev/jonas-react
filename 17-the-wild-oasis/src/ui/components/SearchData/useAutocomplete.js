@@ -29,7 +29,7 @@ function useAutocomplete({
   function searchChange(list, searchString) {
     /// AUTO COMPLETE part, step 2:
     /// Set input text for autocomplete
-    console.log('list.length', list.length);
+    // console.log('list.length', list.length);
     if (autoComplete) {
       if (isApplyAutoComplete && list.length > 0) {
         const str = getSearchedTextFromItem(list[0], searchProp);
