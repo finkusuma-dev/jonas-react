@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import useGuests from '../features/guests/useGuests';
 import Heading from '../ui/Heading';
 import Highlight from '../ui/Highlight';
-import SearchData from '../ui/components/SearchData';
+import SearchData from '../ui/components/SearchData/SearchData';
 import Row from '../ui/Row';
 import ButtonIcon from '../ui/ButtonIcon';
 import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';

@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { useRef } from 'react';
 import { useEffect } from 'react';
-import Input from '../Input';
-import { usePosition } from './usePosition';
+import Input from '../../Input';
+import { useListPosition } from './useListPosition';
+import useAutocomplete from './useAutocomplete';
+import { getSearchedTextFromItem } from './func';
 
 const Box = styled.div`
   position: relative;
@@ -121,11 +123,10 @@ function SearchData({
   const [list, setList] = useState(data);
   const [isShowList, setIsShowList] = useState(false);
   const [activeIdx, setActiveIdx] = useState(null);
-  const [isApplyAutoComplete, setIsApplyAutoComplete] = useState(false);
   const refInput = useRef();
   const refListBox = useRef();
 
-  const { position, calculatePosition } = usePosition({
+  const { listPosition, calculateListPosition } = useListPosition({
     refAnchorElement: refInput,
   });
 
@@ -157,18 +158,18 @@ function SearchData({
     [isShowList]
   );
 
-  /// AUTO COMPLETE part, step 3:
-  /// Mark selection for autocomplete
-  useEffect(() => {
-    if (
-      autoComplete &&
-      isApplyAutoComplete &&
-      inputText.indexOf(searchText) === 0
-    ) {
-      // console.log('setSelectionRange', searchText.length, inputText.length);
-      refInput.current.setSelectionRange(searchText.length, inputText.length);
-    }
-  }, [autoComplete, isApplyAutoComplete, searchText, inputText]);
+  const {
+    searchChange: autoCompleteSearchChange,
+    keyDown: autoCompletekeyDown,
+  } = useAutocomplete({
+    autoComplete,
+    inputText,
+    searchText,
+    refInput,
+    setInputText,
+    searchProp,
+    list,
+  });
 
   // console.log('results', results);
   //console.log('resultActiveIdx', resultActiveIdx);
@@ -181,7 +182,7 @@ function SearchData({
 
     if (searchString.length < 2) setList([]);
     else {
-      const alist = data
+      const aList = data
         /// Filter items based on the search string
         .filter((el) =>
           typeof el === 'string'
@@ -192,8 +193,8 @@ function SearchData({
         )
         /// Sort items based on the index where the search string is found
         .sort((a, b) => {
-          const aString = getSearchedTextFromItem(a);
-          const bString = getSearchedTextFromItem(b);
+          const aString = getSearchedTextFromItem(a, searchProp);
+          const bString = getSearchedTextFromItem(b, searchProp);
           const aIdx = aString.indexOf(searchString);
           const bIdx = bString.indexOf(searchString);
 
@@ -228,17 +229,9 @@ function SearchData({
 
       /// AUTO COMPLETE part, step 2:
       /// Set input text for autocomplete
-      if (autoComplete) {
-        if (isApplyAutoComplete && alist.length > 0) {
-          const str = getSearchedTextFromItem(alist[0]);
+      autoCompleteSearchChange(aList, searchString);
 
-          if (str.indexOf(searchString) === 0) {
-            setInputText(str);
-          }
-        }
-      }
-
-      setList(alist);
+      setList(aList);
     }
 
     showList();
@@ -280,51 +273,17 @@ function SearchData({
         selectItem(activeIdx);
       } else if (
         list.length > 0 &&
-        getSearchedTextFromItem(list[0]).indexOf(searchText) === 0
+        getSearchedTextFromItem(list[0], searchProp).indexOf(searchText) === 0
       ) {
         selectItem(0);
       }
     } else if (e.key === 'Tab') {
       setIsShowList(false);
     }
-    // console.log('setIsAutoComplete', e.keyCode);
 
     /// AUTO COMPLETE part, step 1: determine isAutoComplete on keyDown event
     /// Prevent autocomplete for keycode <= 47.
-    if (autoComplete) {
-      // console.log(
-      //   'e.target.selectionStart',
-      //   e.target.selectionStart,
-      //   searchText.length
-      // );
-
-      /// Only autocomplete when cursor is on the end of searchText
-      if (e.target.selectionStart !== searchText.length) {
-        return setIsApplyAutoComplete(false);
-      }
-      const selectedText = e.target.value.substring(
-        e.target.selectionStart,
-        e.target.selectionEnd
-      );
-
-      const firstItem = list.length > 0 ? getSearchedTextFromItem(list[0]) : '';
-      // console.log(
-      //   ' > ',
-      //   searchText,
-      //   ' + ',
-      //   selectedText,
-      //   ' === ',
-      //   firstItem,
-      //   searchText + selectedText === firstItem
-      // );
-      /// if current selected text is from autocomplete, set the next autocomplete
-      if (
-        selectedText.length === 0 ||
-        searchText + selectedText === firstItem
-      ) {
-        setIsApplyAutoComplete(e.keyCode > 47);
-      }
-    }
+    autoCompletekeyDown(e);
 
     // console.log(
     //   'get selection range',
@@ -353,7 +312,7 @@ function SearchData({
   function showList() {
     setIsShowList(true);
 
-    calculatePosition();
+    calculateListPosition();
   }
 
   function selectItem(itemIdx) {
@@ -387,14 +346,6 @@ function SearchData({
     }
   }
 
-  function getSearchedTextFromItem(item) {
-    /// Searched text is item itself if it's a string,
-    /// Otherwise it's defined by searchProp, searched text = item[searchProp]
-    return typeof item === 'string'
-      ? item
-      : searchProp !== undefined && item[searchProp];
-  }
-
   return (
     <Box>
       <Input
@@ -407,7 +358,7 @@ function SearchData({
         ref={refInput}
       />
       {isShowList && list.length > 0 && (
-        <ListBox ref={refListBox} width={listWidth} position={position}>
+        <ListBox ref={refListBox} width={listWidth} position={listPosition}>
           {!asTable
             ? renderList({
                 searchText,

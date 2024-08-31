@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-function usePosition({ refAnchorElement }) {
-  const [position, setPosition] = useState({});
+function useListPosition({ refAnchorElement }) {
+  const [listPosition, setListPosition] = useState({});
 
-  function calculatePosition() {
+  function calculateListPosition() {
     // if (refListBox.current) {/
     const rectInput = refAnchorElement.current.getBoundingClientRect();
     const topSpace = rectInput.top;
@@ -22,7 +22,7 @@ function usePosition({ refAnchorElement }) {
     const isOnBottom = 130 <= bottomSpace || bottomSpace > topSpace;
     //window.innerHeight - rect.bottom > rect.top;
     // console.log('isOnBottom', isOnBottom);
-    setPosition(
+    setListPosition(
       isOnBottom
         ? {
             top: rectInput.height + 4 + 'px',
@@ -36,7 +36,7 @@ function usePosition({ refAnchorElement }) {
     // }
   }
 
-  return { position, calculatePosition };
+  return { listPosition, calculateListPosition };
 }
 
-export { usePosition };
+export { useListPosition };
