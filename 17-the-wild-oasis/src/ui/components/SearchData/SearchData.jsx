@@ -85,12 +85,6 @@ function SearchData({
     [isShowList]
   );
 
-  // function handleBlur() {
-  //   /// NOTE: Closing the list onBlur create an issue: Cannot click the list item to select it.
-  //   // console.log('handleBlur', e);
-  //   // setIsShowList(false);
-  // }
-
   function showList() {
     setIsShowList(true);
 
