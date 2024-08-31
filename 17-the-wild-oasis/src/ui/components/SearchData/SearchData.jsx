@@ -32,6 +32,7 @@ SearchData.propTypes = {
 const initialState = {
   searchText: '',
   inputText: '',
+  data: [],
   list: [],
   isShowList: false,
   activeIdx: null,
@@ -66,7 +67,7 @@ function SearchData({
   tableColumns = [],
   autoComplete = false,
 }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, { ...initialState, data });
   const {
     //  searchText, inputText,
     list,
