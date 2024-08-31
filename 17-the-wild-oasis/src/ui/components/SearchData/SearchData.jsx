@@ -2,13 +2,13 @@ import { createContext } from 'react';
 import { useContext } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import List from './List';
 import { useListPosition } from './useListPosition';
 import SearchInput from './SearchInput';
-import { useReducer } from 'react';
 
 const Box = styled.div`
   position: relative;
@@ -38,7 +38,7 @@ const initialState = {
   activeIdx: null,
 };
 
-export const actionType = Object.freeze({
+export const ActionType = Object.freeze({
   searchChange: 'searchChange',
   setSearchText: 'setSearchText',
   setInputText: 'setInputText',
@@ -99,7 +99,7 @@ function SearchData({
         ) {
           // console.log('Click outside');
           dispatch({
-            type: actionType.hideList,
+            type: ActionType.hideList,
           });
         }
       }
@@ -114,46 +114,46 @@ function SearchData({
   function reducer(state, action) {
     // console.log('reducer action', action);
     switch (action.type) {
-      case actionType.searchChange:
+      case ActionType.searchChange:
         // console.log('action.searchChange');
         return {
           ...state,
           searchText: action.payload,
           inputText: action.payload,
         };
-      case actionType.setSearchText:
+      case ActionType.setSearchText:
         return {
           ...state,
           searchText: action.payload,
         };
-      case actionType.setInputText:
+      case ActionType.setInputText:
         return {
           ...state,
           inputText: action.payload,
         };
-      case actionType.setList:
+      case ActionType.setList:
         return {
           ...state,
           list: action.payload,
         };
 
-      case actionType.emptyList:
+      case ActionType.emptyList:
         return {
           ...state,
           list: [],
         };
 
-      case actionType.showList:
+      case ActionType.showList:
         return {
           ...state,
           isShowList: true,
         };
-      case actionType.hideList:
+      case ActionType.hideList:
         return {
           ...state,
           isShowList: false,
         };
-      case actionType.inputKeyDown: {
+      case ActionType.inputKeyDown: {
         return {
           ...state,
           activeIdx:
@@ -164,19 +164,19 @@ function SearchData({
               : state.activeIdx,
         };
       }
-      case actionType.inputKeyUp: {
+      case ActionType.inputKeyUp: {
         return {
           ...state,
           activeIdx:
             state.activeIdx - 1 > -1 ? state.activeIdx - 1 : state.activeIdx,
         };
       }
-      case actionType.setActiveIdx:
+      case ActionType.setActiveIdx:
         return {
           ...state,
           activeIdx: action.payload,
         };
-      case actionType.clearActiveIdx:
+      case ActionType.clearActiveIdx:
         return {
           ...state,
           activeIdx: null,
@@ -188,7 +188,7 @@ function SearchData({
 
   function showList() {
     dispatch({
-      type: actionType.showList,
+      type: ActionType.showList,
     });
 
     calculateListPosition();
@@ -196,7 +196,7 @@ function SearchData({
 
   function selectItem(itemIdx) {
     dispatch({
-      type: actionType.hideList,
+      type: ActionType.hideList,
     });
 
     const dataIdx = data.findIndex((obj) =>
@@ -218,7 +218,7 @@ function SearchData({
     const selectedObj = data[dataIdx];
 
     dispatch({
-      type: actionType.setInputText,
+      type: ActionType.setInputText,
       payload: selectedText,
     });
 

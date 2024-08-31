@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { actionType, useSearchData } from './SearchData';
+import { ActionType, useSearchData } from './SearchData';
 
 const ListBox = styled.div`
   position: absolute;
@@ -114,7 +114,7 @@ export function RenderList() {
 
   function handleItemMouseDown(idx) {
     dispatch({
-      type: actionType.setActiveIdx,
+      type: ActionType.setActiveIdx,
       payload: idx,
     });
   }
@@ -162,7 +162,7 @@ export function RenderTable() {
 
   function handleItemMouseDown(idx) {
     dispatch({
-      type: actionType.setActiveIdx,
+      type: ActionType.setActiveIdx,
       payload: idx,
     });
   }

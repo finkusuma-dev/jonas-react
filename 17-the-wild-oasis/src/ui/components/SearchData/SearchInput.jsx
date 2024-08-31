@@ -1,6 +1,6 @@
 import Input from '../../Input';
 import { getSearchedTextFromItem } from './func';
-import { actionType, useSearchData } from './SearchData';
+import { ActionType, useSearchData } from './SearchData';
 import useAutocomplete from './useAutocomplete';
 
 function SearchInput() {
@@ -24,7 +24,7 @@ function SearchInput() {
 
   const { list, activeIdx, inputText, searchText, isShowList } = state;
   const setInputText = (input) => {
-    dispatch({ type: actionType.setInputText, payload: input });
+    dispatch({ type: ActionType.setInputText, payload: input });
   };
 
   const {
@@ -45,14 +45,14 @@ function SearchInput() {
     const searchString = e.target.value;
 
     dispatch({
-      type: actionType.searchChange,
+      type: ActionType.searchChange,
       payload: searchString,
     });
 
     // setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
     // setSearchText(searchString); // searchText only changes on handleSearchChange.
 
-    if (searchString.length < 2) dispatch({ type: actionType.emptyList });
+    if (searchString.length < 2) dispatch({ type: ActionType.emptyList });
     // setList([]);
     else {
       const aList = data
@@ -127,19 +127,19 @@ function SearchInput() {
       e.preventDefault();
       if (!isShowList) return showList();
       dispatch({
-        type: actionType.inputKeyDown,
+        type: ActionType.inputKeyDown,
       });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (!isShowList) return showList();
 
       dispatch({
-        type: actionType.inputKeyUp,
+        type: ActionType.inputKeyUp,
       });
     } else if (e.key === 'Escape') {
       e.preventDefault();
       dispatch({
-        type: actionType.hideList,
+        type: ActionType.hideList,
       });
     } else if (e.key === 'Enter') {
       e.preventDefault();
@@ -153,7 +153,7 @@ function SearchInput() {
       }
     } else if (e.key === 'Tab') {
       dispatch({
-        type: actionType.hideList,
+        type: ActionType.hideList,
       });
     }
 
