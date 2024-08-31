@@ -84,26 +84,41 @@ export default function List() {
 
   return (
     <ListBox ref={refListBox} width={listWidth} position={listPosition}>
-      {!asTable ? RenderList() : RenderTable()}
+      {!asTable ? <RenderList /> : <RenderTable />}
     </ListBox>
   );
 }
 
 export function RenderList() {
   const {
+    /// States
+    renderItem,
     searchText,
     list,
     activeIdx,
-    handleItemClick,
-    handleItemMouseDown,
-    renderItem,
+    setActiveIdx,
+    refInput,
+
+    //
+    selectItem,
   } = useSearchData();
+
+  /// User clicks the list
+  function handleItemClick(idx) {
+    selectItem(idx);
+    refInput.current.focus();
+  }
+
+  function handleItemMouseDown(idx) {
+    setActiveIdx(idx);
+  }
+
   return (
     <ul>
       {list.map((item, i) => (
         <Item
           key={i}
-          isActive={i == activeIdx}
+          isactive={i == activeIdx}
           onClick={() => handleItemClick(i)}
           onMouseDown={() => handleItemMouseDown(i)}
         >
@@ -123,11 +138,24 @@ export function RenderTable() {
     searchText,
     list,
     activeIdx,
-    handleItemClick,
-    handleItemMouseDown,
+    // handleItemClick,
+    // handleItemMouseDown,
     renderItem,
     tableColumns,
+    selectItem,
+    refInput,
+    setActiveIdx,
   } = useSearchData();
+
+  /// User clicks the list
+  function handleItemClick(idx) {
+    selectItem(idx);
+    refInput.current.focus();
+  }
+
+  function handleItemMouseDown(idx) {
+    setActiveIdx(idx);
+  }
 
   const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
   return (

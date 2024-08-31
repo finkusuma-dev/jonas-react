@@ -85,16 +85,6 @@ function SearchData({
     [isShowList]
   );
 
-  /// User clicks the list
-  function handleItemClick(idx) {
-    selectItem(idx);
-    refInput.current.focus();
-  }
-
-  function handleItemMouseDown(idx) {
-    setActiveIdx(idx);
-  }
-
   // function handleBlur() {
   //   /// NOTE: Closing the list onBlur create an issue: Cannot click the list item to select it.
   //   // console.log('handleBlur', e);
@@ -171,10 +161,6 @@ function SearchData({
 
         showList,
         selectItem,
-
-        //
-        handleItemClick,
-        handleItemMouseDown,
       }}
     >
       <Box>
