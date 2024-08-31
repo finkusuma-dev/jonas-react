@@ -25,7 +25,7 @@ SearchData.propTypes = {
   onSelect: PropTypes.func.isRequired,
   renderItem: PropTypes.func,
   maxResults: PropTypes.number,
-  listWidth: PropTypes.number,
+  listWidth: PropTypes.string,
   asTable: PropTypes.bool,
   tableColumns: PropTypes.array,
   autoComplete: PropTypes.bool,
