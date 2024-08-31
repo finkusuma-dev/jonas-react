@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { useSearchData } from './SearchData';
+import { actionType, useSearchData } from './SearchData';
 
 const ListBox = styled.div`
   position: absolute;
@@ -91,17 +91,20 @@ export default function List() {
 
 export function RenderList() {
   const {
-    /// States
+    /// Props
     renderItem,
-    searchText,
-    list,
-    activeIdx,
-    setActiveIdx,
+
+    state,
+    dispatch,
+
+    ///Ref
     refInput,
 
-    //
+    // Other
     selectItem,
   } = useSearchData();
+
+  const { searchText, list, activeIdx } = state;
 
   /// User clicks the list
   function handleItemClick(idx) {
@@ -110,7 +113,10 @@ export function RenderList() {
   }
 
   function handleItemMouseDown(idx) {
-    setActiveIdx(idx);
+    dispatch({
+      type: actionType.setActiveIdx,
+      payload: idx,
+    });
   }
 
   return (
@@ -135,17 +141,18 @@ export function RenderList() {
 
 export function RenderTable() {
   const {
-    searchText,
-    list,
-    activeIdx,
-    // handleItemClick,
-    // handleItemMouseDown,
     renderItem,
     tableColumns,
+
+    ///
+    state,
+    dispatch,
+    //
     selectItem,
     refInput,
-    setActiveIdx,
   } = useSearchData();
+
+  const { searchText, list, activeIdx } = state;
 
   /// User clicks the list
   function handleItemClick(idx) {
@@ -154,7 +161,10 @@ export function RenderTable() {
   }
 
   function handleItemMouseDown(idx) {
-    setActiveIdx(idx);
+    dispatch({
+      type: actionType.setActiveIdx,
+      payload: idx,
+    });
   }
 
   const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');

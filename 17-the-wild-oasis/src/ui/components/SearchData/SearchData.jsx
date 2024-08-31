@@ -1,6 +1,5 @@
 import { createContext } from 'react';
 import { useContext } from 'react';
-import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -9,6 +8,7 @@ import styled from 'styled-components';
 import List from './List';
 import { useListPosition } from './useListPosition';
 import SearchInput from './SearchInput';
+import { useReducer } from 'react';
 
 const Box = styled.div`
   position: relative;
@@ -29,8 +29,29 @@ SearchData.propTypes = {
   autoComplete: PropTypes.bool,
 };
 
-export const SearchDataContext = createContext();
+const initialState = {
+  searchText: '',
+  inputText: '',
+  list: [],
+  isShowList: false,
+  activeIdx: null,
+};
 
+export const actionType = Object.freeze({
+  searchChange: 'searchChange',
+  setSearchText: 'setSearchText',
+  setInputText: 'setInputText',
+  setList: 'setList',
+  emptyList: 'emptyList',
+  showList: 'IsShowList/true',
+  hideList: 'IsShowList/false',
+  setActiveIdx: 'setActiveIdx',
+  inputKeyDown: 'input/keyDown',
+  inputKeyUp: 'input/keyUp',
+  clearActiveIdx: 'clearActiveIdx',
+});
+
+export const SearchDataContext = createContext();
 export const useSearchData = () => useContext(SearchDataContext);
 
 function SearchData({
@@ -45,11 +66,13 @@ function SearchData({
   tableColumns = [],
   autoComplete = false,
 }) {
-  const [searchText, setSearchText] = useState('');
-  const [inputText, setInputText] = useState('');
-  const [list, setList] = useState(data);
-  const [isShowList, setIsShowList] = useState(false);
-  const [activeIdx, setActiveIdx] = useState(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const {
+    //  searchText, inputText,
+    list,
+    isShowList,
+  } = state;
+
   const refInput = useRef();
   const refListBox = useRef();
 
@@ -74,7 +97,9 @@ function SearchData({
           !refListBox.current.contains(e.target)
         ) {
           // console.log('Click outside');
-          setIsShowList(false);
+          dispatch({
+            type: actionType.hideList,
+          });
         }
       }
 
@@ -85,14 +110,94 @@ function SearchData({
     [isShowList]
   );
 
+  function reducer(state, action) {
+    // console.log('reducer action', action);
+    switch (action.type) {
+      case actionType.searchChange:
+        // console.log('action.searchChange');
+        return {
+          ...state,
+          searchText: action.payload,
+          inputText: action.payload,
+        };
+      case actionType.setSearchText:
+        return {
+          ...state,
+          searchText: action.payload,
+        };
+      case actionType.setInputText:
+        return {
+          ...state,
+          inputText: action.payload,
+        };
+      case actionType.setList:
+        return {
+          ...state,
+          list: action.payload,
+        };
+
+      case actionType.emptyList:
+        return {
+          ...state,
+          list: [],
+        };
+
+      case actionType.showList:
+        return {
+          ...state,
+          isShowList: true,
+        };
+      case actionType.hideList:
+        return {
+          ...state,
+          isShowList: false,
+        };
+      case actionType.inputKeyDown: {
+        return {
+          ...state,
+          activeIdx:
+            state.activeIdx === null
+              ? 0
+              : state.activeIdx + 1 < state.list.length
+              ? state.activeIdx + 1
+              : state.activeIdx,
+        };
+      }
+      case actionType.inputKeyUp: {
+        return {
+          ...state,
+          activeIdx:
+            state.activeIdx - 1 > -1 ? state.activeIdx - 1 : state.activeIdx,
+        };
+      }
+      case actionType.setActiveIdx:
+        return {
+          ...state,
+          activeIdx: action.payload,
+        };
+      case actionType.clearActiveIdx:
+        return {
+          ...state,
+          activeIdx: null,
+        };
+      default:
+        throw new Error('SearchDataReducer action is unknown');
+    }
+  }
+
   function showList() {
-    setIsShowList(true);
+    dispatch({
+      type: actionType.showList,
+    });
 
     calculateListPosition();
   }
 
   function selectItem(itemIdx) {
-    setIsShowList(false);
+    dispatch({
+      type: actionType.hideList,
+    });
+
     const dataIdx = data.findIndex((obj) =>
       typeof obj === 'string'
         ? obj === list[itemIdx]
@@ -111,7 +216,11 @@ function SearchData({
         : '';
     const selectedObj = data[dataIdx];
 
-    setInputText(selectedText);
+    dispatch({
+      type: actionType.setInputText,
+      payload: selectedText,
+    });
+
     refInput.current.setSelectionRange(
       selectedText.length,
       selectedText.length
@@ -134,27 +243,25 @@ function SearchData({
         renderItem,
         tableColumns,
         autoComplete,
+        data,
 
         //state
-        data,
-        list,
-        setList,
-        activeIdx,
-        setActiveIdx,
-        inputText,
-        setInputText,
-        searchText,
-        setSearchText,
-        listPosition,
-        isShowList,
-        setIsShowList,
+        // list,
+        // activeIdx,
+        // inputText,
+        // searchText,
+        // isShowList,
 
         //ref
         refInput,
         refListBox,
 
+        listPosition,
         showList,
         selectItem,
+
+        state,
+        dispatch,
       }}
     >
       <Box>

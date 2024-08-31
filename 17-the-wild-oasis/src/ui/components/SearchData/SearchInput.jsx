@@ -1,6 +1,6 @@
 import Input from '../../Input';
 import { getSearchedTextFromItem } from './func';
-import { useSearchData } from './SearchData';
+import { actionType, useSearchData } from './SearchData';
 import useAutocomplete from './useAutocomplete';
 
 function SearchInput() {
@@ -10,26 +10,33 @@ function SearchInput() {
     placeholder,
     searchProp,
     maxResults,
+    data,
 
     //state
-    data,
-    list,
-    setList,
-    activeIdx,
-    setActiveIdx,
-    inputText,
-    setInputText,
-    searchText,
-    setSearchText,
+    // list,
+    // setList,
+    // activeIdx,
+    // setActiveIdx,
+    // inputText,
+    // setInputText,
+    // searchText,
+    // setSearchText,
+    // isShowList,
+    // setIsShowList,
+    state,
+    dispatch,
 
     //ref
     refInput,
 
     showList,
-    isShowList,
-    setIsShowList,
     selectItem,
   } = useSearchData();
+
+  const { list, activeIdx, inputText, searchText, isShowList } = state;
+  const setInputText = (input) => {
+    dispatch({ type: actionType.setInputText, payload: input });
+  };
 
   const {
     searchChange: autoCompleteSearchChange,
@@ -47,10 +54,17 @@ function SearchInput() {
   function handleSearchChange(e) {
     // console.log('handleSearch', e.target.value);
     const searchString = e.target.value;
-    setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
-    setSearchText(searchString); // searchText only changes on handleSearchChange.
 
-    if (searchString.length < 2) setList([]);
+    dispatch({
+      type: actionType.searchChange,
+      payload: searchString,
+    });
+
+    // setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
+    // setSearchText(searchString); // searchText only changes on handleSearchChange.
+
+    if (searchString.length < 2) dispatch({ type: actionType.emptyList });
+    // setList([]);
     else {
       const aList = data
         /// Filter items based on the search string
@@ -101,11 +115,19 @@ function SearchInput() {
       /// Set input text for autocomplete
       autoCompleteSearchChange(aList, searchString);
 
-      setList(aList);
+      // setList(aList);
+
+      dispatch({
+        type: 'setList',
+        payload: aList,
+      });
     }
 
     showList();
-    setActiveIdx(null);
+    dispatch({
+      type: 'clearActiveIdx',
+    });
+    // setActiveIdx(null);
   }
 
   function handleKeyDown(e) {
@@ -115,24 +137,21 @@ function SearchInput() {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (!isShowList) return showList();
-      setActiveIdx((i) => {
-        if (i === null) return 0;
-        else if (i + 1 < list.length) {
-          return i + 1;
-        }
-        return i;
+      dispatch({
+        type: actionType.inputKeyDown,
       });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (!isShowList) return showList();
 
-      setActiveIdx((i) => {
-        if (i - 1 > -1) return i - 1;
-        return i;
+      dispatch({
+        type: actionType.inputKeyUp,
       });
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      setIsShowList(false);
+      dispatch({
+        type: actionType.hideList,
+      });
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (activeIdx) {
@@ -144,7 +163,9 @@ function SearchInput() {
         selectItem(0);
       }
     } else if (e.key === 'Tab') {
-      setIsShowList(false);
+      dispatch({
+        type: actionType.hideList,
+      });
     }
 
     /// AUTO COMPLETE part, step 1: determine isAutoComplete on keyDown event
