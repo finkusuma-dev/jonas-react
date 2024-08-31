@@ -118,7 +118,7 @@ export function RenderList() {
       {list.map((item, i) => (
         <Item
           key={i}
-          isactive={i == activeIdx}
+          isActive={i == activeIdx || false}
           onClick={() => handleItemClick(i)}
           onMouseDown={() => handleItemMouseDown(i)}
         >
@@ -177,7 +177,7 @@ export function RenderTable() {
           <Item
             key={i}
             role="row"
-            isActive={i == activeIdx}
+            isActive={i == activeIdx || false}
             onClick={() => handleItemClick(i)}
             onMouseDown={() => handleItemMouseDown(i)}
             columns={columns}
