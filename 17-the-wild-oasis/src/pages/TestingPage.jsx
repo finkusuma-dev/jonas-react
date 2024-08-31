@@ -14,7 +14,7 @@ const StyledContainer = styled.div`
 `;
 
 function TestingPage() {
-  const { guests = {} } = useGuests();
+  const { guests = [] } = useGuests();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
