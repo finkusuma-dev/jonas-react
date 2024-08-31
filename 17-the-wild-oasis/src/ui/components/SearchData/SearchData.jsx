@@ -1,16 +1,16 @@
+import { createContext } from 'react';
+import { useContext } from 'react';
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-
-import styled from 'styled-components';
 import { useRef } from 'react';
 import { useEffect } from 'react';
-import Input from '../../Input';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+import List from './List';
 import { useListPosition } from './useListPosition';
 import useAutocomplete from './useAutocomplete';
 import { getSearchedTextFromItem } from './func';
-import List from './List';
-import { createContext } from 'react';
-import { useContext } from 'react';
+import Input from '../../Input';
 
 const Box = styled.div`
   position: relative;
