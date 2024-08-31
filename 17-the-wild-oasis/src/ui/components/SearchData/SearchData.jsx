@@ -9,6 +9,8 @@ import { useListPosition } from './useListPosition';
 import useAutocomplete from './useAutocomplete';
 import { getSearchedTextFromItem } from './func';
 import List from './List';
+import { createContext } from 'react';
+import { useContext } from 'react';
 
 const Box = styled.div`
   position: relative;
@@ -28,6 +30,10 @@ SearchData.propTypes = {
   tableColumns: PropTypes.array,
   autoComplete: PropTypes.bool,
 };
+
+export const SearchDataContext = createContext();
+
+export const useSearchData = () => useContext(SearchDataContext);
 
 function SearchData({
   data,
@@ -270,32 +276,34 @@ function SearchData({
   }
 
   return (
-    <Box>
-      <Input
-        type="text"
-        value={inputText}
-        onChange={handleSearchChange}
-        onKeyDown={handleKeyDown}
-        onBlur={handleBlur}
-        placeholder={placeholder || 'Search for data'}
-        ref={refInput}
-      />
-      {isShowList && list.length > 0 && (
-        <List
-          listWidth={listWidth}
-          listPosition={listPosition}
-          asTable={asTable}
-          searchText={searchText}
-          list={list}
-          activeIdx={activeIdx}
-          handleItemClick={handleItemClick}
-          handleItemMouseDown={handleItemMouseDown}
-          renderItem={renderItem}
-          tableColumns={tableColumns}
-          refListBox={refListBox}
+    <SearchDataContext.Provider
+      value={{
+        listWidth,
+        listPosition,
+        asTable,
+        searchText,
+        list,
+        activeIdx,
+        handleItemClick,
+        handleItemMouseDown,
+        renderItem,
+        tableColumns,
+        refListBox,
+      }}
+    >
+      <Box>
+        <Input
+          type="text"
+          value={inputText}
+          onChange={handleSearchChange}
+          onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+          placeholder={placeholder || 'Search for data'}
+          ref={refInput}
         />
-      )}
-    </Box>
+        {isShowList && list.length > 0 && <List />}
+      </Box>
+    </SearchDataContext.Provider>
   );
 }
 

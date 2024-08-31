@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import PropTypes from 'prop-types';
+import { useSearchData } from './SearchData';
 
 const ListBox = styled.div`
   position: absolute;
@@ -79,65 +79,25 @@ const Item = styled.div`
   }
 `;
 
-List.propTypes = {
-  asTable: PropTypes.bool,
-  searchText: PropTypes.string,
-  list: PropTypes.array,
-  activeIdx: PropTypes.number,
-  handleItemClick: PropTypes.func,
-  handleItemMouseDown: PropTypes.func,
-  renderItem: PropTypes.func,
-  tableColumns: PropTypes.array,
-  listWidth: PropTypes.number,
-  listPosition: PropTypes.object,
-  refListBox: PropTypes.object,
-};
+export default function List() {
+  const { listWidth, listPosition, asTable, refListBox } = useSearchData();
 
-export default function List({
-  listWidth,
-  listPosition,
-  asTable,
-  searchText,
-  list,
-  activeIdx,
-  handleItemClick,
-  handleItemMouseDown,
-  renderItem,
-  tableColumns,
-  refListBox,
-}) {
   return (
     <ListBox ref={refListBox} width={listWidth} position={listPosition}>
-      {!asTable
-        ? renderList({
-            searchText,
-            list,
-            activeIdx,
-            handleItemClick,
-            handleItemMouseDown,
-            renderItem,
-          })
-        : renderTable({
-            searchText,
-            list,
-            activeIdx,
-            handleItemClick,
-            handleItemMouseDown,
-            renderItem,
-            tableColumns,
-          })}
+      {!asTable ? RenderList() : RenderTable()}
     </ListBox>
   );
 }
 
-export function renderList({
-  searchText,
-  list,
-  activeIdx,
-  handleItemClick,
-  handleItemMouseDown,
-  renderItem,
-}) {
+export function RenderList() {
+  const {
+    searchText,
+    list,
+    activeIdx,
+    handleItemClick,
+    handleItemMouseDown,
+    renderItem,
+  } = useSearchData();
   return (
     <ul>
       {list.map((item, i) => (
@@ -158,15 +118,17 @@ export function renderList({
   );
 }
 
-export function renderTable({
-  searchText,
-  list,
-  activeIdx,
-  handleItemClick,
-  handleItemMouseDown,
-  renderItem,
-  tableColumns,
-}) {
+export function RenderTable() {
+  const {
+    searchText,
+    list,
+    activeIdx,
+    handleItemClick,
+    handleItemMouseDown,
+    renderItem,
+    tableColumns,
+  } = useSearchData();
+
   const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
   return (
     <>
