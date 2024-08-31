@@ -72,6 +72,7 @@ function SearchData({
     //  searchText, inputText,
     list,
     isShowList,
+    activeIdx,
   } = state;
 
   const refInput = useRef();
@@ -81,8 +82,65 @@ function SearchData({
     refAnchorElement: refInput,
   });
 
-  /// Ref to use with Custom click outside
+  /// refInput scroll event listener
+  // useEffect(() => {
+  //   function onScroll() {
+  //     console.log('refListBox.current.scrollTop', refListBox.current.scrollTop);
+  //   }
+  //   console.log('isShowList', isShowList, refListBox.current);
+  //   if (isShowList && refListBox.current) {
+  //     console.log('inside');
+  //     const ref = refListBox.current;
+  //     const res = ref.addEventListener('scroll', onScroll);
+  //     console.log('addevent result', res);
 
+  //     return () => ref.removeEventListener('scroll', onScroll);
+  //   }
+  // }, [isShowList]);
+  /** */
+
+  /// Scroll item into view
+  useEffect(() => {
+    if (isShowList && refListBox.current) {
+      if (activeIdx === null) {
+        refListBox.current.scrollTop = 0;
+      } else {
+        const firstItemTop =
+          refListBox.current.children[1].children[0]?.offsetTop;
+        const listHeight = refListBox.current.clientHeight;
+        const itemTop =
+          refListBox.current.children[1].children[activeIdx]?.offsetTop;
+        const itemBottom =
+          itemTop +
+          refListBox.current.children[1].children[activeIdx]?.clientHeight;
+
+        // console.log(
+        //   'listHeight',
+        //   refListBox.current.clientHeight,
+        //   'firstItemTop',
+        //   firstItemTop,
+        //   'itemTop',
+        //   itemTop,
+        //   'itemBottom',
+        //   itemBottom,
+        //   'refListBox.current.scrollTop',
+        //   refListBox.current.scrollTop
+        // );
+
+        /// Scroll to bottom
+        if (itemBottom > listHeight + refListBox.current.scrollTop) {
+          console.log('scrollTop', itemBottom - listHeight + 8);
+          refListBox.current.scrollTop = itemBottom - listHeight + 8;
+        }
+        /// Scroll to top
+        else if (itemTop - firstItemTop < refListBox.current.scrollTop) {
+          refListBox.current.scrollTop = itemTop - firstItemTop;
+        }
+      }
+    }
+  }, [isShowList, listPosition, activeIdx]);
+
+  /// Custom click outside
   useEffect(
     /// Custom click outside, used to close the list
     /// Not using useClickOutside because needs to trigger it outside of 2 components

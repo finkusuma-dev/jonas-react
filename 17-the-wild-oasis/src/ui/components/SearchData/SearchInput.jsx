@@ -122,7 +122,6 @@ function SearchInput() {
   function handleKeyDown(e) {
     console.log('handleKeyDown', e.key, e.keyCode);
 
-    ///TODO: Scroll into view on pressing ArrowDown & ArrowUp
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (!isShowList) return showList();

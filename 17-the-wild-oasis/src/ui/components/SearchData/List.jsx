@@ -25,6 +25,7 @@ const ListBox = styled.div`
   width: ${(props) => props.width || 'auto'};
   /* max-height: ${(props) => props.maxHeight || '260px'}; */
   overflow: scroll;
+  /* scroll-behavior: smooth; */
   z-index: 100;
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-sm);
