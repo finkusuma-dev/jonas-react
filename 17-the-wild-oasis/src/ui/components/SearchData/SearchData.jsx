@@ -77,6 +77,7 @@ function SearchData({
 
   const refInput = useRef();
   const refListBox = useRef();
+  const refListContainer = useRef();
 
   const { listPosition, calculateListPosition } = useListPosition({
     refAnchorElement: refInput,
@@ -100,20 +101,16 @@ function SearchData({
   /** */
 
   /// Scroll item into view
-  /// TODO: apply it for without header, and also for without table
   useEffect(() => {
-    if (isShowList && refListBox.current) {
+    if (isShowList && refListBox.current && refListContainer.current) {
       if (activeIdx === null) {
         refListBox.current.scrollTop = 0;
       } else {
-        const firstItemTop =
-          refListBox.current.children[1].children[0]?.offsetTop;
+        const firstItemTop = refListContainer.current.children[0]?.offsetTop;
         const listHeight = refListBox.current.clientHeight;
-        const itemTop =
-          refListBox.current.children[1].children[activeIdx]?.offsetTop;
+        const itemTop = refListContainer.current.children[activeIdx]?.offsetTop;
         const itemBottom =
-          itemTop +
-          refListBox.current.children[1].children[activeIdx]?.clientHeight;
+          itemTop + refListContainer.current.children[activeIdx]?.clientHeight;
 
         // console.log(
         //   'listHeight',
@@ -326,6 +323,7 @@ function SearchData({
         //ref
         refInput,
         refListBox,
+        refListContainer,
 
         listPosition,
         showList,
