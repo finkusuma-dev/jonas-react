@@ -78,7 +78,7 @@ function SearchData({
 
   const refInput = useRef();
   const refListBox = useRef();
-  const refListContainer = useRef();
+  const refListItemsContainer = useRef();
 
   const { listPosition, calculateListPosition } = useListPosition({
     refAnchorElement: refInput,
@@ -103,15 +103,18 @@ function SearchData({
 
   /// Scroll item into view
   useEffect(() => {
-    if (isShowList && refListBox.current && refListContainer.current) {
+    if (isShowList && refListBox.current && refListItemsContainer.current) {
       if (activeIdx === null) {
         refListBox.current.scrollTop = 0;
       } else {
-        const firstItemTop = refListContainer.current.children[0]?.offsetTop;
+        const firstItemTop =
+          refListItemsContainer.current.children[0]?.offsetTop;
         const listHeight = refListBox.current.clientHeight;
-        const itemTop = refListContainer.current.children[activeIdx]?.offsetTop;
+        const itemTop =
+          refListItemsContainer.current.children[activeIdx]?.offsetTop;
         const itemBottom =
-          itemTop + refListContainer.current.children[activeIdx]?.clientHeight;
+          itemTop +
+          refListItemsContainer.current.children[activeIdx]?.clientHeight;
 
         /// Scroll to bottom
         if (itemBottom > listHeight + refListBox.current.scrollTop) {
@@ -325,7 +328,7 @@ function SearchData({
         //ref
         refInput,
         refListBox,
-        refListContainer,
+        refListItemsContainer,
 
         listPosition,
         showList,

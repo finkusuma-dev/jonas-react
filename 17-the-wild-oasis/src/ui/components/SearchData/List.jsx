@@ -100,7 +100,7 @@ export function RenderList() {
 
     ///Ref
     refInput,
-    refListContainer,
+    refListItemsContainer,
 
     // Other
     selectItem,
@@ -122,7 +122,7 @@ export function RenderList() {
   }
 
   return (
-    <ul ref={refListContainer}>
+    <ul ref={refListItemsContainer}>
       {list.map((item, i) => (
         <Item
           key={i}
@@ -152,7 +152,7 @@ export function RenderTable() {
     //
     selectItem,
     refInput,
-    refListContainer,
+    refListItemsContainer,
   } = useSearchData();
 
   const { searchText, list, activeIdx } = state;
@@ -185,7 +185,7 @@ export function RenderTable() {
           ))}
         </TableHeaders>
       )}
-      <div ref={refListContainer}>
+      <div ref={refListItemsContainer}>
         {list.map((item, i) => (
           <Item
             key={i}
