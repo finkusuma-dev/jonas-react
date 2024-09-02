@@ -104,7 +104,7 @@ function TestingPage() {
                 </Highlight>
                 <div>{item.fullName}</div>
                 <div>{item.nationality}</div>
-                <div style={{ justifySelf: 'center' }}>
+                <div>
                   <img src={item.countryFlag} width="20rem" />
                 </div>
               </>

@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { ActionType, useSearchData } from './SearchData';
+import { cloneElement } from 'react';
 
 const ListBox = styled.div`
   position: absolute;
@@ -171,6 +172,44 @@ export function RenderTable() {
   }
 
   const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
+
+  ///
+  let reactElements = list.map((item, i) => {
+    const itemReactEl =
+      typeof item === 'string'
+        ? item
+        : renderItem !== undefined
+        ? renderItem(item, i, searchText)
+        : '';
+
+    /// align items based on the tableColumns[i].align property
+    ///
+    if (tableColumns.length > 0) {
+      const alignedItem = itemReactEl.props?.children.map((el, colIdx) => {
+        if (
+          tableColumns[colIdx].align &&
+          tableColumns[colIdx].align !== 'left'
+        ) {
+          if (el.props.style) {
+            /// add prop to the style
+            el.props.style.justifySelf = tableColumns[colIdx].align ?? 'left';
+          }
+          /// add new style prop
+          else
+            el = cloneElement(el, {
+              style: { justifySelf: tableColumns[colIdx].align ?? 'left' },
+            });
+        }
+        // console.log(`${colIdx}`, el.props.style);
+        return el;
+      });
+
+      return alignedItem;
+    }
+
+    return itemReactEl;
+  });
+
   return (
     <>
       {tableColumns.some((item) => 'header' in item) && (
@@ -195,11 +234,7 @@ export function RenderTable() {
             onMouseDown={() => handleItemMouseDown(i)}
             columns={columns}
           >
-            {typeof item === 'string'
-              ? item
-              : renderItem !== undefined
-              ? renderItem(item, i, searchText)
-              : ''}
+            {reactElements[i]}
           </Item>
         ))}
       </div>
