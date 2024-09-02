@@ -1,5 +1,4 @@
 import Input from '../../Input';
-import { getSearchedTextFromItem } from './func';
 import { ActionType, useSearchData } from './SearchData';
 import useAutocomplete from './useAutocomplete';
 
@@ -20,9 +19,19 @@ function SearchInput() {
 
     showList,
     selectItem,
+    getSearchedTextFromItem,
   } = useSearchData();
 
-  const { list, activeIdx, inputText, searchText, isShowList } = state;
+  const firstItemStr =
+    state.list.length > 0 && getSearchedTextFromItem(state.list[0]);
+  // console.log(
+  //   'init firstItemStr',
+  //   firstItemStr,
+  //   'state.list.length',
+  //   state.list.length
+  // );
+
+  // const { list, activeIdx, inputText, searchText, isShowList } = state;
   const setInputText = (input) => {
     dispatch({ type: ActionType.setInputText, payload: input });
   };
@@ -31,45 +40,38 @@ function SearchInput() {
     searchChange: autoCompleteSearchChange,
     keyDown: autoCompleteKeyDown,
   } = useAutocomplete({
-    autoComplete,
-    inputText,
-    searchText,
-    refInput,
-    searchProp,
+    enabled: autoComplete,
+    inputText: state.inputText,
     setInputText,
-    list,
+    searchText: state.searchText,
+    refInput,
   });
 
-  function handleSearchChange(e) {
-    // console.log('handleSearch', e.target.value);
-    const searchString = e.target.value;
+  function handleChange(e) {
+    const newSearchString = e.target.value;
 
     dispatch({
       type: ActionType.searchChange,
-      payload: searchString,
+      payload: newSearchString,
     });
 
-    // setInputText(searchString); // inputText changes on handleSearchChange and on select result item.
-    // setSearchText(searchString); // searchText only changes on handleSearchChange.
-
-    if (searchString.length < 2) dispatch({ type: ActionType.emptyList });
-    // setList([]);
+    if (newSearchString.length < 2) dispatch({ type: ActionType.emptyList });
     else {
-      const aList = data
+      const newList = data
         /// Filter items based on the search string
         .filter((el) =>
           typeof el === 'string'
-            ? String(el).includes(searchString)
+            ? String(el).includes(newSearchString)
             : searchProp !== undefined && el[searchProp]
-            ? String(el[searchProp]).includes(searchString)
+            ? String(el[searchProp]).includes(newSearchString)
             : false
         )
         /// Sort items based on the index where the search string is found
         .sort((a, b) => {
-          const aString = getSearchedTextFromItem(a, searchProp);
-          const bString = getSearchedTextFromItem(b, searchProp);
-          const aIdx = aString.indexOf(searchString);
-          const bIdx = bString.indexOf(searchString);
+          const aString = getSearchedTextFromItem(a);
+          const bString = getSearchedTextFromItem(b);
+          const aIdx = aString.indexOf(newSearchString);
+          const bIdx = bString.indexOf(newSearchString);
 
           if (aIdx !== bIdx) {
             /// If idx are not the same, simply substract the idx.
@@ -82,10 +84,10 @@ function SearchInput() {
             /// In this case 'library' should appear before 'light'
             ///
             const restAString = String(aString).substring(
-              aString.indexOf(searchString) + searchString.length
+              aString.indexOf(newSearchString) + newSearchString.length
             );
             const restbString = String(bString).substring(
-              bString.indexOf(searchString) + searchString.length
+              bString.indexOf(newSearchString) + newSearchString.length
             );
             const res =
               restAString < restbString
@@ -93,44 +95,43 @@ function SearchInput() {
                 : restAString > restbString
                 ? 1
                 : 0;
-            // console.log('rest a:b', restAString, restbString, res);
             return res;
           }
         })
         /// Limit the number of items to only less or equal than maxResult
         .filter((el, i) => i < maxResults);
 
+      // console.log('newList', newList);
+
+      const newFirstItemStr = getSearchedTextFromItem(newList[0]);
       /// AUTO COMPLETE part, step 2:
       /// Set input text for autocomplete
-      autoCompleteSearchChange(aList, searchString);
-
-      // setList(aList);
+      autoCompleteSearchChange(newSearchString, newFirstItemStr);
 
       dispatch({
-        type: 'setList',
-        payload: aList,
+        type: ActionType.setList,
+        payload: newList,
       });
     }
 
     showList();
     dispatch({
-      type: 'clearActiveIdx',
+      type: ActionType.clearActiveIdx,
     });
-    // setActiveIdx(null);
   }
 
   function handleKeyDown(e) {
-    console.log('handleKeyDown', e.key, e.keyCode);
+    // console.log('handleKeyDown', e.key, e.keyCode);
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (!isShowList) return showList();
+      if (!state.isShowList) return showList();
       dispatch({
         type: ActionType.inputKeyDown,
       });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (!isShowList) return showList();
+      if (!state.isShowList) return showList();
 
       dispatch({
         type: ActionType.inputKeyUp,
@@ -142,12 +143,9 @@ function SearchInput() {
       });
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (activeIdx) {
-        selectItem(activeIdx);
-      } else if (
-        list.length > 0 &&
-        getSearchedTextFromItem(list[0], searchProp).indexOf(searchText) === 0
-      ) {
+      if (state.activeIdx) {
+        selectItem(state.activeIdx);
+      } else if (firstItemStr?.indexOf(state.searchText) === 0) {
         selectItem(0);
       }
     } else if (e.key === 'Tab') {
@@ -157,8 +155,7 @@ function SearchInput() {
     }
 
     /// AUTO COMPLETE part, step 1: determine isAutoComplete on keyDown event
-    /// Prevent autocomplete for keycode <= 47.
-    autoCompleteKeyDown(e);
+    autoCompleteKeyDown(e, firstItemStr);
 
     // console.log(
     //   'get selection range',
@@ -171,8 +168,8 @@ function SearchInput() {
   return (
     <Input
       type="text"
-      value={inputText}
-      onChange={handleSearchChange}
+      value={state.inputText}
+      onChange={handleChange}
       onKeyDown={handleKeyDown}
       // onBlur={handleBlur}
       placeholder={placeholder || 'Search for data'}

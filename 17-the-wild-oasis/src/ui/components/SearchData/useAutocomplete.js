@@ -1,67 +1,67 @@
+import { useRef } from 'react';
 import { useEffect } from 'react';
-import { useState } from 'react';
-import { getSearchedTextFromItem } from './func';
 
 function useAutocomplete({
-  autoComplete,
+  enabled,
   inputText,
+  setInputText,
   searchText,
   refInput,
-  searchProp,
-  setInputText,
-  list,
 }) {
-  const [isApplyAutoComplete, setIsApplyAutoComplete] = useState(false);
+  const refApplied = useRef(false);
 
   /// AUTO COMPLETE part, step 3:
   /// Mark selection for autocomplete
   useEffect(() => {
     if (
-      autoComplete &&
-      isApplyAutoComplete &&
-      inputText.indexOf(searchText) === 0
+      enabled &&
+      refApplied.current
+      // && inputText.indexOf(searchText) === 0
     ) {
-      // console.log('setSelectionRange', searchText.length, inputText.length);
       refInput.current.setSelectionRange(searchText.length, inputText.length);
     }
-  }, [autoComplete, isApplyAutoComplete, searchText, inputText, refInput]);
+  }, [enabled, searchText, inputText, refInput]);
 
-  function searchChange(list, searchString) {
+  function searchChange(newSearchString, newFirstItemStr) {
     /// AUTO COMPLETE part, step 2:
     /// Set input text for autocomplete
-    // console.log('list.length', list.length);
-    if (autoComplete) {
-      if (isApplyAutoComplete && list.length > 0) {
-        const str = getSearchedTextFromItem(list[0], searchProp);
-
-        if (str.indexOf(searchString) === 0) {
-          setInputText(str);
-        }
+    if (enabled) {
+      if (
+        refApplied.current &&
+        newFirstItemStr &&
+        newFirstItemStr.indexOf(newSearchString) === 0
+      ) {
+        // console.log('setInputText');
+        setInputText(newFirstItemStr);
+      } else {
+        refApplied.current = false;
       }
     }
   }
 
-  function keyDown(e) {
+  function keyDown(e, firstItemStr) {
     /// AUTO COMPLETE part, step 1: determine isApplyAutoComplete on keyDown event
     /// Prevent autocomplete for keycode <= 47.
-    if (autoComplete) {
-      // console.log(
-      //   'e.target.selectionStart',
-      //   e.target.selectionStart,
-      //   searchText.length
-      // );
-
+    if (enabled) {
       /// Only perform autocomplete when the cursor is on the end of searchText
+      refApplied.current = false;
+
       if (e.target.selectionStart !== searchText.length) {
-        return setIsApplyAutoComplete(false);
+        return;
       }
       const selectedText = e.target.value.substring(
         e.target.selectionStart,
         e.target.selectionEnd
       );
 
-      const firstItem =
-        list.length > 0 ? getSearchedTextFromItem(list[0], searchProp) : '';
+      /// If current selected text is from previous autocomplete,
+      /// set the next autocomplete
+      if (!selectedText.length || searchText + selectedText === firstItemStr) {
+        refApplied.current = e.keyCode > 47;
+      }
+
+      // const firstItem =
+      //   list.length > 0 ? getSearchedTextFromItem(list[0], searchProp) : '';
       // console.log(
       //   ' > ',
       //   searchText,
@@ -71,15 +71,6 @@ function useAutocomplete({
       //   firstItem,
       //   searchText + selectedText === firstItem
       // );
-
-      /// If current selected text is from previous autocomplete,
-      /// set the next autocomplete
-      if (
-        selectedText.length === 0 ||
-        searchText + selectedText === firstItem
-      ) {
-        setIsApplyAutoComplete(e.keyCode > 47);
-      }
     }
   }
 
