@@ -40,6 +40,7 @@ const initialState = {
 
 export const ActionType = Object.freeze({
   searchChange: 'searchChange',
+  clearSearch: 'clearSearch',
   setSearchText: 'setSearchText',
   setInputText: 'setInputText',
   setList: 'setList',
@@ -176,6 +177,16 @@ function SearchData({
           ...state,
           searchText: action.payload,
           inputText: action.payload,
+        };
+      case ActionType.clearSearch:
+        // console.log('action.searchChange');
+        return {
+          ...state,
+          searchText: '',
+          inputText: '',
+          list: [],
+          activeIdx: null,
+          isShowList: false,
         };
       case ActionType.setSearchText:
         return {

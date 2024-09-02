@@ -165,16 +165,52 @@ function SearchInput() {
     // );
   }
 
+  function handleClearInput() {
+    dispatch({ type: ActionType.clearSearch });
+    refInput.current.focus();
+  }
+
   return (
-    <Input
-      type="text"
-      value={state.inputText}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      // onBlur={handleBlur}
-      placeholder={placeholder || 'Search for data'}
-      ref={refInput}
-    />
+    <>
+      <Input
+        type="text"
+        value={state.inputText}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        // onBlur={handleBlur}
+        placeholder={placeholder || 'Search for data'}
+        ref={refInput}
+        style={{
+          position: 'relative',
+        }}
+      />
+      {state.inputText && (
+        /// Clear Button
+        <div
+          style={{
+            border: 'none',
+            padding: '10px',
+            position: 'absolute',
+            right: '0px',
+            top: '0',
+            bottom: '0',
+            color: 'var(--color-grey-600)',
+            cursor: 'pointer',
+          }}
+          onClick={handleClearInput}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+          </svg>
+        </div>
+      )}
+    </>
   );
 }
 
