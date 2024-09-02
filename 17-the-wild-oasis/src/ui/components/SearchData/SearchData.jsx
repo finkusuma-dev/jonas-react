@@ -100,6 +100,7 @@ function SearchData({
   /** */
 
   /// Scroll item into view
+  /// TODO: apply it for without header, and also for without table
   useEffect(() => {
     if (isShowList && refListBox.current) {
       if (activeIdx === null) {
