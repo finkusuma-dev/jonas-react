@@ -30,12 +30,12 @@ SearchData.propTypes = {
 };
 
 const initialState = {
-  searchText: '',
-  inputText: '',
+  inputText: '', /// Input Text component's value
+  searchText: '', /// The actual keyboard keys pressed/search by the user
   data: [],
-  list: [],
-  isShowList: false,
-  activeIdx: null,
+  list: [], /// The results of searching the searchText
+  isShowList: false, /// The state of showing the list
+  activeIdx: null, /// The active index of item in the list. Set when user presses keydown/keyup/click with mouse.
 };
 
 export const ActionType = Object.freeze({
@@ -112,19 +112,6 @@ function SearchData({
         const itemTop = refListContainer.current.children[activeIdx]?.offsetTop;
         const itemBottom =
           itemTop + refListContainer.current.children[activeIdx]?.clientHeight;
-
-        // console.log(
-        //   'listHeight',
-        //   refListBox.current.clientHeight,
-        //   'firstItemTop',
-        //   firstItemTop,
-        //   'itemTop',
-        //   itemTop,
-        //   'itemBottom',
-        //   itemBottom,
-        //   'refListBox.current.scrollTop',
-        //   refListBox.current.scrollTop
-        // );
 
         /// Scroll to bottom
         if (itemBottom > listHeight + refListBox.current.scrollTop) {
