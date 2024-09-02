@@ -224,7 +224,11 @@ function SearchData({
         return {
           ...state,
           activeIdx:
-            state.activeIdx - 1 > -1 ? state.activeIdx - 1 : state.activeIdx,
+            state.activeIdx === null
+              ? 0
+              : state.activeIdx - 1 > -1
+              ? state.activeIdx - 1
+              : state.activeIdx,
         };
       }
       case ActionType.setActiveIdx:
