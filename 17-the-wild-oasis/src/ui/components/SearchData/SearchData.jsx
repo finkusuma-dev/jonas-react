@@ -1,7 +1,6 @@
 import { createContext } from 'react';
 import { useContext } from 'react';
 import { useRef } from 'react';
-import { useEffect } from 'react';
 import { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -10,6 +9,7 @@ import List from './List';
 import { useListPosition } from './useListPosition';
 import SearchInput from './SearchInput';
 import useSearchDataClickOutside from './useSearchDataClickOutside';
+import useScrollItemIntoView from './useScrollItemIntoView';
 
 const Box = styled.div`
   position: relative;
@@ -105,32 +105,12 @@ function SearchData({
   /** */
 
   /// Scroll item into view
-  useEffect(() => {
-    if (isShowList && refListBox.current && refListItemsContainer.current) {
-      if (activeIdx === null) {
-        refListBox.current.scrollTop = 0;
-      } else {
-        const firstItemTop =
-          refListItemsContainer.current.children[0]?.offsetTop;
-        const listHeight = refListBox.current.clientHeight;
-        const itemTop =
-          refListItemsContainer.current.children[activeIdx]?.offsetTop;
-        const itemBottom =
-          itemTop +
-          refListItemsContainer.current.children[activeIdx]?.clientHeight;
-
-        /// Scroll to bottom
-        if (itemBottom > listHeight + refListBox.current.scrollTop) {
-          console.log('scrollTop', itemBottom - listHeight + 8);
-          refListBox.current.scrollTop = itemBottom - listHeight + 8;
-        }
-        /// Scroll to top
-        else if (itemTop - firstItemTop < refListBox.current.scrollTop) {
-          refListBox.current.scrollTop = itemTop - firstItemTop;
-        }
-      }
-    }
-  }, [isShowList, listPosition, activeIdx]);
+  useScrollItemIntoView({
+    isShowList,
+    activeIdx,
+    refListBox,
+    refListItemsContainer,
+  });
 
   function reducer(state, action) {
     // console.log('reducer action', action);
