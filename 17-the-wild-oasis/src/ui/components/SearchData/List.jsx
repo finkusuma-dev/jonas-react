@@ -225,7 +225,7 @@ export function RenderTable() {
         </TableHeaders>
       )}
       <div ref={refListItemsContainer}>
-        {list.map((item, i) => (
+        {reactElements.map((el, i) => (
           <Item
             key={i}
             role="row"
@@ -234,7 +234,7 @@ export function RenderTable() {
             onMouseDown={() => handleItemMouseDown(i)}
             columns={columns}
           >
-            {reactElements[i]}
+            {el}
           </Item>
         ))}
       </div>
