@@ -5,15 +5,15 @@ import { cloneElement } from 'react';
 const ListBox = styled.div`
   position: absolute;
   ${(props) => {
-    if (props.position?.top) {
+    if (props.window?.top) {
       return css`
-        top: ${props.position.top};
-        max-height: ${props.position.maxHeight};
+        top: ${props.window.top};
+        max-height: ${props.window.maxHeight};
       `;
-    } else if (props.position.bottom) {
+    } else if (props.window?.bottom) {
       return css`
-        bottom: ${props.position.bottom};
-        max-height: ${props.position.maxHeight};
+        bottom: ${props.window.bottom};
+        max-height: ${props.window.maxHeight};
       `;
     }
     return css`
@@ -82,10 +82,10 @@ const Item = styled.div`
 `;
 
 export default function List() {
-  const { listWidth, listPosition, asTable, refListBox } = useSearchData();
+  const { listWidth, listWindow, asTable, refListBox } = useSearchData();
 
   return (
-    <ListBox ref={refListBox} width={listWidth} position={listPosition}>
+    <ListBox ref={refListBox} width={listWidth} window={listWindow}>
       {!asTable ? <RenderList /> : <RenderTable />}
     </ListBox>
   );

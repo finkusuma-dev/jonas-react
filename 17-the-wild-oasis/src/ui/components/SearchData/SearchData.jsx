@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import List from './List';
-import { useListPosition } from './useListPosition';
+import { usePositionListWindow } from './usePositionListWindow';
 import SearchInput from './SearchInput';
 import useSearchDataClickOutside from './useSearchDataClickOutside';
 import useScrollItemIntoView from './useScrollItemIntoView';
@@ -81,8 +81,8 @@ function SearchData({
   const refListBox = useRef();
   const refListItemsContainer = useRef();
 
-  const { listPosition, calculateListPosition } = useListPosition({
-    refAnchorElement: refInput,
+  const { listWindow, calculateListWindow } = usePositionListWindow({
+    refInput,
   });
 
   useSearchDataClickOutside({ refInput, refListBox, isShowList, dispatch });
@@ -206,7 +206,7 @@ function SearchData({
       type: ActionType.showList,
     });
 
-    calculateListPosition();
+    calculateListWindow();
   }
 
   function selectItem(itemIdx) {
@@ -284,7 +284,7 @@ function SearchData({
         refListBox,
         refListItemsContainer,
 
-        listPosition,
+        listWindow,
         showList,
         selectItem,
         getSearchedTextFromItem,
