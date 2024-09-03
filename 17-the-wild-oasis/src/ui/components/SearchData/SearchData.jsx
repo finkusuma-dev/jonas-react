@@ -83,6 +83,8 @@ function SearchData({
 
   const { listWindow, calculateListWindow } = usePositionListWindow({
     refInput,
+    refListBox,
+    refListItemsContainer,
   });
 
   useSearchDataClickOutside({ refInput, refListBox, isShowList, dispatch });
@@ -105,12 +107,12 @@ function SearchData({
   /** */
 
   /// Scroll item into view
-  useScrollItemIntoView({
-    isShowList,
-    activeIdx,
-    refListBox,
-    refListItemsContainer,
-  });
+  // useScrollItemIntoView({
+  //   isShowList,
+  //   activeIdx,
+  //   refListBox,
+  //   refListItemsContainer,
+  // });
 
   function reducer(state, action) {
     // console.log('reducer action', action);

@@ -25,7 +25,7 @@ const ListBox = styled.div`
   left: 0;
   width: ${(props) => props.width || 'auto'};
   /* max-height: ${(props) => props.maxHeight || '260px'}; */
-  overflow: scroll;
+  /* overflow: scroll; */
   /* scroll-behavior: smooth; */
   z-index: 100;
   background-color: var(--color-grey-0);
@@ -35,14 +35,14 @@ const ListBox = styled.div`
   //
   position: absolute;
   border: 1px solid var(--color-grey-300);
-  padding: 0.8rem 0;
+  /* padding: 0.8rem 0; */
 `;
 
 const TableHeaders = styled.div`
-  margin-top: -0.8rem;
+  /* margin-top: -0.8rem; */
   padding: 0.5rem 1.2rem;
   position: sticky;
-  top: -0.8rem;
+  /* top: -0.8rem; */
   z-index: 100;
   /* left: 0;
   right: 0; */
@@ -174,7 +174,7 @@ export function RenderTable() {
   const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
 
   ///
-  let reactElements = list.map((item, i) => {
+  let reactElementItem = list.map((item, i) => {
     const itemReactEl =
       typeof item === 'string'
         ? item
@@ -224,8 +224,15 @@ export function RenderTable() {
           ))}
         </TableHeaders>
       )}
-      <div ref={refListItemsContainer}>
-        {reactElements.map((el, i) => (
+      <div
+        ref={refListItemsContainer}
+        style={{
+          overflow: 'scroll',
+          border: '0px solid red',
+          padding: '0.8rem 0',
+        }}
+      >
+        {list.map((_, i) => (
           <Item
             key={i}
             role="row"
@@ -234,7 +241,7 @@ export function RenderTable() {
             onMouseDown={() => handleItemMouseDown(i)}
             columns={columns}
           >
-            {el}
+            {reactElementItem[i]}
           </Item>
         ))}
       </div>
