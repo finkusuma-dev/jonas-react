@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import List from './List';
 import { useListPosition } from './useListPosition';
 import SearchInput from './SearchInput';
+import useSearchDataClickOutside from './useSearchDataClickOutside';
 
 const Box = styled.div`
   position: relative;
@@ -84,6 +85,8 @@ function SearchData({
     refAnchorElement: refInput,
   });
 
+  useSearchDataClickOutside({ refInput, refListBox, isShowList, dispatch });
+
   /// refInput scroll event listener
   // useEffect(() => {
   //   function onScroll() {
@@ -128,35 +131,6 @@ function SearchData({
       }
     }
   }, [isShowList, listPosition, activeIdx]);
-
-  /// Custom click outside
-  useEffect(
-    /// Custom click outside, used to close the list
-    /// Not using useClickOutside because needs to trigger it outside of 2 components
-    function () {
-      function handleClick(e) {
-        // e.stopPropagation();
-        // console.log('clickOutside', ref.current, e.target);
-        if (
-          isShowList &&
-          refInput.current &&
-          refListBox.current &&
-          !refInput.current.contains(e.target) &&
-          !refListBox.current.contains(e.target)
-        ) {
-          // console.log('Click outside');
-          dispatch({
-            type: ActionType.hideList,
-          });
-        }
-      }
-
-      document.addEventListener('click', handleClick, false);
-
-      return () => document.removeEventListener('click', handleClick);
-    },
-    [isShowList]
-  );
 
   function reducer(state, action) {
     // console.log('reducer action', action);
