@@ -93,7 +93,6 @@ function TestingPage() {
             renderItem={(item, i, searchText) => (
               <>
                 <Highlight
-                  key={i}
                   highlightString={searchText}
                   style={{
                     backgroundColor: 'var(--color-brand-700)',
