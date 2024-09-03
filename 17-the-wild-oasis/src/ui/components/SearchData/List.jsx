@@ -91,6 +91,12 @@ export default function List() {
   );
 }
 
+// TODO: Merge RenderList & RenderTable.
+//       Only use "columns" prop to specify the list of columns shown. Delete asTable prop.
+// TODO: Make renderItem prop optional. Use it to provide custom render.
+// TODO: Apply renderItem prop to custom render an item. Also provide to custom render a header.
+// TODO: Provide custom styles for elements.
+
 export function RenderList() {
   const {
     /// Props
