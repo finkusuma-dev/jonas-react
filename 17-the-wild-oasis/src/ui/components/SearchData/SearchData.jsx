@@ -92,12 +92,15 @@ function SearchData({
   /// refInput scroll event listener
   // useEffect(() => {
   //   function onScroll() {
-  //     console.log('refListBox.current.scrollTop', refListBox.current.scrollTop);
+  //     console.log(
+  //       'refListItemsContainer.scrollTop',
+  //       refListItemsContainer.current.scrollTop
+  //     );
   //   }
-  //   console.log('isShowList', isShowList, refListBox.current);
-  //   if (isShowList && refListBox.current) {
+  //   // console.log('isShowList', isShowList, refListBox.current);
+  //   if (isShowList && refListItemsContainer.current) {
   //     console.log('inside');
-  //     const ref = refListBox.current;
+  //     const ref = refListItemsContainer.current;
   //     const res = ref.addEventListener('scroll', onScroll);
   //     console.log('addevent result', res);
 
@@ -107,12 +110,11 @@ function SearchData({
   /** */
 
   /// Scroll item into view
-  // useScrollItemIntoView({
-  //   isShowList,
-  //   activeIdx,
-  //   refListBox,
-  //   refListItemsContainer,
-  // });
+  useScrollItemIntoView({
+    isShowList,
+    activeIdx,
+    refListItemsContainer,
+  });
 
   function reducer(state, action) {
     // console.log('reducer action', action);

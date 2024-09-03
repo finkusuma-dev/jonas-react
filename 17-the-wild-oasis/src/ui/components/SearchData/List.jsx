@@ -123,7 +123,14 @@ export function RenderList() {
   }
 
   return (
-    <ul ref={refListItemsContainer}>
+    <ul
+      ref={refListItemsContainer}
+      style={{
+        overflow: 'scroll',
+        border: '0px solid red',
+        padding: '0.8rem 0',
+      }}
+    >
       {list.map((item, i) => (
         <Item
           key={i}

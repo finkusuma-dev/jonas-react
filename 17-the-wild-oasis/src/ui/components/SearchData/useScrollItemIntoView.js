@@ -7,40 +7,59 @@ import { useEffect } from 'react';
 function useScrollItemIntoView({
   isShowList,
   activeIdx,
-  refListBox,
   refListItemsContainer,
 }) {
   useEffect(() => {
-    if (isShowList && refListBox.current && refListItemsContainer.current) {
+    if (isShowList && refListItemsContainer.current) {
+      // console.log('refListBox', refListBox.current.maxHeight);
+      // console.log(
+      //   'refListItemsContainer',
+      //   refListItemsContainer.current.clientHeight,
+      //   'scrollTop',
+      //   refListItemsContainer.current.scrollTop
+      // );
       if (activeIdx === null) {
-        refListBox.current.scrollTop = 0;
+        refListItemsContainer.current.scrollTop = 0;
       } else {
         const firstItemTop =
           refListItemsContainer.current.children[0]?.offsetTop;
-        const listHeight = refListBox.current.clientHeight;
+        const listHeight = refListItemsContainer.current.clientHeight;
         const itemTop =
           refListItemsContainer.current.children[activeIdx]?.offsetTop;
         const itemBottom =
           itemTop +
           refListItemsContainer.current.children[activeIdx]?.clientHeight;
 
-        const listBoxMarginBottom = Number.parseInt(
-          window.getComputedStyle(refListBox.current)?.paddingBottom
+        const listBoxMarginBlock = Number.parseInt(
+          window.getComputedStyle(refListItemsContainer.current)?.paddingBottom
         );
         // console.log('listbox margin', listBoxMarginBottom);
         /// Scroll to bottom
-        if (itemBottom > listHeight + refListBox.current.scrollTop) {
-          // console.log('scrollTop', itemBottom - listHeight + 8);
-          refListBox.current.scrollTop =
-            itemBottom - listHeight + listBoxMarginBottom;
+        // console.log(
+        //   'item',
+        //   itemTop,
+        //   itemBottom - firstItemTop,
+        //   '>',
+        //   listHeight + refListItemsContainer.current.scrollTop
+        // );
+        if (
+          itemBottom - firstItemTop + listBoxMarginBlock >
+          listHeight + refListItemsContainer.current.scrollTop
+        ) {
+          refListItemsContainer.current.scrollTop =
+            itemBottom - firstItemTop - listHeight + listBoxMarginBlock * 2;
+          // console.log('scrollTop', refListItemsContainer.current.scrollTop);
         }
         /// Scroll to top
-        else if (itemTop - firstItemTop < refListBox.current.scrollTop) {
-          refListBox.current.scrollTop = itemTop - firstItemTop;
+        else if (
+          itemTop - firstItemTop <
+          refListItemsContainer.current.scrollTop
+        ) {
+          refListItemsContainer.current.scrollTop = itemTop - firstItemTop;
         }
       }
     }
-  }, [isShowList, activeIdx, refListBox, refListItemsContainer]);
+  }, [isShowList, activeIdx, refListItemsContainer]);
 }
 
 export default useScrollItemIntoView;
