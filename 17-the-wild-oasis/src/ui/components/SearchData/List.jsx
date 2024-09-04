@@ -83,80 +83,21 @@ const Item = styled.div`
 `;
 
 export default function List() {
-  const { listWidth, listWindow, refListBox, columnsProp } = useSearchData();
+  const { listWidth, listWindow, refListBox } = useSearchData();
 
   return (
     <ListBox ref={refListBox} width={listWidth} window={listWindow}>
-      {!columnsProp.length ? <RenderList /> : <RenderTable />}
+      <RenderList />
     </ListBox>
   );
 }
 
-// TODO: Merge RenderList & RenderTable.
-//       Only use "columns" prop to specify the list of columns shown. Delete asTable prop.
-// TODO: Make renderDataItem prop optional. Use it to provide custom render.
-// TODO: Apply renderDataItem prop to custom render an item. Also provide to custom render a header.
-// TODO: Provide custom styles for elements.
+// [x]: Merge RenderList & RenderTable.  Only use "columns" prop to specify the list of columns shown. Delete asTable prop.
+// [ ]: Make renderDataItem prop optional. Use it to provide custom render.
+// [ ]: Apply renderDataItem prop to custom render an item. Also provide to custom render a header.
+// [ ]: Provide custom styles for elements.
 
 export function RenderList() {
-  const {
-    /// Props
-    renderDataItem,
-
-    state,
-    dispatch,
-
-    ///Ref
-    refInput,
-    refListItemsContainer,
-
-    // Other
-    selectItem,
-  } = useSearchData();
-
-  const { searchText, list, activeIdx } = state;
-
-  /// User clicks the list
-  function handleItemClick(idx) {
-    selectItem(idx);
-    refInput.current.focus();
-  }
-
-  function handleItemMouseDown(idx) {
-    dispatch({
-      type: ActionType.setActiveIdx,
-      payload: idx,
-    });
-  }
-
-  return (
-    <ul
-      ref={refListItemsContainer}
-      style={{
-        overflow: 'scroll',
-        border: '0px solid red',
-        padding: '0.8rem 0',
-      }}
-    >
-      {list.map((item, i) => (
-        <Item
-          key={i}
-          isActive={i == activeIdx || false}
-          onClick={() => handleItemClick(i)}
-          onMouseDown={() => handleItemMouseDown(i)}
-        >
-          {typeof item === 'string'
-            ? item
-            : renderDataItem !== undefined
-            ? renderDataItem(item, i, searchText)
-            : ''}
-        </Item>
-      ))}
-    </ul>
-  );
-}
-
-export function RenderTable() {
   const {
     renderDataItem,
     columnsProp,
@@ -208,6 +149,7 @@ export function RenderTable() {
           /// add new style prop
           else
             el = cloneElement(el, {
+              // key: colIdx,
               style: { justifySelf: columnsProp[colIdx].align ?? 'left' },
             });
         }
