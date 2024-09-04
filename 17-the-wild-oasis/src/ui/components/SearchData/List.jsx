@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { useSearchData } from './SearchData';
 import { cloneElement } from 'react';
 import { ActionType } from './useSearchDataReducer';
+import { Highlight } from './Highlight';
 
 const ListBox = styled.div`
   position: absolute;
@@ -93,7 +94,7 @@ export default function List() {
 }
 
 // [x]: Merge RenderList & RenderTable.  Only use "columns" prop to specify the list of columns shown. Delete asTable prop.
-// [ ]: Make renderDataItem prop optional. Use it to provide custom render.
+// [x]: Make renderDataItem prop optional. Use it to provide custom render.
 // [ ]: Apply renderDataItem prop to custom render an item. Also provide to custom render a header.
 // [ ]: Provide custom styles for elements.
 
@@ -129,50 +130,51 @@ export function RenderList() {
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
   /// Calls renderDataItem if present
-  let reactElementItem = list.map((item, i) => {
-    const itemReactEl =
-      typeof item === 'string'
-        ? item
-        : renderDataItem !== undefined
-        ? renderDataItem(item, i, searchText)
-        : '';
+  const itemReactEl = list.map((item, i) => {
+    let itemEl = item;
 
-    /// align items based on the tableColumns[i].align property
+    if (typeof item !== 'string') {
+      if (renderDataItem !== undefined) {
+        itemEl = renderDataItem(item, i, searchText);
+      } else {
+        itemEl = DefaultRenderDataItem(item, i, searchText);
+      }
+    }
+
+    /// Align data items based on the columnsProp.align property
     ///
     if (columnsProp.length > 0) {
-      const alignedItem = itemReactEl.props?.children.map((el, colIdx) => {
+      itemEl = itemEl.props?.children.map((el, colIdx) => {
         if (columnsProp[colIdx].align && columnsProp[colIdx].align !== 'left') {
           if (el.props.style) {
             /// add prop to the style
             el.props.style.justifySelf = columnsProp[colIdx].align ?? 'left';
           }
           /// add new style prop
-          else
+          else {
             el = cloneElement(el, {
-              // key: colIdx,
               style: { justifySelf: columnsProp[colIdx].align ?? 'left' },
             });
+          }
+          el = cloneElement(el, {
+            key: colIdx,
+          });
         }
         // console.log(`${colIdx}`, el.props.style);
         return el;
       });
-
-      return alignedItem;
     }
 
-    return itemReactEl;
+    return itemEl;
   });
 
   return (
     <>
       {columnsProp.some((item) => 'header' in item) && (
         <TableHeaders columns={columnsStr} role="row" as="header">
-          {columnsProp.map((item) => (
-            <div
-              key={item.header}
-              style={{ justifySelf: item.align ?? 'left' }}
-            >
-              {item.header ?? ''}
+          {columnsProp.map((col) => (
+            <div key={col.header} style={{ justifySelf: col.align ?? 'left' }}>
+              {col.header ?? ''}
             </div>
           ))}
         </TableHeaders>
@@ -194,10 +196,59 @@ export function RenderList() {
             onMouseDown={() => handleItemMouseDown(i)}
             columns={columnsStr}
           >
-            {reactElementItem[i]}
+            {itemReactEl[i]}
           </Item>
         ))}
       </div>
     </>
   );
+}
+
+function DefaultRenderDataItem(item, i, searchText) {
+  const { columnsProp, searchField } = useSearchData();
+
+  if (columnsProp.length) {
+    const renderedItems = columnsProp.map((column, i) => {
+      // console.log('column', column, i);
+      if (column.field === searchField) {
+        return (
+          <Highlight
+            key={i}
+            highlightString={searchText}
+            style={{
+              backgroundColor: 'var(--color-brand-700)',
+              color: 'white',
+            }}
+          >
+            {item[column.field]}
+          </Highlight>
+        );
+      } else if (column.type === 'image') {
+        return (
+          <div key={i}>
+            <img src={item[column.field]} width="20px" />
+          </div>
+        );
+      } else {
+        return <div key={i}>{item[column.field]}</div>;
+      }
+    });
+
+    // console.log('renderedItems', renderedItems);
+
+    return <>{renderedItems}</>;
+  } else {
+    return (
+      <Highlight
+        key={i}
+        highlightString={searchText}
+        style={{
+          backgroundColor: 'var(--color-brand-700)',
+          color: 'white',
+        }}
+      >
+        {item[searchField]}
+      </Highlight>
+    );
+  }
 }

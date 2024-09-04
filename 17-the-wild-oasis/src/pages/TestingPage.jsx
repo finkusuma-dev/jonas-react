@@ -41,18 +41,18 @@ function TestingPage() {
             searchField="email"
             placeholder="Search email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
-            renderDataItem={(dataItem, i, searchText) => (
-              <Highlight
-                key={i}
-                highlightString={searchText}
-                style={{
-                  backgroundColor: 'var(--color-brand-700)',
-                  color: 'white',
-                }}
-              >
-                {dataItem.email} - {dataItem.fullName}
-              </Highlight>
-            )}
+            // renderDataItem={(dataItem, i, searchText) => (
+            //   <Highlight
+            //     key={i}
+            //     highlightString={searchText}
+            //     style={{
+            //       backgroundColor: 'var(--color-brand-700)',
+            //       color: 'white',
+            //     }}
+            //   >
+            //     {dataItem.email} - {dataItem.fullName}
+            //   </Highlight>
+            // )}
           />
         </div>
 
@@ -89,28 +89,29 @@ function TestingPage() {
               {
                 header: 'Country',
                 field: 'countryFlag',
+                type: 'image',
                 width: '0.3fr',
                 align: 'center',
               },
             ]}
-            renderDataItem={(dataItem, i, searchText) => (
-              <>
-                <Highlight
-                  highlightString={searchText}
-                  style={{
-                    backgroundColor: 'var(--color-brand-700)',
-                    color: 'white',
-                  }}
-                >
-                  {dataItem.email}
-                </Highlight>
-                <div>{dataItem.fullName}</div>
-                <div>{dataItem.nationality}</div>
-                <div>
-                  <img src={dataItem.countryFlag} width="20rem" />
-                </div>
-              </>
-            )}
+            // renderDataItem={(dataItem, i, searchText) => (
+            //   <>
+            //     <Highlight
+            //       highlightString={searchText}
+            //       style={{
+            //         backgroundColor: 'var(--color-brand-700)',
+            //         color: 'white',
+            //       }}
+            //     >
+            //       {dataItem.email}
+            //     </Highlight>
+            //     <div>{dataItem.fullName}</div>
+            //     <div>{dataItem.nationality}</div>
+            //     <div>
+            //       <img src={dataItem.countryFlag} width="px" />
+            //     </div>
+            //   </>
+            // )}
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
           />
         </div>
