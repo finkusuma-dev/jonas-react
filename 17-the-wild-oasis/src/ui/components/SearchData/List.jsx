@@ -3,6 +3,7 @@ import { useSearchData } from './SearchData';
 import { cloneElement } from 'react';
 import { ActionType } from './useSearchDataReducer';
 import { Highlight } from './Highlight';
+import { getStyles, StyleType } from './styles';
 
 const ListBox = styled.div`
   position: absolute;
@@ -104,6 +105,7 @@ export function RenderList() {
   const {
     RenderDataItem,
     columnsProp,
+    styles,
 
     ///
     state,
@@ -174,11 +176,14 @@ export function RenderList() {
     <>
       {columnsProp.some((item) => 'header' in item) && (
         <TableHeaders columns={columnsStr} role="row" as="header">
-          {columnsProp.map((col) => (
-            <div key={col.header} style={{ justifySelf: col.align ?? 'left' }}>
-              {col.header ?? ''}
-            </div>
-          ))}
+          {columnsProp.map((colProp) => {
+            const headerStyle = getStyles(StyleType.header)(styles, colProp);
+            return (
+              <div key={colProp.header} style={headerStyle}>
+                {colProp.header ?? ''}
+              </div>
+            );
+          })}
         </TableHeaders>
       )}
       <div

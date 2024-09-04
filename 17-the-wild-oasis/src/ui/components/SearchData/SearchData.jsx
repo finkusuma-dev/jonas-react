@@ -27,6 +27,7 @@ SearchData.propTypes = {
   listWidth: PropTypes.string,
   columns: PropTypes.array,
   autoComplete: PropTypes.bool,
+  styles: PropTypes.object,
 };
 
 export const SearchDataContext = createContext();
@@ -42,6 +43,7 @@ function SearchData({
   listWidth,
   columns: columnsProp = [],
   autoComplete = false,
+  styles = [],
 }) {
   const { state, dispatch } = useSearchDataReducer(data);
 
@@ -160,6 +162,7 @@ function SearchData({
         columnsProp,
         autoComplete,
         data,
+        styles,
 
         //state
         // list,

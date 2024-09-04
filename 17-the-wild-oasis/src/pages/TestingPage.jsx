@@ -98,6 +98,18 @@ function TestingPage() {
                 align: 'center',
               },
             ]}
+            styles={{
+              header: (field) => {
+                if (field === 'email')
+                  return {
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                  };
+                return {
+                  fontStyle: 'italic',
+                };
+              },
+            }}
             // RenderDataItem={(dataItem, i, searchText) => (
             //   <>
             //     <Highlight
