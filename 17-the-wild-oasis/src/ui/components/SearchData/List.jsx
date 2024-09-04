@@ -224,9 +224,10 @@ function DefaultRenderDataItem(item, i, searchText) {
           </Highlight>
         );
       } else if (column.type === 'image') {
+        const scale = column.image?.scale || '100%';
         return (
-          <div key={i}>
-            <img src={item[column.field]} width="20px" />
+          <div key={i} style={{ width: scale, display: 'flex' }}>
+            <img src={item[column.field]} />
           </div>
         );
       } else {

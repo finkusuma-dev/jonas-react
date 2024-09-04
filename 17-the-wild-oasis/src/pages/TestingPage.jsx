@@ -90,6 +90,9 @@ function TestingPage() {
                 header: 'Country',
                 field: 'countryFlag',
                 type: 'image',
+                image: {
+                  scale: '40%',
+                },
                 width: '0.3fr',
                 align: 'center',
               },
