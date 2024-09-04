@@ -73,7 +73,7 @@ function TestingPage() {
             listWidth="70rem"
             autoComplete={true}
             asTable={true}
-            tableColumns={[
+            columns={[
               {
                 header: 'Email',
               },

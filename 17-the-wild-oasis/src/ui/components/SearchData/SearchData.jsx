@@ -26,7 +26,7 @@ SearchData.propTypes = {
   maxResults: PropTypes.number,
   listWidth: PropTypes.string,
   asTable: PropTypes.bool,
-  tableColumns: PropTypes.array,
+  columns: PropTypes.array,
   autoComplete: PropTypes.bool,
 };
 
@@ -42,7 +42,7 @@ function SearchData({
   maxResults = 7,
   listWidth,
   asTable = false,
-  tableColumns = [],
+  columns: columnsProp = [],
   autoComplete = false,
 }) {
   const { state, dispatch } = useSearchDataReducer(data);
@@ -160,7 +160,7 @@ function SearchData({
         searchProp,
         maxResults,
         renderDataItem,
-        tableColumns,
+        columnsProp,
         autoComplete,
         data,
 

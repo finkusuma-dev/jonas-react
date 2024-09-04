@@ -159,7 +159,7 @@ export function RenderList() {
 export function RenderTable() {
   const {
     renderDataItem,
-    tableColumns,
+    columnsProp,
 
     ///
     state,
@@ -185,7 +185,7 @@ export function RenderTable() {
     });
   }
 
-  const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
+  const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
   /// Calls renderDataItem if present
   let reactElementItem = list.map((item, i) => {
@@ -198,20 +198,17 @@ export function RenderTable() {
 
     /// align items based on the tableColumns[i].align property
     ///
-    if (tableColumns.length > 0) {
+    if (columnsProp.length > 0) {
       const alignedItem = itemReactEl.props?.children.map((el, colIdx) => {
-        if (
-          tableColumns[colIdx].align &&
-          tableColumns[colIdx].align !== 'left'
-        ) {
+        if (columnsProp[colIdx].align && columnsProp[colIdx].align !== 'left') {
           if (el.props.style) {
             /// add prop to the style
-            el.props.style.justifySelf = tableColumns[colIdx].align ?? 'left';
+            el.props.style.justifySelf = columnsProp[colIdx].align ?? 'left';
           }
           /// add new style prop
           else
             el = cloneElement(el, {
-              style: { justifySelf: tableColumns[colIdx].align ?? 'left' },
+              style: { justifySelf: columnsProp[colIdx].align ?? 'left' },
             });
         }
         // console.log(`${colIdx}`, el.props.style);
@@ -226,9 +223,9 @@ export function RenderTable() {
 
   return (
     <>
-      {tableColumns.some((item) => 'header' in item) && (
-        <TableHeaders columns={columns} role="row" as="header">
-          {tableColumns.map((item) => (
+      {columnsProp.some((item) => 'header' in item) && (
+        <TableHeaders columns={columnsStr} role="row" as="header">
+          {columnsProp.map((item) => (
             <div
               key={item.header}
               style={{ justifySelf: item.align ?? 'left' }}
@@ -253,7 +250,7 @@ export function RenderTable() {
             isActive={i == activeIdx || false}
             onClick={() => handleItemClick(i)}
             onMouseDown={() => handleItemMouseDown(i)}
-            columns={columns}
+            columns={columnsStr}
           >
             {reactElementItem[i]}
           </Item>
