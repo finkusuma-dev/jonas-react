@@ -1,6 +1,7 @@
 import Input from '../../Input';
-import { ActionType, useSearchData } from './SearchData';
+import { useSearchData } from './SearchData';
 import useAutocomplete from './useAutocomplete';
+import { ActionType } from './useSearchDataReducer';
 
 function SearchInput() {
   const {

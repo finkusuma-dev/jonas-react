@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { ActionType } from './SearchData';
+import { ActionType } from './useSearchDataReducer';
 
 useSearchDataClickOutside.propTypes = {
   refInput: PropTypes.object,
