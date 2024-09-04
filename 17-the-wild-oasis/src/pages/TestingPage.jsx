@@ -41,7 +41,7 @@ function TestingPage() {
             searchProp="email"
             placeholder="Search email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
-            renderItem={(item, i, searchText) => (
+            renderDataItem={(dataItem, i, searchText) => (
               <Highlight
                 key={i}
                 highlightString={searchText}
@@ -50,7 +50,7 @@ function TestingPage() {
                   color: 'white',
                 }}
               >
-                {item.email} - {item.fullName}
+                {dataItem.email} - {dataItem.fullName}
               </Highlight>
             )}
           />
@@ -90,7 +90,7 @@ function TestingPage() {
                 align: 'center',
               },
             ]}
-            renderItem={(item, i, searchText) => (
+            renderDataItem={(dataItem, i, searchText) => (
               <>
                 <Highlight
                   highlightString={searchText}
@@ -99,12 +99,12 @@ function TestingPage() {
                     color: 'white',
                   }}
                 >
-                  {item.email}
+                  {dataItem.email}
                 </Highlight>
-                <div>{item.fullName}</div>
-                <div>{item.nationality}</div>
+                <div>{dataItem.fullName}</div>
+                <div>{dataItem.nationality}</div>
                 <div>
-                  <img src={item.countryFlag} width="20rem" />
+                  <img src={dataItem.countryFlag} width="20rem" />
                 </div>
               </>
             )}

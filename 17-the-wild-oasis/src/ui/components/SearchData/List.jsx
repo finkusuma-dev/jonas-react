@@ -94,14 +94,14 @@ export default function List() {
 
 // TODO: Merge RenderList & RenderTable.
 //       Only use "columns" prop to specify the list of columns shown. Delete asTable prop.
-// TODO: Make renderItem prop optional. Use it to provide custom render.
-// TODO: Apply renderItem prop to custom render an item. Also provide to custom render a header.
+// TODO: Make renderDataItem prop optional. Use it to provide custom render.
+// TODO: Apply renderDataItem prop to custom render an item. Also provide to custom render a header.
 // TODO: Provide custom styles for elements.
 
 export function RenderList() {
   const {
     /// Props
-    renderItem,
+    renderDataItem,
 
     state,
     dispatch,
@@ -147,8 +147,8 @@ export function RenderList() {
         >
           {typeof item === 'string'
             ? item
-            : renderItem !== undefined
-            ? renderItem(item, i, searchText)
+            : renderDataItem !== undefined
+            ? renderDataItem(item, i, searchText)
             : ''}
         </Item>
       ))}
@@ -158,7 +158,7 @@ export function RenderList() {
 
 export function RenderTable() {
   const {
-    renderItem,
+    renderDataItem,
     tableColumns,
 
     ///
@@ -187,13 +187,13 @@ export function RenderTable() {
 
   const columns = tableColumns.map((item) => item.width ?? '1fr').join(' ');
 
-  ///
+  /// Calls renderDataItem if present
   let reactElementItem = list.map((item, i) => {
     const itemReactEl =
       typeof item === 'string'
         ? item
-        : renderItem !== undefined
-        ? renderItem(item, i, searchText)
+        : renderDataItem !== undefined
+        ? renderDataItem(item, i, searchText)
         : '';
 
     /// align items based on the tableColumns[i].align property
