@@ -72,7 +72,6 @@ function TestingPage() {
             placeholder="Search email"
             listWidth="70rem"
             autoComplete={true}
-            asTable={true}
             columns={[
               {
                 header: 'Email',

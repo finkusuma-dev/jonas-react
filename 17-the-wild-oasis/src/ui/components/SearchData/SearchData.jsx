@@ -25,7 +25,6 @@ SearchData.propTypes = {
   renderDataItem: PropTypes.func,
   maxResults: PropTypes.number,
   listWidth: PropTypes.string,
-  asTable: PropTypes.bool,
   columns: PropTypes.array,
   autoComplete: PropTypes.bool,
 };
@@ -41,7 +40,6 @@ function SearchData({
   placeholder,
   maxResults = 7,
   listWidth,
-  asTable = false,
   columns: columnsProp = [],
   autoComplete = false,
 }) {
@@ -155,7 +153,6 @@ function SearchData({
       value={{
         // props
         listWidth,
-        asTable,
         placeholder,
         searchProp,
         maxResults,

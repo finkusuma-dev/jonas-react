@@ -83,11 +83,11 @@ const Item = styled.div`
 `;
 
 export default function List() {
-  const { listWidth, listWindow, asTable, refListBox } = useSearchData();
+  const { listWidth, listWindow, refListBox, columnsProp } = useSearchData();
 
   return (
     <ListBox ref={refListBox} width={listWidth} window={listWindow}>
-      {!asTable ? <RenderList /> : <RenderTable />}
+      {!columnsProp.length ? <RenderList /> : <RenderTable />}
     </ListBox>
   );
 }
