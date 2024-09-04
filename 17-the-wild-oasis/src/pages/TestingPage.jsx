@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import useGuests from '../features/guests/useGuests';
 import Heading from '../ui/Heading';
-import Highlight from '../ui/Highlight';
+import { Highlight } from '../ui/components/SearchData/Highlight';
 import SearchData from '../ui/components/SearchData/SearchData';
 import Row from '../ui/Row';
 import ButtonIcon from '../ui/ButtonIcon';
@@ -75,16 +75,20 @@ function TestingPage() {
             columns={[
               {
                 header: 'Email',
+                field: 'email',
               },
               {
                 header: 'Full Name',
+                field: 'fullName',
               },
               {
                 header: 'National ID',
+                field: 'nationalID',
                 width: '0.7fr',
               },
               {
                 header: 'Country',
+                field: 'countryFlag',
                 width: '0.3fr',
                 align: 'center',
               },

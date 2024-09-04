@@ -9,7 +9,7 @@ Highlight.propTypes = {
   style: PropTypes.object,
 };
 
-function Highlight({
+export function Highlight({
   children,
   highlightString,
   style = {
@@ -40,5 +40,3 @@ function Highlight({
     </span>
   );
 }
-
-export default Highlight;
