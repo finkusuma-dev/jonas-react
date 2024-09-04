@@ -55,7 +55,7 @@ function SearchInput() {
       payload: newSearchString,
     });
 
-    if (newSearchString.length < 2) dispatch({ type: ActionType.emptyList });
+    if (newSearchString.length < 2) dispatch({ type: ActionType.clearList });
     else {
       const newList = data
         /// Filter items based on the search string

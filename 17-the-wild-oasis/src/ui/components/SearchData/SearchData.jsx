@@ -42,16 +42,16 @@ const initialState = {
 export const ActionType = Object.freeze({
   searchChange: 'searchChange',
   clearSearch: 'clearSearch',
-  setSearchText: 'setSearchText',
-  setInputText: 'setInputText',
-  setList: 'setList',
-  emptyList: 'emptyList',
-  showList: 'IsShowList/true',
-  hideList: 'IsShowList/false',
-  setActiveIdx: 'setActiveIdx',
+  setSearchText: 'searchText/set',
+  setInputText: 'inputText/set',
+  setList: 'list/set',
+  clearList: 'list/clear',
+  showList: 'isShowList/true',
+  hideList: 'isShowList/false',
+  setActiveIdx: 'activeIdx/set',
+  clearActiveIdx: 'activeIdx/clear',
   inputKeyDown: 'input/keyDown',
   inputKeyUp: 'input/keyUp',
-  clearActiveIdx: 'clearActiveIdx',
 });
 
 export const SearchDataContext = createContext();
@@ -152,7 +152,7 @@ function SearchData({
           list: action.payload,
         };
 
-      case ActionType.emptyList:
+      case ActionType.clearList:
         return {
           ...state,
           list: [],
