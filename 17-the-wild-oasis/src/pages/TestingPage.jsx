@@ -38,7 +38,7 @@ function TestingPage() {
             //   { name: 'giraffe', color: 'orange' },
             // ]}
             data={guests}
-            searchProp="email"
+            searchField="email"
             placeholder="Search email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
             renderDataItem={(dataItem, i, searchText) => (
@@ -68,7 +68,7 @@ function TestingPage() {
           <span>Email</span>
           <SearchData
             data={guests}
-            searchProp="email"
+            searchField="email"
             placeholder="Search email"
             listWidth="70rem"
             autoComplete={true}

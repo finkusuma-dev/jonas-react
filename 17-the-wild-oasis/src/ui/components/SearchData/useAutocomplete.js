@@ -60,8 +60,6 @@ function useAutocomplete({
         refApplied.current = e.keyCode > 47;
       }
 
-      // const firstItem =
-      //   list.length > 0 ? getSearchedTextFromItem(list[0], searchProp) : '';
       // console.log(
       //   ' > ',
       //   searchText,

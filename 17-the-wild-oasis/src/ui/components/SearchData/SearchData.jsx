@@ -19,7 +19,7 @@ const Box = styled.div`
 
 SearchData.propTypes = {
   data: PropTypes.array.isRequired,
-  searchProp: PropTypes.string, // prop to search if data.element is an object
+  searchField: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   renderDataItem: PropTypes.func,
@@ -34,7 +34,7 @@ export const useSearchData = () => useContext(SearchDataContext);
 
 function SearchData({
   data,
-  searchProp,
+  searchField,
   onSelect,
   renderDataItem,
   placeholder,
@@ -107,8 +107,8 @@ function SearchData({
     const dataIdx = data.findIndex((obj) =>
       typeof obj === 'string'
         ? obj === list[itemIdx]
-        : searchProp !== undefined && obj[searchProp]
-        ? obj[searchProp] === list[itemIdx][searchProp]
+        : searchField !== undefined && obj[searchField]
+        ? obj[searchField] === list[itemIdx][searchField]
         : false
     );
 
@@ -117,8 +117,8 @@ function SearchData({
     const selectedText =
       typeof data[dataIdx] === 'string'
         ? data[dataIdx]
-        : searchProp !== undefined
-        ? data[dataIdx][searchProp]
+        : searchField !== undefined
+        ? data[dataIdx][searchField]
         : '';
     const selectedObj = data[dataIdx];
 
@@ -139,12 +139,12 @@ function SearchData({
 
   function getSearchedTextFromItem(item) {
     /// Searched text is item itself if it's a string,
-    /// Otherwise it's defined by searchProp, searched text = item[searchProp]
+    /// Otherwise it's defined by searchField, searched text = item[searchField]
     return (
       item &&
       (typeof item === 'string'
         ? item
-        : searchProp !== undefined && item[searchProp])
+        : searchField !== undefined && item[searchField])
     );
   }
 
@@ -154,7 +154,7 @@ function SearchData({
         // props
         listWidth,
         placeholder,
-        searchProp,
+        searchField,
         maxResults,
         renderDataItem,
         columnsProp,

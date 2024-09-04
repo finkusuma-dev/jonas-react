@@ -8,7 +8,7 @@ function SearchInput() {
     // props
     autoComplete,
     placeholder,
-    searchProp,
+    searchField,
     maxResults,
     data,
 
@@ -60,11 +60,11 @@ function SearchInput() {
     else {
       const newList = data
         /// Filter items based on the search string
-        .filter((el) =>
-          typeof el === 'string'
-            ? String(el).includes(newSearchString)
-            : searchProp !== undefined && el[searchProp]
-            ? String(el[searchProp]).includes(newSearchString)
+        .filter((item) =>
+          typeof item === 'string'
+            ? String(item).includes(newSearchString)
+            : searchField !== undefined && item[searchField]
+            ? String(item[searchField]).includes(newSearchString)
             : false
         )
         /// Sort items based on the index where the search string is found
