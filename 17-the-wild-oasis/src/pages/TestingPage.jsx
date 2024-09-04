@@ -41,7 +41,7 @@ function TestingPage() {
             searchField="email"
             placeholder="Search email"
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
-            // renderDataItem={(dataItem, i, searchText) => (
+            // RenderDataItem={(dataItem, i, searchText) => (
             //   <Highlight
             //     key={i}
             //     highlightString={searchText}
@@ -85,6 +85,7 @@ function TestingPage() {
                 header: 'National ID',
                 field: 'nationalID',
                 width: '0.7fr',
+                // align: 'right',
               },
               {
                 header: 'Country',
@@ -97,7 +98,7 @@ function TestingPage() {
                 align: 'center',
               },
             ]}
-            // renderDataItem={(dataItem, i, searchText) => (
+            // RenderDataItem={(dataItem, i, searchText) => (
             //   <>
             //     <Highlight
             //       highlightString={searchText}

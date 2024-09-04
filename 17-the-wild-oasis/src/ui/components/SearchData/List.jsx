@@ -49,6 +49,7 @@ const TableHeaders = styled.div`
   /* left: 0;
   right: 0; */
   display: grid;
+  /* column-gap: 4rem; */
   grid-template-columns: ${(props) => props.columns};
   background-color: var(--color-grey-200);
   color: var(--color-grey-700);
@@ -72,6 +73,7 @@ const Item = styled.div`
       props.columns &&
       css`
         display: grid;
+        /* column-gap: 4rem; */
         grid-template-columns: ${props.columns};
         align-items: center;
       `
@@ -94,13 +96,13 @@ export default function List() {
 }
 
 // [x]: Merge RenderList & RenderTable.  Only use "columns" prop to specify the list of columns shown. Delete asTable prop.
-// [x]: Make renderDataItem prop optional. Use it to provide custom render.
-// [ ]: Apply renderDataItem prop to custom render an item. Also provide to custom render a header.
+// [x]: Make RenderDataItem prop optional. Use it to provide custom render.
+// [ ]: Apply RenderDataItem prop to custom render an item. Also provide to custom render a header.
 // [ ]: Provide custom styles for elements.
 
 export function RenderList() {
   const {
-    renderDataItem,
+    RenderDataItem,
     columnsProp,
 
     ///
@@ -129,13 +131,13 @@ export function RenderList() {
 
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
-  /// Calls renderDataItem if present
+  /// Calls RenderDataItem if present
   const itemReactEl = list.map((item, i) => {
     let itemEl = item;
 
     if (typeof item !== 'string') {
-      if (renderDataItem !== undefined) {
-        itemEl = renderDataItem(item, i, searchText);
+      if (RenderDataItem !== undefined) {
+        itemEl = RenderDataItem(item, i, searchText);
       } else {
         itemEl = DefaultRenderDataItem(item, i, searchText);
       }
