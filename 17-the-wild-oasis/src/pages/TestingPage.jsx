@@ -61,8 +61,8 @@ function TestingPage() {
             display: 'flex',
             alignItems: 'center',
             gap: '20px',
-            marginTop: '300px',
-            marginBottom: '300px',
+            // marginTop: '300px',
+            // marginBottom: '300px',
           }}
         >
           <span>Email</span>
