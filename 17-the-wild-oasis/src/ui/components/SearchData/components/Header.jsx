@@ -17,18 +17,14 @@ import { getStyles, StyleType } from '../helpers/styles';
 //   color: var(--color-grey-700);
 // `;
 
-const style = {
+const headerStyle = {
   padding: '0.5rem 1.2rem',
-  position: 'sticky',
-  /* top: -0.8rem; */
-  // zIndex: '100',
-  /* left: 0;
-  right: 0; */
+
   display: 'grid',
-  /* column-gap: 4rem; */
+
   gridTemplateColumns: '1fr',
   backgroundColor: 'hsl(0, 0%, 85.09803921568627%)',
-  // color: 'var(--color-grey-700)',
+  color: 'black',
 };
 
 Header.propTypes = {
@@ -37,18 +33,18 @@ Header.propTypes = {
 };
 
 function Header({ columnsProp, stylesProp }) {
-  /// columnsStyle is get from columnsProp.width
-  const columnsStyle = {
+  /// customStyle is get from styles.header
+  const customStyle = getStyles(StyleType.header)(stylesProp);
+  const style = {
+    ...headerStyle,
+    /// columnsStyle is get from columnsProp.width
     gridTemplateColumns: columnsProp
       .map((item) => item.width ?? '1fr')
       .join(' '),
+    ...customStyle,
   };
-
-  /// customStyle is get from styles.header
-  const customStyle = getStyles(StyleType.header)(stylesProp);
-
   return (
-    <header style={{ ...style, ...columnsStyle, ...customStyle }} role="row">
+    <header style={style} role="row">
       {columnsProp.map((colProp) => {
         const headerItemStyle = getStyles(StyleType.headerItem)(
           stylesProp,
