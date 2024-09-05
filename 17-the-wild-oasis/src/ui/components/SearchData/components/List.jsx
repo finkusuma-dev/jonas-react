@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
-import { useSearchData } from './SearchData';
+import { useSearchData } from '../SearchData';
 import { cloneElement } from 'react';
-import { ActionType } from './useSearchDataReducer';
+import { ActionType } from '../hooks/useSearchDataReducer';
 import { Highlight } from './Highlight';
-import { getStyles, StyleType } from './styles';
+import { getStyles, StyleType } from '../helpers/styles';
 
 const ListBox = styled.div`
   position: absolute;

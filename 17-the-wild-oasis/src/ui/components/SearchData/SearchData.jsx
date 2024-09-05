@@ -1,15 +1,15 @@
 import { createContext } from 'react';
 import { useContext } from 'react';
 import { useRef } from 'react';
-import useSearchDataReducer, { ActionType } from './useSearchDataReducer';
+import useSearchDataReducer, { ActionType } from './hooks/useSearchDataReducer';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import List from './List';
-import { usePositionListWindow } from './usePositionListWindow';
-import SearchInput from './SearchInput';
-import useSearchDataClickOutside from './useSearchDataClickOutside';
-import useScrollItemIntoView from './useScrollItemIntoView';
+import List from './components/List';
+import { usePositionListWindow } from './hooks/usePositionListWindow';
+import SearchInput from './components/SearchInput';
+import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
+import useScrollItemIntoView from './hooks/useScrollItemIntoView';
 
 const Box = styled.div`
   position: relative;

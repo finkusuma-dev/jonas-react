@@ -1,7 +1,7 @@
-import Input from '../../Input';
-import { useSearchData } from './SearchData';
-import useAutocomplete from './useAutocomplete';
-import { ActionType } from './useSearchDataReducer';
+import Input from '../../../Input';
+import { useSearchData } from '../SearchData';
+import useAutocomplete from '../hooks/useAutocomplete';
+import { ActionType } from '../hooks/useSearchDataReducer';
 
 function SearchInput() {
   const {
