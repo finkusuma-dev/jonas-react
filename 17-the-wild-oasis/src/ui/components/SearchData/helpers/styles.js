@@ -1,34 +1,34 @@
 export const StyleType = Object.freeze({
-  headerItem: 'headerItem',
+  headerTitle: 'headerTitle',
   header: 'header',
 });
 
 const defaultStyles = {
-  headerItem: { justifySelf: 'left' },
+  headerTitle: { justifySelf: 'left' },
 };
 
 export function getStyles(name) {
   switch (name) {
-    case StyleType.headerItem:
-      return getHeader;
+    case StyleType.headerTitle:
+      return getHeaderTitle;
     case StyleType.header:
-      return getHeaderRow;
+      return getHeader;
   }
 }
 
-const getHeader = (stylesProp, colProp) => {
+const getHeaderTitle = (stylesProp, colProp) => {
   const style = {
-    justifySelf: colProp.align ?? defaultStyles.headerItem.justifySelf,
+    justifySelf: colProp.align ?? defaultStyles.headerTitle.justifySelf,
   };
-  if (stylesProp[StyleType.headerItem]) {
-    const customHeaderStyle = stylesProp[StyleType.headerItem](colProp.field);
+  if (stylesProp[StyleType.headerTitle]) {
+    const customHeaderStyle = stylesProp[StyleType.headerTitle](colProp.field);
     // console.log('customHeaderStyle', customHeaderStyle, col.field);
     return { ...style, ...customHeaderStyle };
   }
 
   return style;
 };
-const getHeaderRow = (stylesProp) => {
+const getHeader = (stylesProp) => {
   if (stylesProp[StyleType.header]) {
     const customHeaderStyle = stylesProp[StyleType.header]();
     // console.log('customHeaderStyle', customHeaderStyle, col.field);

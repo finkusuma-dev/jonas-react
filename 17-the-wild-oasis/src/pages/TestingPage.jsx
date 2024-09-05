@@ -103,7 +103,7 @@ function TestingPage() {
                 backgroundColor: 'var(--color-grey-200)',
                 color: 'var(--color-grey-700)',
               }),
-              headerItem: (field) => {
+              headerTitle: (field) => {
                 if (field === 'email')
                   return {
                     fontWeight: 'bold',

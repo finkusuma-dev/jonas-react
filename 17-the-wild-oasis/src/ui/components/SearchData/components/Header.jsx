@@ -46,12 +46,12 @@ function Header({ columnsProp, stylesProp }) {
   return (
     <header style={style} role="row">
       {columnsProp.map((colProp) => {
-        const headerItemStyle = getStyles(StyleType.headerItem)(
+        const headerTitleStyle = getStyles(StyleType.headerTitle)(
           stylesProp,
           colProp
         );
         return (
-          <div key={colProp.header} style={headerItemStyle}>
+          <div key={colProp.header} style={headerTitleStyle}>
             {colProp.header ?? ''}
           </div>
         );
