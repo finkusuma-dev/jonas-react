@@ -99,7 +99,11 @@ function TestingPage() {
               },
             ]}
             styles={{
-              header: (field) => {
+              header: () => ({
+                backgroundColor: 'var(--color-grey-200)',
+                color: 'var(--color-grey-700)',
+              }),
+              headerItem: (field) => {
                 if (field === 'email')
                   return {
                     fontWeight: 'bold',
@@ -109,10 +113,6 @@ function TestingPage() {
                   fontStyle: 'italic',
                 };
               },
-              headerRow: () => ({
-                backgroundColor: 'var(--color-grey-200)',
-                color: 'var(--color-grey-700)',
-              }),
             }}
             // RenderDataItem={(dataItem, i, searchText) => (
             //   <>

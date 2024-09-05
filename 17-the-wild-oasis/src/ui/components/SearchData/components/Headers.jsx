@@ -43,14 +43,17 @@ function Headers({ columnsProp, stylesProp }) {
       .join(' '),
   };
 
-  const customStyle = getStyles(StyleType.headerRow)(stylesProp);
+  const customStyle = getStyles(StyleType.header)(stylesProp);
 
   return (
     <header style={{ ...style, ...columnsStyle, ...customStyle }} role="row">
       {columnsProp.map((colProp) => {
-        const headerStyle = getStyles(StyleType.header)(stylesProp, colProp);
+        const headerItemStyle = getStyles(StyleType.headerItem)(
+          stylesProp,
+          colProp
+        );
         return (
-          <div key={colProp.header} style={headerStyle}>
+          <div key={colProp.header} style={headerItemStyle}>
             {colProp.header ?? ''}
           </div>
         );
