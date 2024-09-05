@@ -148,6 +148,10 @@ function SearchInput() {
         selectItem(state.activeIdx);
       } else if (firstItemStr?.indexOf(state.searchText) === 0) {
         selectItem(0);
+        dispatch({
+          type: ActionType.setActiveIdx,
+          payload: 0,
+        });
       }
     } else if (e.key === 'Tab') {
       dispatch({
