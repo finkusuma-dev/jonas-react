@@ -41,7 +41,7 @@ const ListBox = styled.div`
   /* padding: 0.8rem 0; */
 `;
 
-const TableHeaders = styled.div`
+const Headers = styled.div`
   /* margin-top: -0.8rem; */
   padding: 0.5rem 1.2rem;
   position: sticky;
@@ -175,7 +175,7 @@ export function RenderList() {
   return (
     <>
       {columnsProp.some((item) => 'header' in item) && (
-        <TableHeaders columns={columnsStr} role="row" as="header">
+        <Headers columns={columnsStr} role="row" as="header">
           {columnsProp.map((colProp) => {
             const headerStyle = getStyles(StyleType.header)(
               stylesProp,
@@ -187,7 +187,7 @@ export function RenderList() {
               </div>
             );
           })}
-        </TableHeaders>
+        </Headers>
       )}
       <div
         ref={refListItemsContainer}
