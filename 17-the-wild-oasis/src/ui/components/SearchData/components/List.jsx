@@ -3,7 +3,7 @@ import { useSearchData } from '../SearchData';
 import { cloneElement } from 'react';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { Highlight } from './Highlight';
-import { getStyles, StyleType } from '../helpers/styles';
+import Headers from './Headers';
 
 const ListBox = styled.div`
   position: absolute;
@@ -39,21 +39,6 @@ const ListBox = styled.div`
   position: absolute;
   border: 1px solid var(--color-grey-300);
   /* padding: 0.8rem 0; */
-`;
-
-const Headers = styled.div`
-  /* margin-top: -0.8rem; */
-  padding: 0.5rem 1.2rem;
-  position: sticky;
-  /* top: -0.8rem; */
-  z-index: 100;
-  /* left: 0;
-  right: 0; */
-  display: grid;
-  /* column-gap: 4rem; */
-  grid-template-columns: ${(props) => props.columns};
-  background-color: var(--color-grey-200);
-  color: var(--color-grey-700);
 `;
 
 const Item = styled.div`
@@ -175,19 +160,7 @@ export function RenderList() {
   return (
     <>
       {columnsProp.some((item) => 'header' in item) && (
-        <Headers columns={columnsStr} role="row" as="header">
-          {columnsProp.map((colProp) => {
-            const headerStyle = getStyles(StyleType.header)(
-              stylesProp,
-              colProp
-            );
-            return (
-              <div key={colProp.header} style={headerStyle}>
-                {colProp.header ?? ''}
-              </div>
-            );
-          })}
-        </Headers>
+        <Headers columnsProp={columnsProp} stylesProp={stylesProp} />
       )}
       <div
         ref={refListItemsContainer}
