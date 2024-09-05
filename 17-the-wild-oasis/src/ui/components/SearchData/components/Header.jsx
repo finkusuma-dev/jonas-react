@@ -31,18 +31,20 @@ const style = {
   // color: 'var(--color-grey-700)',
 };
 
-Headers.propTypes = {
+Header.propTypes = {
   columnsProp: PropTypes.array,
   stylesProp: PropTypes.object,
 };
 
-function Headers({ columnsProp, stylesProp }) {
+function Header({ columnsProp, stylesProp }) {
+  /// columnsStyle is get from columnsProp.width
   const columnsStyle = {
     gridTemplateColumns: columnsProp
       .map((item) => item.width ?? '1fr')
       .join(' '),
   };
 
+  /// customStyle is get from styles.header
   const customStyle = getStyles(StyleType.header)(stylesProp);
 
   return (
@@ -62,4 +64,4 @@ function Headers({ columnsProp, stylesProp }) {
   );
 }
 
-export default Headers;
+export default Header;

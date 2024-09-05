@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { useSearchData } from '../SearchData';
 import { cloneElement } from 'react';
-import Headers from './Headers';
+import Header from './Header';
 import Item, { DefaultRenderDataItem } from './Item';
 
 const ListBox = styled.div`
