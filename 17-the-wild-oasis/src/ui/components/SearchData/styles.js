@@ -13,12 +13,12 @@ export function getStyles(name) {
   }
 }
 
-const getHeader = (styles, colProp) => {
+const getHeader = (stylesProp, colProp) => {
   const style = {
     justifySelf: colProp.align ?? defaultStyles.header.justifySelf,
   };
-  if (styles.header) {
-    const customHeaderStyle = styles.header(colProp.field);
+  if (stylesProp.header) {
+    const customHeaderStyle = stylesProp.header(colProp.field);
     // console.log('customHeaderStyle', customHeaderStyle, col.field);
     return { ...style, ...customHeaderStyle };
   }

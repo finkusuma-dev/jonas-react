@@ -105,7 +105,7 @@ export function RenderList() {
   const {
     RenderDataItem,
     columnsProp,
-    styles,
+    stylesProp,
 
     ///
     state,
@@ -177,7 +177,10 @@ export function RenderList() {
       {columnsProp.some((item) => 'header' in item) && (
         <TableHeaders columns={columnsStr} role="row" as="header">
           {columnsProp.map((colProp) => {
-            const headerStyle = getStyles(StyleType.header)(styles, colProp);
+            const headerStyle = getStyles(StyleType.header)(
+              stylesProp,
+              colProp
+            );
             return (
               <div key={colProp.header} style={headerStyle}>
                 {colProp.header ?? ''}

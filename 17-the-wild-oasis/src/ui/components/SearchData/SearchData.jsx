@@ -43,7 +43,7 @@ function SearchData({
   listWidth,
   columns: columnsProp = [],
   autoComplete = false,
-  styles = [],
+  styles: stylesProp = [],
 }) {
   const { state, dispatch } = useSearchDataReducer(data);
 
@@ -162,7 +162,7 @@ function SearchData({
         columnsProp,
         autoComplete,
         data,
-        styles,
+        stylesProp,
 
         //state
         // list,
