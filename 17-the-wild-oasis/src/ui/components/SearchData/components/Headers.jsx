@@ -27,8 +27,8 @@ const style = {
   display: 'grid',
   /* column-gap: 4rem; */
   gridTemplateColumns: '1fr',
-  backgroundColor: 'var(--color-grey-200)',
-  color: 'var(--color-grey-700)',
+  backgroundColor: 'hsl(0, 0%, 85.09803921568627%)',
+  // color: 'var(--color-grey-700)',
 };
 
 Headers.propTypes = {
@@ -43,8 +43,10 @@ function Headers({ columnsProp, stylesProp }) {
       .join(' '),
   };
 
+  const customStyle = getStyles(StyleType.headerRow)(stylesProp);
+
   return (
-    <header style={{ ...style, ...columnsStyle }} role="row">
+    <header style={{ ...style, ...columnsStyle, ...customStyle }} role="row">
       {columnsProp.map((colProp) => {
         const headerStyle = getStyles(StyleType.header)(stylesProp, colProp);
         return (
