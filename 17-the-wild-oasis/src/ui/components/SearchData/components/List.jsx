@@ -113,8 +113,8 @@ export function RenderList() {
 
   return (
     <>
-      {columnsProp.some((item) => 'header' in item) && (
-        <Headers columnsProp={columnsProp} stylesProp={stylesProp} />
+      {columnsProp.some((column) => 'header' in column) && (
+        <Header columnsProp={columnsProp} stylesProp={stylesProp} />
       )}
       <div
         ref={refListItemsContainer}
