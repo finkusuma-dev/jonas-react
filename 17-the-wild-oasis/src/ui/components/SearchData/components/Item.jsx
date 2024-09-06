@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSearchData } from '../SearchData';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { Highlight } from './Highlight';
-import { getStyle, StyleType } from '../helpers/styles';
+import { getCustomStyle, StyleType } from '../helpers/styles';
 
 const StyledItem = styled.div`
   cursor: pointer;
@@ -63,7 +63,7 @@ function Item({ children, idx }) {
 
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
-  const customStyle = getStyle(StyleType.listItem, stylesProp);
+  const customStyle = getCustomStyle(StyleType.listItem, stylesProp);
 
   return (
     <StyledItem

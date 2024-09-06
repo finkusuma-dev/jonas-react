@@ -8,18 +8,18 @@ const defaultStyles = {
   headerTitle: { justifySelf: 'left' },
 };
 
-export function getStyle(name, stylesProp) {
+export function getCustomStyle(name, stylesProp) {
   switch (name) {
     // case StyleType.headerTitle:
     //   return getHeaderTitle;
     // case StyleType.header:
     // return getHeader;
     default:
-      return getStyleDefault(name, stylesProp);
+      return customStyleDefault(name, stylesProp);
   }
 }
 
-const getStyleDefault = (name, stylesProp) => {
+const customStyleDefault = (name, stylesProp) => {
   return stylesProp[name];
 };
 
