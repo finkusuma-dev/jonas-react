@@ -10,8 +10,8 @@ const defaultStyles = {
 
 export function getCustomStyle(name, stylesProp) {
   switch (name) {
-    // case StyleType.headerTitle:
-    //   return getHeaderTitle;
+    case StyleType.headerTitle:
+      return headerTitleStyle(name, stylesProp);
     // case StyleType.header:
     // return getHeader;
     default:
@@ -23,15 +23,14 @@ const customStyleDefault = (name, stylesProp) => {
   return stylesProp[name];
 };
 
-// const getHeaderTitle = (stylesProp, colProp) => {
-//   const alignStyle = {
-//     justifySelf: colProp.align ?? defaultStyles.headerTitle.justifySelf,
-//   };
-//   if (stylesProp[StyleType.headerTitle]) {
-//     const customHeaderStyle = stylesProp[StyleType.headerTitle];
-//     // console.log('customHeaderStyle', customHeaderStyle, col.field);
-//     return { ...alignStyle, ...customHeaderStyle };
-//   }
+const headerTitleStyle = (name, stylesProp) => (colProp) => {
+  const customStyle = customStyleDefault(name, stylesProp);
+
+  return {
+    justifySelf: colProp.align ?? defaultStyles.headerTitle.justifySelf,
+    ...customStyle,
+  };
+};
 
 //   return alignStyle;
 // };
