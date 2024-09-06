@@ -13,7 +13,7 @@ const StyledItem = styled.div`
     return (
       props.isActive === true &&
       css`
-        background-color: blue;
+        background-color: #6366f1;
         color: white;
       `
     );
@@ -86,8 +86,9 @@ function Item({ children, idx }) {
 }
 
 export function DefaultRenderDataItem(item, i, searchText) {
-  const { columnsProp, searchField } = useSearchData();
+  const { columnsProp, searchField, stylesProp } = useSearchData();
 
+  const highlightStyle = getCustomStyle(StyleType.textHighlight, stylesProp);
   if (columnsProp.length) {
     const renderedItems = columnsProp.map((column, i) => {
       // console.log('column', column, i);
@@ -96,10 +97,7 @@ export function DefaultRenderDataItem(item, i, searchText) {
           <Highlight
             key={i}
             highlightString={searchText}
-            style={{
-              backgroundColor: 'var(--color-brand-700)',
-              color: 'white',
-            }}
+            style={highlightStyle}
           >
             {item[column.field]}
           </Highlight>
@@ -121,14 +119,7 @@ export function DefaultRenderDataItem(item, i, searchText) {
     return <>{renderedItems}</>;
   } else {
     return (
-      <Highlight
-        key={i}
-        highlightString={searchText}
-        style={{
-          backgroundColor: 'var(--color-brand-700)',
-          color: 'white',
-        }}
-      >
+      <Highlight key={i} highlightString={searchText} style={highlightStyle}>
         {item[searchField]}
       </Highlight>
     );

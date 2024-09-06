@@ -13,7 +13,7 @@ export function Highlight({
   children,
   highlightString,
   style = {
-    backgroundColor: 'blue',
+    backgroundColor: '#4338ca',
     color: 'white',
   },
 }) {

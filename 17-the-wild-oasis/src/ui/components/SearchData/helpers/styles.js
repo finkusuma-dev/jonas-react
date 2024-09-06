@@ -4,6 +4,7 @@ export const StyleType = Object.freeze({
   list: 'list',
   item: 'item',
   itemActive: 'itemActive',
+  textHighlight: 'textHighlight',
 });
 
 const defaultStyles = {

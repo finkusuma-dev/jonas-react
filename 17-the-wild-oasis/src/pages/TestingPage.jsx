@@ -121,6 +121,10 @@ function TestingPage() {
                 backgroundColor: 'var(--color-brand-500)',
                 color: 'var(--color-grey-0)',
               },
+              textHighlight: {
+                backgroundColor: 'var(--color-brand-700)',
+                color: 'white',
+              },
             }}
             // RenderDataItem={(dataItem, i, searchText) => (
             //   <>
