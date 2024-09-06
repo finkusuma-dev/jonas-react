@@ -33,7 +33,7 @@ const StyledItem = styled.div`
   border-bottom: 1px solid #eee;
 
   &:last-child {
-    border-bottom: none;
+    border-bottom: none !important;
   }
 `;
 
