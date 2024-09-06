@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSearchData } from '../SearchData';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { Highlight } from './Highlight';
+import { getStyle, StyleType } from '../helpers/styles';
 
 const StyledItem = styled.div`
   cursor: pointer;
@@ -29,8 +30,10 @@ const StyledItem = styled.div`
     );
   }}
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
   }
 `;
 
@@ -40,7 +43,7 @@ Item.propTypes = {
 };
 
 function Item({ children, idx }) {
-  const { columnsProp, selectItem, refInput, state, dispatch } =
+  const { columnsProp, stylesProp, selectItem, refInput, state, dispatch } =
     useSearchData();
 
   const { activeIdx } = state;
@@ -60,6 +63,8 @@ function Item({ children, idx }) {
 
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
+  const customStyle = getStyle(StyleType.listItem, stylesProp);
+
   return (
     <StyledItem
       role="row"
@@ -67,6 +72,7 @@ function Item({ children, idx }) {
       onClick={() => handleItemClick(idx)}
       onMouseDown={() => handleItemMouseDown(idx)}
       columns={columnsStr}
+      style={customStyle}
     >
       {children}
     </StyledItem>

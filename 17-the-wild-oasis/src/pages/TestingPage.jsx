@@ -107,6 +107,9 @@ function TestingPage() {
                 fontWeight: 'bold',
                 fontStyle: 'italic',
               },
+              listItem: {
+                borderBottom: '1px solid var(--color-grey-100)',
+              },
             }}
             // RenderDataItem={(dataItem, i, searchText) => (
             //   <>

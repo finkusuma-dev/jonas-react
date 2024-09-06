@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // import styled from 'styled-components';
-import { getStyles, StyleType } from '../helpers/styles';
+import { getStyle, StyleType } from '../helpers/styles';
 
 // const StyledHeaders = styled.div`
 //   /* margin-top: -0.8rem; */
@@ -34,7 +34,7 @@ Header.propTypes = {
 
 function Header({ columnsProp, stylesProp }) {
   /// customStyle is get from styles.header
-  const customStyle = getStyles(StyleType.header)(stylesProp);
+  const customStyle = getStyle(StyleType.header, stylesProp);
   const style = {
     ...headerStyle,
     /// columnsStyle is get from columnsProp.width
@@ -46,10 +46,7 @@ function Header({ columnsProp, stylesProp }) {
   return (
     <header style={style} role="row">
       {columnsProp.map((colProp) => {
-        const headerTitleStyle = getStyles(StyleType.headerTitle)(
-          stylesProp,
-          colProp
-        );
+        const headerTitleStyle = getStyle(StyleType.headerTitle, stylesProp);
         return (
           <div key={colProp.header} style={headerTitleStyle}>
             {colProp.header ?? ''}
