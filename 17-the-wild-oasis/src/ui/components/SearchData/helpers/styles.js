@@ -17,20 +17,20 @@ export function getStyles(name) {
 }
 
 const getHeaderTitle = (stylesProp, colProp) => {
-  const style = {
+  const alignStyle = {
     justifySelf: colProp.align ?? defaultStyles.headerTitle.justifySelf,
   };
   if (stylesProp[StyleType.headerTitle]) {
-    const customHeaderStyle = stylesProp[StyleType.headerTitle](colProp.field);
+    const customHeaderStyle = stylesProp[StyleType.headerTitle];
     // console.log('customHeaderStyle', customHeaderStyle, col.field);
-    return { ...style, ...customHeaderStyle };
+    return { ...alignStyle, ...customHeaderStyle };
   }
 
-  return style;
+  return alignStyle;
 };
 const getHeader = (stylesProp) => {
   if (stylesProp[StyleType.header]) {
-    const customHeaderStyle = stylesProp[StyleType.header]();
+    const customHeaderStyle = stylesProp[StyleType.header];
     // console.log('customHeaderStyle', customHeaderStyle, col.field);
     return { ...customHeaderStyle };
   }
