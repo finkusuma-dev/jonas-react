@@ -1,6 +1,7 @@
 export const StyleType = Object.freeze({
-  headerTitle: 'headerTitle',
   header: 'header',
+  headerTitle: 'headerTitle',
+  list: 'list',
   item: 'item',
   itemActive: 'itemActive',
 });

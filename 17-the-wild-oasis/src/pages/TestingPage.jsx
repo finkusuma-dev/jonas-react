@@ -107,6 +107,13 @@ function TestingPage() {
                 fontWeight: 'bold',
                 fontStyle: 'italic',
               },
+              list: {
+                backgroundColor: 'var(--color-grey-0)',
+                borderRadius: 'var(--border-radius-sm)',
+                boxShadow: 'var(--shadow-sm)',
+                fontSize: '1.4rem; ',
+                border: '1px solid var(--color-grey-300);',
+              },
               item: {
                 borderBottom: '1px solid var(--color-grey-100)',
               },

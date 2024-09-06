@@ -3,6 +3,7 @@ import { useSearchData } from '../SearchData';
 import { cloneElement } from 'react';
 import Header from './Header';
 import Item, { DefaultRenderDataItem } from './Item';
+import { getCustomStyle, StyleType } from '../helpers/styles';
 
 const ListBox = styled.div`
   position: absolute;
@@ -30,21 +31,26 @@ const ListBox = styled.div`
   /* overflow: scroll; */
   /* scroll-behavior: smooth; */
   z-index: 100;
-  background-color: var(--color-grey-0);
-  border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-sm);
-  font-size: 1.4rem;
-  //
-  position: absolute;
-  border: 1px solid var(--color-grey-300);
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  /* */
   /* padding: 0.8rem 0; */
 `;
 
 export default function List() {
-  const { listWidth, listWindow, refListBox } = useSearchData();
+  const { listWidth, listWindow, refListBox, stylesProp } = useSearchData();
+
+  const customStyle = getCustomStyle(StyleType.list, stylesProp);
 
   return (
-    <ListBox ref={refListBox} width={listWidth} window={listWindow}>
+    <ListBox
+      ref={refListBox}
+      width={listWidth}
+      window={listWindow}
+      style={customStyle}
+    >
       <RenderList />
     </ListBox>
   );
