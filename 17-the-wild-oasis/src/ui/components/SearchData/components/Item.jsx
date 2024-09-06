@@ -13,8 +13,8 @@ const StyledItem = styled.div`
     return (
       props.isActive === true &&
       css`
-        background-color: var(--color-brand-500);
-        color: var(--color-grey-0);
+        background-color: blue;
+        color: white;
       `
     );
   }};
@@ -63,7 +63,13 @@ function Item({ children, idx }) {
 
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
-  const customStyle = getCustomStyle(StyleType.listItem, stylesProp);
+  let customStyle = getCustomStyle(StyleType.item, stylesProp);
+  if (idx == activeIdx) {
+    customStyle = {
+      ...customStyle,
+      ...getCustomStyle(StyleType.itemActive, stylesProp),
+    };
+  }
 
   return (
     <StyledItem

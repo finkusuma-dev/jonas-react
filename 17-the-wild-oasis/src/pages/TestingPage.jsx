@@ -107,8 +107,12 @@ function TestingPage() {
                 fontWeight: 'bold',
                 fontStyle: 'italic',
               },
-              listItem: {
+              item: {
                 borderBottom: '1px solid var(--color-grey-100)',
+              },
+              itemActive: {
+                backgroundColor: 'var(--color-brand-500)',
+                color: 'var(--color-grey-0)',
               },
             }}
             // RenderDataItem={(dataItem, i, searchText) => (
