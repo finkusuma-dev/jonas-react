@@ -75,6 +75,7 @@ function TestingPage() {
               placeholder="Search email"
               listWidth="70rem"
               autoComplete
+              isClearable
               columns={[
                 {
                   title: 'Email',

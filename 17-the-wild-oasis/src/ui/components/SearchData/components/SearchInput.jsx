@@ -43,6 +43,7 @@ function SearchInput() {
   const {
     // props
     autoComplete,
+    isClearable,
     placeholder,
     searchField,
     maxResults,
@@ -235,7 +236,7 @@ function SearchInput() {
         ref={refInput}
         style={customStyle}
       />
-      {state.inputText.length > 0 && (
+      {isClearable && state.inputText.length > 0 && (
         /// Clear Button
         <ClearButton onClick={handleClearInput} style={clearButtonCustomStyle}>
           <svg

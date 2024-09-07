@@ -24,6 +24,7 @@ SearchData.propTypes = {
   listWidth: PropTypes.string,
   columns: PropTypes.array,
   autoComplete: PropTypes.bool,
+  isClearable: PropTypes.bool,
   styles: PropTypes.object,
   onSelect: PropTypes.func,
   onDeselect: PropTypes.func,
@@ -41,6 +42,7 @@ function SearchData({
   listWidth,
   columns: columnsProp = [],
   autoComplete = false,
+  isClearable = false,
   styles: stylesProp = [],
 
   /// Events
@@ -165,6 +167,7 @@ function SearchData({
         // RenderDataItem,/
         columnsProp,
         autoComplete,
+        isClearable,
         data,
         stylesProp,
         onDeselect,
