@@ -22,6 +22,23 @@ const Input = styled.input`
   }
 `;
 
+const ClearButton = styled.button`
+  border: none;
+  padding: 10px;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  bottom: 1px;
+  background-color: transparent;
+  color: #4b5563;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
 function SearchInput() {
   const {
     // props
@@ -197,6 +214,11 @@ function SearchInput() {
 
   const customStyle = getCustomStyle(StyleType.inputText, stylesProp);
 
+  const clearButtonCustomStyle = getCustomStyle(
+    StyleType.inputTextClearButton,
+    stylesProp
+  );
+
   return (
     <>
       <Input
@@ -209,21 +231,9 @@ function SearchInput() {
         ref={refInput}
         style={customStyle}
       />
-      {state.inputText && (
+      {state.inputText.length > 0 && (
         /// Clear Button
-        <div
-          style={{
-            border: 'none',
-            padding: '10px',
-            position: 'absolute',
-            right: '0px',
-            top: '0',
-            bottom: '0',
-            color: 'var(--color-grey-600)',
-            cursor: 'pointer',
-          }}
-          onClick={handleClearInput}
-        >
+        <ClearButton onClick={handleClearInput} style={clearButtonCustomStyle}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -233,7 +243,7 @@ function SearchInput() {
           >
             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
           </svg>
-        </div>
+        </ClearButton>
       )}
     </>
   );

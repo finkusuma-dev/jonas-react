@@ -106,13 +106,19 @@ function TestingPage() {
                 padding: '0.8rem 1.2rem',
                 boxShadow: 'var(--shadow-sm)',
               },
+              inputTextClearButton: {
+                // backgroundColor: '#eee',
+                // borderTopRightRadius: 'var(--border-radius-sm)',
+                // borderBottomRightRadius: 'var(--border-radius-sm)',
+                // color: 'red',
+              },
               header: {
                 backgroundColor: 'var(--color-grey-200)',
                 color: 'var(--color-grey-700)',
               },
               headerTitle: {
-                fontWeight: 'bold',
-                fontStyle: 'italic',
+                // fontWeight: 'bold',
+                // fontStyle: 'italic',
               },
               list: {
                 backgroundColor: 'var(--color-grey-0)',

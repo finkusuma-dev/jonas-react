@@ -1,5 +1,6 @@
 export const StyleType = Object.freeze({
   inputText: 'inputText',
+  inputTextClearButton: 'inputTextClearButton',
   header: 'header',
   headerTitle: 'headerTitle',
   list: 'list',
