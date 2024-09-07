@@ -5,7 +5,6 @@ import { getCustomStyle, StyleType } from '../helpers/styles';
 // const StyledHeaders = styled.div`
 //   /* margin-top: -0.8rem; */
 //   padding: 0.5rem 1.2rem;
-//   position: sticky;
 //   /* top: -0.8rem; */
 //   z-index: 100;
 //   /* left: 0;
@@ -19,9 +18,7 @@ import { getCustomStyle, StyleType } from '../helpers/styles';
 
 const headerStyle = {
   padding: '0.5rem 1.2rem',
-
   display: 'grid',
-
   gridTemplateColumns: '1fr',
   backgroundColor: '#e5e7eb',
   color: 'black',

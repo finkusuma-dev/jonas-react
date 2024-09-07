@@ -27,16 +27,11 @@ const ListBox = styled.div`
 
   left: 0;
   width: ${(props) => props.width || 'auto'};
-  /* max-height: ${(props) => props.maxHeight || '260px'}; */
-  /* overflow: scroll; */
-  /* scroll-behavior: smooth; */
   z-index: 100;
   background-color: white;
   border: 1px solid #ddd;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   font-size: 14px;
-  /* */
-  /* padding: 0.8rem 0; */
 `;
 
 export default function List() {
