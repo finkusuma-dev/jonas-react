@@ -7,6 +7,7 @@ import Row from '../ui/Row';
 import ButtonIcon from '../ui/ButtonIcon';
 import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';
 import { useDarkMode } from '../context/DarkModeContext';
+import SpinnerMini from '../ui/SpinnerMini';
 
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
@@ -14,7 +15,7 @@ const StyledContainer = styled.div`
 `;
 
 function TestingPage() {
-  const { guests = [] } = useGuests();
+  const { guests = [], isLoading } = useGuests();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
@@ -66,99 +67,104 @@ function TestingPage() {
           }}
         >
           <span>Email</span>
-          <SearchData
-            data={guests}
-            searchField="email"
-            placeholder="Search email"
-            listWidth="70rem"
-            autoComplete={true}
-            columns={[
-              {
-                header: 'Email',
-                field: 'email',
-              },
-              {
-                header: 'Full Name',
-                field: 'fullName',
-              },
-              {
-                header: 'National ID',
-                field: 'nationalID',
-                width: '0.7fr',
-                // align: 'right',
-              },
-              {
-                header: 'Country',
-                field: 'countryFlag',
-                type: 'image',
-                image: {
-                  scale: '40%',
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <SearchData
+              data={guests}
+              searchField="email"
+              placeholder="Search email"
+              listWidth="70rem"
+              autoComplete={true}
+              columns={[
+                {
+                  header: 'Email',
+                  field: 'email',
                 },
-                width: '0.3fr',
-                align: 'center',
-              },
-            ]}
-            styles={{
-              inputText: {
-                border: '1px solid var(--color-grey-300)',
-                backgroundColor: 'var(--color-grey-0)',
-                borderRadius: 'var(--border-radius-sm)',
-                padding: '0.8rem 1.2rem',
-                boxShadow: 'var(--shadow-sm)',
-              },
-              inputTextClearButton: {
-                // backgroundColor: '#eee',
-                // borderTopRightRadius: 'var(--border-radius-sm)',
-                // borderBottomRightRadius: 'var(--border-radius-sm)',
-                // color: 'red',
-              },
-              header: {
-                backgroundColor: 'var(--color-grey-200)',
-                color: 'var(--color-grey-700)',
-              },
-              headerTitle: {
-                // fontWeight: 'bold',
-                // fontStyle: 'italic',
-              },
-              list: {
-                backgroundColor: 'var(--color-grey-0)',
-                borderRadius: 'var(--border-radius-sm)',
-                boxShadow: 'var(--shadow-sm)',
-                fontSize: '1.4rem; ',
-                border: '1px solid var(--color-grey-300)',
-              },
-              item: {
-                borderBottom: '1px solid var(--color-grey-100)',
-              },
-              itemActive: {
-                backgroundColor: 'var(--color-brand-500)',
-                color: 'var(--color-grey-0)',
-              },
-              textHighlight: {
-                backgroundColor: 'var(--color-brand-700)',
-                color: 'white',
-              },
-            }}
-            // RenderDataItem={(dataItem, i, searchText) => (
-            //   <>
-            //     <Highlight
-            //       highlightString={searchText}
-            //       style={{
-            //         backgroundColor: 'var(--color-brand-700)',
-            //         color: 'white',
-            //       }}
-            //     >
-            //       {dataItem.email}
-            //     </Highlight>
-            //     <div>{dataItem.fullName}</div>
-            //     <div>{dataItem.nationality}</div>
-            //     <div>
-            //       <img src={dataItem.countryFlag} width="px" />
-            //     </div>
-            //   </>
-            // )}
-            onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
-          />
+                {
+                  header: 'Full Name',
+                  field: 'fullName',
+                },
+                {
+                  header: 'National ID',
+                  field: 'nationalID',
+                  width: '0.7fr',
+                  // align: 'right',
+                },
+                {
+                  header: 'Country',
+                  field: 'countryFlag',
+                  type: 'image',
+                  image: {
+                    scale: '40%',
+                  },
+                  width: '0.3fr',
+                  align: 'center',
+                },
+              ]}
+              styles={{
+                inputText: {
+                  border: '1px solid var(--color-grey-300)',
+                  backgroundColor: 'var(--color-grey-0)',
+                  borderRadius: 'var(--border-radius-sm)',
+                  padding: '0.8rem 1.2rem',
+                  boxShadow: 'var(--shadow-sm)',
+                },
+                inputTextClearButton: {
+                  // backgroundColor: '#eee',
+                  // borderTopRightRadius: 'var(--border-radius-sm)',
+                  // borderBottomRightRadius: 'var(--border-radius-sm)',
+                  // color: 'red',
+                },
+                header: {
+                  backgroundColor: 'var(--color-grey-200)',
+                  color: 'var(--color-grey-700)',
+                },
+                headerTitle: {
+                  // fontWeight: 'bold',
+                  // fontStyle: 'italic',
+                },
+                list: {
+                  backgroundColor: 'var(--color-grey-0)',
+                  borderRadius: 'var(--border-radius-sm)',
+                  boxShadow: 'var(--shadow-sm)',
+                  fontSize: '1.4rem',
+                  border: '1px solid var(--color-grey-300)',
+                },
+                item: {
+                  borderBottom: '1px solid var(--color-grey-100)',
+                },
+                itemActive: {
+                  backgroundColor: 'var(--color-brand-500)',
+                  color: 'var(--color-grey-0)',
+                },
+                textHighlight: {
+                  backgroundColor: 'var(--color-brand-700)',
+                  color: 'white',
+                },
+              }}
+              // RenderDataItem={(dataItem, i, searchText) => (
+              //   <>
+              //     <Highlight
+              //       highlightString={searchText}
+              //       style={{
+              //         backgroundColor: 'var(--color-brand-700)',
+              //         color: 'white',
+              //       }}
+              //     >
+              //       {dataItem.email}
+              //     </Highlight>
+              //     <div>{dataItem.fullName}</div>
+              //     <div>{dataItem.nationality}</div>
+              //     <div>
+              //       <img src={dataItem.countryFlag} width="px" />
+              //     </div>
+              //   </>
+              // )}
+              onSelect={(idx, selected) =>
+                console.log('onSelect', idx, selected)
+              }
+            />
+            {isLoading && <SpinnerMini />}
+          </div>
         </div>
 
         <div>
