@@ -49,7 +49,7 @@ function Header({ columnsProp, stylesProp }) {
         )(colProp);
         return (
           <div key={colProp.header} style={headerTitleStyle}>
-            {colProp.header ?? ''}
+            {colProp['title'] ?? ''}
           </div>
         );
       })}

@@ -76,21 +76,21 @@ function TestingPage() {
               autoComplete={true}
               columns={[
                 {
-                  header: 'Email',
+                  title: 'Email',
                   field: 'email',
                 },
                 {
-                  header: 'Full Name',
+                  title: 'Full Name',
                   field: 'fullName',
                 },
                 {
-                  header: 'National ID',
+                  title: 'National ID',
                   field: 'nationalID',
                   width: '0.7fr',
                   // align: 'right',
                 },
                 {
-                  header: 'Country',
+                  title: 'Country',
                   field: 'countryFlag',
                   type: 'image',
                   image: {

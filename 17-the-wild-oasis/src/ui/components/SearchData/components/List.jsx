@@ -114,7 +114,7 @@ export function RenderList() {
 
   return (
     <>
-      {columnsProp.some((column) => 'header' in column) && (
+      {columnsProp.some((column) => 'title' in column) && (
         <Header columnsProp={columnsProp} stylesProp={stylesProp} />
       )}
       <div
