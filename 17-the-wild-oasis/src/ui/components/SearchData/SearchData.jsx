@@ -15,8 +15,6 @@ const Box = styled.div`
   position: relative;
 `;
 
-// const fakeData = ['dog', 'cat', 'horse', 'giraffe'];
-
 SearchData.propTypes = {
   data: PropTypes.array.isRequired,
   searchField: PropTypes.string, // prop to search if data.element is an object
@@ -163,13 +161,6 @@ function SearchData({
         autoComplete,
         data,
         stylesProp,
-
-        //state
-        // list,
-        // activeIdx,
-        // inputText,
-        // searchText,
-        // isShowList,
 
         //ref
         refInput,
