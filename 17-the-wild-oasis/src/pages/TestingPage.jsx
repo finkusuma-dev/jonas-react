@@ -29,6 +29,31 @@ function TestingPage() {
       <Row>
         <Heading as="h1">Testing Page</Heading>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span>Animal</span>
+          <SearchData
+            // data={['dog', 'cat', 'giraw', 'giraffe']}
+            data={[
+              { name: 'dog', color: 'white' },
+              { name: 'cat', color: 'blue' },
+              { name: 'dinosaurus', color: 'grey' },
+              { name: 'duck', color: 'orange' },
+            ]}
+            searchField="name"
+            placeholder="Search animal"
+            // listWidth="40rem"
+            columns={[
+              {
+                field: 'name',
+              },
+              {
+                field: 'color',
+              },
+            ]}
+            autoComplete
+            onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <span>Email</span>
           <SearchData
             // data={['dog', 'cat', 'giraw', 'giraffe']}
@@ -57,7 +82,6 @@ function TestingPage() {
             // )}
           />
         </div>
-
         <div
           style={{
             display: 'flex',
@@ -170,7 +194,7 @@ function TestingPage() {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <select inputMode="search">
             <option>Giraffe</option>
             <option>Elephant</option>
@@ -182,7 +206,7 @@ function TestingPage() {
             <option value="Boston">Boston</option>
             <option value="Cambridge">Cambridge</option>
           </datalist>
-        </div>
+        </div> */}
         <Highlight
           highlightString="dee"
           style={{

@@ -26,7 +26,24 @@ const ListBox = styled.div`
   }};
 
   left: 0;
-  width: ${(props) => props.width || 'auto'};
+  ${(props) => {
+    if (props.width)
+      return css`
+        width: ${props.width};
+      `;
+    /// Calculate width based on columns prop length
+    else if (props.columns.length > 2) {
+      const width = props.columns.length * 130 + 'px';
+      console.log('width', width);
+      return css`
+        width: ${width};
+      `;
+    }
+    /// Set width the same as inputText width
+    return css`
+      right: 0;
+    `;
+  }};
   z-index: 100;
   background-color: white;
   border: 1px solid #ddd;
@@ -35,7 +52,8 @@ const ListBox = styled.div`
 `;
 
 export default function List() {
-  const { listWidth, listWindow, refListBox, stylesProp } = useSearchData();
+  const { listWidth, listWindow, refListBox, stylesProp, columnsProp } =
+    useSearchData();
 
   const customStyle = getCustomStyle(StyleType.list, stylesProp);
 
@@ -45,6 +63,7 @@ export default function List() {
       width={listWidth}
       window={listWindow}
       style={customStyle}
+      columns={columnsProp}
     >
       <RenderList />
     </ListBox>
