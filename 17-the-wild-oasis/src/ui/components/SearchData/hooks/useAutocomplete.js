@@ -9,6 +9,7 @@ function useAutocomplete({
   refInput,
 }) {
   const refApplied = useRef(false);
+  // console.log('autoComplete enabled', enabled);
 
   /// AUTO COMPLETE part, step 3:
   /// Mark selection for autocomplete

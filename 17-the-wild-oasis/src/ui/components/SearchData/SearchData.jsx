@@ -49,6 +49,8 @@ function SearchData({
 }) {
   const { state, dispatch } = useSearchDataReducer(data);
 
+  //console.log('autoComplete', typeof autoComplete, autoComplete);
+
   const {
     //  searchText, inputText,
     list,

@@ -41,6 +41,7 @@ function TestingPage() {
             data={guests}
             searchField="email"
             placeholder="Search email"
+            autoComplete
             onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
             // RenderDataItem={(dataItem, i, searchText) => (
             //   <Highlight
@@ -73,7 +74,7 @@ function TestingPage() {
               searchField="email"
               placeholder="Search email"
               listWidth="70rem"
-              autoComplete={true}
+              autoComplete
               columns={[
                 {
                   title: 'Email',
