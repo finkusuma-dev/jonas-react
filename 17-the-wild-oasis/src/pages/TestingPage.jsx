@@ -119,7 +119,7 @@ function TestingPage() {
                 borderRadius: 'var(--border-radius-sm)',
                 boxShadow: 'var(--shadow-sm)',
                 fontSize: '1.4rem; ',
-                border: '1px solid var(--color-grey-300);',
+                border: '1px solid var(--color-grey-300)',
               },
               item: {
                 borderBottom: '1px solid var(--color-grey-100)',
