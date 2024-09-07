@@ -30,7 +30,7 @@ const StyledItem = styled.div`
     );
   }}
 
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #f3f4f6;
 
   &:last-child {
     border-bottom: none !important;

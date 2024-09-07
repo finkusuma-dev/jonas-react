@@ -23,7 +23,7 @@ const headerStyle = {
   display: 'grid',
 
   gridTemplateColumns: '1fr',
-  backgroundColor: 'hsl(0, 0%, 85.09803921568627%)',
+  backgroundColor: '#e5e7eb',
   color: 'black',
 };
 
