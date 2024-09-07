@@ -48,6 +48,7 @@ function SearchInput() {
     maxResults,
     data,
     stylesProp,
+    onDeselect,
 
     state,
     dispatch,
@@ -92,6 +93,12 @@ function SearchInput() {
       type: ActionType.searchChange,
       payload: newSearchString,
     });
+
+    dispatch({
+      type: ActionType.clearActiveIdx,
+    });
+
+    if (onDeselect && onDeselect());
 
     if (newSearchString.length < 2) dispatch({ type: ActionType.clearList });
     else {
@@ -153,9 +160,6 @@ function SearchInput() {
     }
 
     showList();
-    dispatch({
-      type: ActionType.clearActiveIdx,
-    });
   }
 
   function handleKeyDown(e) {

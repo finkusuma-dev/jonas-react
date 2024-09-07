@@ -162,6 +162,7 @@ function TestingPage() {
               onSelect={(idx, selected) =>
                 console.log('onSelect', idx, selected)
               }
+              onDeselect={() => console.log('Deselect item')}
             />
             {isLoading && <SpinnerMini />}
           </div>

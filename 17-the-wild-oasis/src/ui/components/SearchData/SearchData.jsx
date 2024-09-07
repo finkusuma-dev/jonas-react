@@ -19,13 +19,14 @@ SearchData.propTypes = {
   data: PropTypes.array.isRequired,
   searchField: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
-  onSelect: PropTypes.func.isRequired,
-  RenderDataItem: PropTypes.func,
+  // RenderDataItem: PropTypes.func,
   maxResults: PropTypes.number,
   listWidth: PropTypes.string,
   columns: PropTypes.array,
   autoComplete: PropTypes.bool,
   styles: PropTypes.object,
+  onSelect: PropTypes.func,
+  onDeselect: PropTypes.func,
 };
 
 export const SearchDataContext = createContext();
@@ -34,14 +35,17 @@ export const useSearchData = () => useContext(SearchDataContext);
 function SearchData({
   data,
   searchField,
-  onSelect,
-  RenderDataItem,
+  // RenderDataItem,
   placeholder,
   maxResults = 7,
   listWidth,
   columns: columnsProp = [],
   autoComplete = false,
   styles: stylesProp = [],
+
+  /// Events
+  onSelect,
+  onDeselect,
 }) {
   const { state, dispatch } = useSearchDataReducer(data);
 
@@ -156,11 +160,12 @@ function SearchData({
         placeholder,
         searchField,
         maxResults,
-        RenderDataItem,
+        // RenderDataItem,/
         columnsProp,
         autoComplete,
         data,
         stylesProp,
+        onDeselect,
 
         //ref
         refInput,
