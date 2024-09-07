@@ -99,6 +99,13 @@ function TestingPage() {
               },
             ]}
             styles={{
+              inputText: {
+                border: '1px solid var(--color-grey-300)',
+                backgroundColor: 'var(--color-grey-0)',
+                borderRadius: 'var(--border-radius-sm)',
+                padding: '0.8rem 1.2rem',
+                boxShadow: 'var(--shadow-sm)',
+              },
               header: {
                 backgroundColor: 'var(--color-grey-200)',
                 color: 'var(--color-grey-700)',

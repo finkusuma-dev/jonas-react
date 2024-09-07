@@ -1,7 +1,26 @@
-import Input from '../../../Input';
+import styled from 'styled-components';
 import { useSearchData } from '../SearchData';
 import useAutocomplete from '../hooks/useAutocomplete';
 import { ActionType } from '../hooks/useSearchDataReducer';
+import { getCustomStyle, StyleType } from '../helpers/styles';
+
+const Input = styled.input`
+  /* border: 1px solid var(--color-grey-300);
+  background-color: var(--color-grey-0);
+  border-radius: var(--border-radius-sm);
+  padding: 0.8rem 1.2rem;
+  box-shadow: var(--shadow-sm); */
+  position: relative;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 0.6rem 1.1rem;
+  background-color: white;
+
+  &:focus {
+    outline: 2px solid #4f46e5; //var(--color-brand-600);
+    outline-offset: -1px;
+  }
+`;
 
 function SearchInput() {
   const {
@@ -11,6 +30,7 @@ function SearchInput() {
     searchField,
     maxResults,
     data,
+    stylesProp,
 
     state,
     dispatch,
@@ -175,6 +195,8 @@ function SearchInput() {
     refInput.current.focus();
   }
 
+  const customStyle = getCustomStyle(StyleType.inputText, stylesProp);
+
   return (
     <>
       <Input
@@ -185,9 +207,7 @@ function SearchInput() {
         // onBlur={handleBlur}
         placeholder={placeholder || 'Search for data'}
         ref={refInput}
-        style={{
-          position: 'relative',
-        }}
+        style={customStyle}
       />
       {state.inputText && (
         /// Clear Button
