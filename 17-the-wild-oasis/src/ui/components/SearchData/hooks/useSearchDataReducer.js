@@ -20,6 +20,7 @@ export const ActionType = Object.freeze({
 const initialState = {
   inputText: '', /// Input Text component's value
   searchText: '', /// The actual keyboard keys pressed/search by the user
+  savedDataSearchText: '',
   savedData: [],
   list: [], /// The results of searching the searchText
   isShowList: false, /// The state of showing the list
@@ -64,7 +65,8 @@ function useSearchDataReducer() {
       case ActionType.saveData:
         return {
           ...state,
-          savedData: action.payload,
+          savedData: action.payload.data,
+          savedDataSearchText: action.payload.searchText,
         };
 
       case ActionType.clearData:
@@ -72,6 +74,7 @@ function useSearchDataReducer() {
         return {
           ...state,
           savedData: [],
+          savedDataSearchText: '',
         };
       case ActionType.setList:
         return {
@@ -83,6 +86,7 @@ function useSearchDataReducer() {
         return {
           ...state,
           list: [],
+          isShowList: false,
         };
 
       case ActionType.showList:

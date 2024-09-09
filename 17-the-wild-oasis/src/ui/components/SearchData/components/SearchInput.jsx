@@ -68,7 +68,6 @@ function SearchInput() {
   } = useSearchData();
 
   const refTimeout = useRef();
-  const refSavedSearchStringData = useRef();
 
   const firstItemStr =
     state.list.length > 0 && getSearchedTextFromItem(state.list[0]);
@@ -123,9 +122,9 @@ function SearchInput() {
         if (
           /// If new search string has saved search string as its substring,
           /// use previous saved data
-          refSavedSearchStringData.current &&
-          refSavedSearchStringData.current.length > 0 &&
-          newSearchString.indexOf(refSavedSearchStringData.current) > -1
+          state.savedDataSearchText &&
+          state.savedDataSearchText.length > 0 &&
+          newSearchString.indexOf(state.savedDataSearchText) > -1
         ) {
           return createNewList({ newSearchString, savedData: state.savedData });
         }
@@ -145,9 +144,8 @@ function SearchInput() {
           // 1000
         );
       } else {
-        console.log(' ==== clear data');
-        refSavedSearchStringData.current = '';
-        dispatch({ type: ActionType.clearData });
+        // console.log(' ==== clear data');
+        // dispatch({ type: ActionType.clearData });
         dispatch({ type: ActionType.clearList });
       }
     } else {
@@ -166,8 +164,10 @@ function SearchInput() {
       ///
       // console.log('>>> new data', newSearchString);
       currentData = newData;
-      refSavedSearchStringData.current = newSearchString;
-      dispatch({ type: ActionType.saveData, payload: newData });
+      dispatch({
+        type: ActionType.saveData,
+        payload: { data: newData, searchText: newSearchString },
+      });
 
       console.log('> Use new data', currentData);
     } else if (savedData) {
