@@ -49,7 +49,7 @@ function SearchData({
   onSelect,
   onDeselect,
 }) {
-  const { state, dispatch } = useSearchDataReducer(data);
+  const { state, dispatch } = useSearchDataReducer();
 
   //console.log('autoComplete', typeof autoComplete, autoComplete);
 

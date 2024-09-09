@@ -3,6 +3,10 @@ import { useSearchData } from '../SearchData';
 import useAutocomplete from '../hooks/useAutocomplete';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { getCustomStyle, StyleType } from '../helpers/styles';
+import { useRef } from 'react';
+import { processTimeout } from '../helpers/func';
+
+const MIN_CHARACTER_SEARCH = 2;
 
 const Input = styled.input`
   /* border: 1px solid var(--color-grey-300);
@@ -62,6 +66,9 @@ function SearchInput() {
     getSearchedTextFromItem,
   } = useSearchData();
 
+  const refTimeout = useRef();
+  const refSavedSearchStringData = useRef();
+
   const firstItemStr =
     state.list.length > 0 && getSearchedTextFromItem(state.list[0]);
   // console.log(
@@ -101,9 +108,59 @@ function SearchInput() {
 
     if (onDeselect && onDeselect());
 
-    if (newSearchString.length < 2) dispatch({ type: ActionType.clearList });
-    else {
-      const newList = data
+    // console.log(
+    //   'refSearchStringData.current',
+    //   refSearchStringData.current,
+    //   newSearchString
+    // );
+
+    if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
+      if (
+        /// If new search string has saved search string as its substring,
+        /// use previous saved data
+        refSavedSearchStringData.current &&
+        refSavedSearchStringData.current.length > 0 &&
+        newSearchString.indexOf(refSavedSearchStringData.current) > -1
+      ) {
+        return createNewList({ newSearchString });
+      }
+
+      /// If not request for a new data
+      processTimeout(
+        refTimeout,
+        () => {
+          createNewList({ newSearchString, isNewData: true });
+        }
+        // 1000
+      );
+    } else {
+      // console.log(' ==== clear');
+      refSavedSearchStringData.current = '';
+      dispatch({ type: ActionType.clearSavedData });
+      dispatch({ type: ActionType.clearList });
+    }
+  }
+
+  function createNewList({ newSearchString, isNewData = false }) {
+    let savedData;
+    if (isNewData) {
+      /// If new data arrived, the search string & the data is saved
+      ///
+      // console.log('>>> new data', newSearchString);
+      savedData = data;
+      refSavedSearchStringData.current = newSearchString;
+      dispatch({ type: ActionType.setSavedData, payload: data });
+    } else {
+      /// If not, using previous savedData
+      ///
+      // console.log('> old data', refSearchStringData.current);
+      savedData = state.savedData;
+    }
+
+    if (newSearchString.length < MIN_CHARACTER_SEARCH) {
+      //
+    } else {
+      const newList = savedData
         /// Filter items based on the search string
         .filter((item) =>
           typeof item === 'string'
@@ -158,9 +215,8 @@ function SearchInput() {
         type: ActionType.setList,
         payload: newList,
       });
+      showList();
     }
-
-    showList();
   }
 
   function handleKeyDown(e) {
