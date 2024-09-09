@@ -4,6 +4,7 @@ export const ActionType = Object.freeze({
   searchChange: 'searchChange',
   clearSearch: 'clearSearch',
   saveData: 'savedData/set',
+  saveDataSearchText: 'savedDataSearchText/set',
   clearData: 'savedData/clear',
   setSearchText: 'searchText/set',
   setInputText: 'inputText/set',
@@ -65,16 +66,19 @@ function useSearchDataReducer() {
       case ActionType.saveData:
         return {
           ...state,
-          savedData: action.payload.data,
-          savedDataSearchText: action.payload.searchText,
+          savedData: action.payload,
         };
-
       case ActionType.clearData:
         // console.log('clear savedData');
         return {
           ...state,
           savedData: [],
           savedDataSearchText: '',
+        };
+      case ActionType.saveDataSearchText:
+        return {
+          ...state,
+          savedDataSearchText: action.payload,
         };
       case ActionType.setList:
         return {

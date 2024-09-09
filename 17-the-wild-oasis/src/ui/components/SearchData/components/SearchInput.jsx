@@ -166,7 +166,11 @@ function SearchInput() {
       currentData = newData;
       dispatch({
         type: ActionType.saveData,
-        payload: { data: newData, searchText: newSearchString },
+        payload: newData,
+      });
+      dispatch({
+        type: ActionType.saveDataSearchText,
+        payload: newSearchString,
       });
 
       console.log('> Use new data', currentData);

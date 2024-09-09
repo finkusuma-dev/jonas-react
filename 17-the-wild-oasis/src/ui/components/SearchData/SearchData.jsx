@@ -65,8 +65,11 @@ function SearchData({
 
   useEffect(() => {
     if (dataProp.length > 0 && !isSameData) {
-      console.log('>> Save dataProp, data the same', isSameData);
-      dispatch({ type: ActionType.saveData, payload: dataProp });
+      console.log('>> Save dataProp, data the same', isSameData, dataProp);
+      dispatch({
+        type: ActionType.saveData,
+        payload: dataProp,
+      });
     }
   }, [isSameData, dataProp]);
   // console.log('data', data);
