@@ -106,7 +106,7 @@ function SearchInput() {
       type: ActionType.clearActiveIdx,
     });
 
-    if (onDeselect && onDeselect());
+    if (state.activeIdx !== null && onDeselect && onDeselect());
 
     // console.log(
     //   'refSearchStringData.current',
