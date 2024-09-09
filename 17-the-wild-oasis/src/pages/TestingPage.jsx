@@ -13,6 +13,7 @@ import { searchEmail } from '../services/apiGuests';
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
   padding: 4rem 4.8rem 6.4rem;
+  min-height: 100vh;
 `;
 
 function TestingPage() {
@@ -75,6 +76,31 @@ function TestingPage() {
               placeholder="Search email"
               autoComplete
               isClearable
+              styles={{
+                inputText: {
+                  border: '1px solid var(--color-grey-300)',
+                  backgroundColor: 'var(--color-grey-0)',
+                  boxShadow: 'var(--shadow-sm)',
+                },
+                inputTextClearButton: {
+                  color: 'var(--color-grey-500)',
+                },
+                list: {
+                  backgroundColor: 'var(--color-grey-0)',
+                  border: '1px solid var(--color-grey-300)',
+                },
+                item: {
+                  borderBottom: '1px solid var(--color-grey-100)',
+                },
+                itemActive: {
+                  backgroundColor: 'var(--color-brand-500)',
+                  color: 'var(--color-grey-0)',
+                },
+                textHighlight: {
+                  backgroundColor: 'var(--color-brand-700)',
+                  color: 'white',
+                },
+              }}
               onSelect={(idx, selected) =>
                 console.log('onSelect', idx, selected)
               }
@@ -152,7 +178,7 @@ function TestingPage() {
                     // backgroundColor: '#eee',
                     // borderTopRightRadius: 'var(--border-radius-sm)',
                     // borderBottomRightRadius: 'var(--border-radius-sm)',
-                    // color: 'red',
+                    color: 'var(--color-grey-500)',
                   },
                   header: {
                     backgroundColor: 'var(--color-grey-200)',
