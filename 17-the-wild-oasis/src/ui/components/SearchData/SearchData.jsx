@@ -16,7 +16,7 @@ const Box = styled.div`
 `;
 
 SearchData.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array,
   searchField: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
   // RenderDataItem: PropTypes.func,
@@ -28,13 +28,14 @@ SearchData.propTypes = {
   styles: PropTypes.object,
   onSelect: PropTypes.func,
   onDeselect: PropTypes.func,
+  onSearch: PropTypes.func,
 };
 
 export const SearchDataContext = createContext();
 export const useSearchData = () => useContext(SearchDataContext);
 
 function SearchData({
-  data,
+  data: dataProp = [],
   searchField,
   // RenderDataItem,
   placeholder,
@@ -48,8 +49,17 @@ function SearchData({
   /// Events
   onSelect,
   onDeselect,
+  onSearch,
 }) {
   const { state, dispatch } = useSearchDataReducer();
+
+  /// NOTE: using useEffect to save data results in infinite loop
+
+  /// Save data to reducer whenever it changes
+  // useEffect(() => {
+  //   dispatch({ type: ActionType.saveData, payload: data });
+  // }, [data]);
+  // console.log('data', data);
 
   //console.log('autoComplete', typeof autoComplete, autoComplete);
 
@@ -112,6 +122,9 @@ function SearchData({
       type: ActionType.hideList,
     });
 
+    /// [x]: currently there are two conditions, using state.savedData or dataProp
+    const data = state.savedData.length > 0 ? state.savedData : dataProp;
+
     const dataIdx = data.findIndex((obj) =>
       typeof obj === 'string'
         ? obj === list[itemIdx]
@@ -168,9 +181,10 @@ function SearchData({
         columnsProp,
         autoComplete,
         isClearable,
-        data,
+        dataProp,
         stylesProp,
         onDeselect,
+        onSearch,
 
         //ref
         refInput,

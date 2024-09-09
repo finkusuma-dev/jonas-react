@@ -3,8 +3,8 @@ import { useReducer } from 'react';
 export const ActionType = Object.freeze({
   searchChange: 'searchChange',
   clearSearch: 'clearSearch',
-  setSavedData: 'savedData/set',
-  clearSavedData: 'savedData/clear',
+  saveData: 'savedData/set',
+  clearData: 'savedData/clear',
   setSearchText: 'searchText/set',
   setInputText: 'inputText/set',
   setList: 'list/set',
@@ -27,7 +27,9 @@ const initialState = {
 };
 
 function useSearchDataReducer() {
-  const [state, dispatch] = useReducer(reducer, { ...initialState });
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+  });
 
   function reducer(state, action) {
     // console.log('reducer action', action);
@@ -59,13 +61,14 @@ function useSearchDataReducer() {
           ...state,
           inputText: action.payload,
         };
-      case ActionType.setSavedData:
+      case ActionType.saveData:
         return {
           ...state,
           savedData: action.payload,
         };
 
-      case ActionType.clearSavedData:
+      case ActionType.clearData:
+        // console.log('clear savedData');
         return {
           ...state,
           savedData: [],

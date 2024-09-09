@@ -51,9 +51,10 @@ function SearchInput() {
     placeholder,
     searchField,
     maxResults,
-    data,
+    dataProp,
     stylesProp,
     onDeselect,
+    onSearch,
 
     state,
     dispatch,
@@ -102,65 +103,85 @@ function SearchInput() {
       payload: newSearchString,
     });
 
+    if (state.activeIdx !== null && onDeselect && onDeselect());
+
     dispatch({
       type: ActionType.clearActiveIdx,
     });
 
-    if (state.activeIdx !== null && onDeselect && onDeselect());
-
+    requestData(newSearchString);
     // console.log(
     //   'refSearchStringData.current',
     //   refSearchStringData.current,
     //   newSearchString
     // );
+  }
 
-    if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
-      if (
-        /// If new search string has saved search string as its substring,
-        /// use previous saved data
-        refSavedSearchStringData.current &&
-        refSavedSearchStringData.current.length > 0 &&
-        newSearchString.indexOf(refSavedSearchStringData.current) > -1
-      ) {
-        return createNewList({ newSearchString });
-      }
-
-      /// If not request for a new data
-      processTimeout(
-        refTimeout,
-        () => {
-          createNewList({ newSearchString, isNewData: true });
+  function requestData(newSearchString) {
+    if (onSearch) {
+      if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
+        if (
+          /// If new search string has saved search string as its substring,
+          /// use previous saved data
+          refSavedSearchStringData.current &&
+          refSavedSearchStringData.current.length > 0 &&
+          newSearchString.indexOf(refSavedSearchStringData.current) > -1
+        ) {
+          return createNewList({ newSearchString, savedData: state.savedData });
         }
-        // 1000
-      );
+
+        /// If not request for a new data
+        processTimeout(
+          refTimeout,
+          async () => {
+            if (onSearch) {
+              const newData = await onSearch(newSearchString);
+              console.log(`newData result ${newSearchString}`, newData);
+              createNewList({ newSearchString, newData });
+            }
+          }
+          // 1000
+        );
+      } else {
+        console.log(' ==== clear data');
+        refSavedSearchStringData.current = '';
+        dispatch({ type: ActionType.clearData });
+        dispatch({ type: ActionType.clearList });
+      }
     } else {
-      // console.log(' ==== clear');
-      refSavedSearchStringData.current = '';
-      dispatch({ type: ActionType.clearSavedData });
-      dispatch({ type: ActionType.clearList });
+      if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
+        return createNewList({ newSearchString });
+      } else {
+        dispatch({ type: ActionType.clearList });
+      }
     }
   }
 
-  function createNewList({ newSearchString, isNewData = false }) {
-    let savedData;
-    if (isNewData) {
+  function createNewList({ newSearchString, newData, savedData }) {
+    let data;
+    if (newData) {
       /// If new data arrived, the search string & the data is saved
       ///
       // console.log('>>> new data', newSearchString);
-      savedData = data;
+      data = newData;
       refSavedSearchStringData.current = newSearchString;
-      dispatch({ type: ActionType.setSavedData, payload: data });
-    } else {
+      dispatch({ type: ActionType.saveData, payload: newData });
+
+      console.log('> use new data', data);
+    } else if (savedData) {
       /// If not, using previous savedData
       ///
-      // console.log('> old data', refSearchStringData.current);
-      savedData = state.savedData;
+      data = savedData;
+      console.log('> use saved data', data);
+    } else {
+      data = dataProp;
+      console.log('> use data prop', data);
     }
 
     if (newSearchString.length < MIN_CHARACTER_SEARCH) {
       //
     } else {
-      const newList = savedData
+      const newList = data
         /// Filter items based on the search string
         .filter((item) =>
           typeof item === 'string'

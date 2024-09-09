@@ -10,3 +10,17 @@ export async function getGuests() {
 
   return data;
 }
+
+export async function searchEmail(search) {
+  const { data, error } = await supabase
+    .from('guests')
+    .select('*')
+    .ilike('email', `%${search}%`);
+
+  if (error) {
+    console.log('searchEmail error', error);
+    throw new Error('Search email error');
+  }
+
+  return data;
+}
