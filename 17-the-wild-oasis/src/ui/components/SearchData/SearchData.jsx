@@ -1,7 +1,6 @@
 import { createContext } from 'react';
 import { useContext } from 'react';
 import { useRef } from 'react';
-import { useEffect } from 'react';
 import useSearchDataReducer, { ActionType } from './hooks/useSearchDataReducer';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -11,6 +10,7 @@ import { usePositionListWindow } from './hooks/usePositionListWindow';
 import SearchInput from './components/SearchInput';
 import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
+import useCompare from './hooks/useCompare';
 // import { useMemo } from 'react';
 
 const Box = styled.div`
@@ -60,19 +60,19 @@ function SearchData({
   // const currentData = useMemo(() => dataProp, [dataProp]);
 
   /// Save data to reducer whenever it changes.
-  const isSameData =
-    JSON.stringify(state.savedData) === JSON.stringify(dataProp);
-
-  useEffect(() => {
-    if (dataProp.length > 0 && !isSameData) {
-      console.log('>> Save dataProp, data the same', isSameData, dataProp);
-      dispatch({
-        type: ActionType.saveData,
-        payload: dataProp,
-      });
-    }
-  }, [isSameData, dataProp]);
-  // console.log('data', data);
+  useCompare({
+    newValue: dataProp,
+    prevValue: state.savedData,
+    callbackFn: (dataProp) => {
+      if (dataProp.length > 0) {
+        console.log('>> Save dataProp', dataProp);
+        dispatch({
+          type: ActionType.saveData,
+          payload: dataProp,
+        });
+      }
+    },
+  });
 
   //console.log('autoComplete', typeof autoComplete, autoComplete);
 
