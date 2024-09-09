@@ -51,7 +51,7 @@ function SearchInput() {
     placeholder,
     searchField,
     maxResults,
-    dataProp,
+    // dataProp,
     stylesProp,
     onDeselect,
     onSearch,
@@ -136,8 +136,10 @@ function SearchInput() {
           async () => {
             if (onSearch) {
               const newData = await onSearch(newSearchString);
-              console.log(`newData result ${newSearchString}`, newData);
-              createNewList({ newSearchString, newData });
+              if (newData) {
+                // console.log(`newData result ${newSearchString}`, newData);
+                createNewList({ newSearchString, newData });
+              }
             }
           }
           // 1000
@@ -150,7 +152,7 @@ function SearchInput() {
       }
     } else {
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
-        return createNewList({ newSearchString });
+        return createNewList({ newSearchString, savedData: state.savedData });
       } else {
         dispatch({ type: ActionType.clearList });
       }
@@ -158,30 +160,30 @@ function SearchInput() {
   }
 
   function createNewList({ newSearchString, newData, savedData }) {
-    let data;
+    let currentData;
     if (newData) {
       /// If new data arrived, the search string & the data is saved
       ///
       // console.log('>>> new data', newSearchString);
-      data = newData;
+      currentData = newData;
       refSavedSearchStringData.current = newSearchString;
       dispatch({ type: ActionType.saveData, payload: newData });
 
-      console.log('> use new data', data);
+      console.log('> Use new data', currentData);
     } else if (savedData) {
       /// If not, using previous savedData
       ///
-      data = savedData;
-      console.log('> use saved data', data);
+      currentData = savedData;
+      console.log('> Use saved data');
     } else {
-      data = dataProp;
-      console.log('> use data prop', data);
+      // data = dataProp;
+      // console.log('> use data prop', data);
     }
 
     if (newSearchString.length < MIN_CHARACTER_SEARCH) {
       //
     } else {
-      const newList = data
+      const newList = currentData
         /// Filter items based on the search string
         .filter((item) =>
           typeof item === 'string'

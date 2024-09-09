@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 import { useContext } from 'react';
 import { useRef } from 'react';
+import { useEffect } from 'react';
 import useSearchDataReducer, { ActionType } from './hooks/useSearchDataReducer';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -10,6 +11,7 @@ import { usePositionListWindow } from './hooks/usePositionListWindow';
 import SearchInput from './components/SearchInput';
 import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
+// import { useMemo } from 'react';
 
 const Box = styled.div`
   position: relative;
@@ -55,10 +57,18 @@ function SearchData({
 
   /// NOTE: using useEffect to save data results in infinite loop
 
-  /// Save data to reducer whenever it changes
-  // useEffect(() => {
-  //   dispatch({ type: ActionType.saveData, payload: data });
-  // }, [data]);
+  // const currentData = useMemo(() => dataProp, [dataProp]);
+
+  /// Save data to reducer whenever it changes.
+  const isSameData =
+    JSON.stringify(state.savedData) === JSON.stringify(dataProp);
+
+  useEffect(() => {
+    if (dataProp.length > 0 && !isSameData) {
+      console.log('>> Save dataProp, data the same', isSameData);
+      dispatch({ type: ActionType.saveData, payload: dataProp });
+    }
+  }, [isSameData, dataProp]);
   // console.log('data', data);
 
   //console.log('autoComplete', typeof autoComplete, autoComplete);
@@ -123,9 +133,10 @@ function SearchData({
     });
 
     /// [x]: currently there are two conditions, using state.savedData or dataProp
-    const data = state.savedData.length > 0 ? state.savedData : dataProp;
+    // const data = state.savedData.length > 0 ? state.savedData : dataProp;
+    const curentData = state.savedData;
 
-    const dataIdx = data.findIndex((obj) =>
+    const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
         ? obj === list[itemIdx]
         : searchField !== undefined && obj[searchField]
@@ -136,12 +147,12 @@ function SearchData({
     // console.log('selectedIdx', selectedIdx);
 
     const selectedText =
-      typeof data[dataIdx] === 'string'
-        ? data[dataIdx]
+      typeof curentData[dataIdx] === 'string'
+        ? curentData[dataIdx]
         : searchField !== undefined
-        ? data[dataIdx][searchField]
+        ? curentData[dataIdx][searchField]
         : '';
-    const selectedObj = data[dataIdx];
+    const selectedObj = curentData[dataIdx];
 
     dispatch({
       type: ActionType.setInputText,

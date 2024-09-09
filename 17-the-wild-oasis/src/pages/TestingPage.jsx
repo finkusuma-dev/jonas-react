@@ -32,7 +32,7 @@ function TestingPage() {
       <Row>
         <Heading as="h1">Testing Page</Heading>
 
-        {
+        {/* 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <span>Animal</span>
             <SearchData
@@ -62,33 +62,37 @@ function TestingPage() {
               }
             />
           </div>
-        }
+         */}
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <span>Email</span>
-          <SearchData
-            key="search_data_guests"
-            name="search_data_guests"
-            data={guests}
-            searchField="email"
-            placeholder="Search email"
-            autoComplete
-            isClearable
-            onSelect={(idx, selected) => console.log('onSelect', idx, selected)}
-            // RenderDataItem={(dataItem, i, searchText) => (
-            //   <Highlight
-            //     key={i}
-            //     highlightString={searchText}
-            //     style={{
-            //       backgroundColor: 'var(--color-brand-700)',
-            //       color: 'white',
-            //     }}
-            //   >
-            //     {dataItem.email} - {dataItem.fullName}
-            //   </Highlight>
-            // )}
-          />
-        </div>
+        {
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <span>Email</span>
+            <SearchData
+              key="search_data_guests"
+              name="search_data_guests"
+              data={guests}
+              searchField="email"
+              placeholder="Search email"
+              autoComplete
+              isClearable
+              onSelect={(idx, selected) =>
+                console.log('onSelect', idx, selected)
+              }
+              // RenderDataItem={(dataItem, i, searchText) => (
+              //   <Highlight
+              //     key={i}
+              //     highlightString={searchText}
+              //     style={{
+              //       backgroundColor: 'var(--color-brand-700)',
+              //       color: 'white',
+              //     }}
+              //   >
+              //     {dataItem.email} - {dataItem.fullName}
+              //   </Highlight>
+              // )}
+            />
+          </div>
+        }
 
         {
           <div
