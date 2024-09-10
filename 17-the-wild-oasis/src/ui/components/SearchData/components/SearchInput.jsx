@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useSearchData } from '../SearchData';
-import useAutocomplete from '../hooks/useAutocomplete';
+// import useAutocomplete from '../hooks/useAutocomplete';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { getCustomStyle, StyleType } from '../helpers/styles';
 import { useRef } from 'react';
@@ -46,11 +46,11 @@ const ClearButton = styled.button`
 function SearchInput() {
   const {
     // props
-    autoComplete,
+    // autoComplete,
     isClearable,
     placeholder,
-    searchField,
-    maxResults,
+    // searchField,
+    // maxResults,
     // dataProp,
     stylesProp,
     onDeselect,
@@ -65,6 +65,8 @@ function SearchInput() {
     showList,
     selectItem,
     getSearchedTextFromItem,
+    createNewList,
+    autoCompleteKeyDown,
   } = useSearchData();
 
   const refTimeout = useRef();
@@ -79,20 +81,20 @@ function SearchInput() {
   // );
 
   // const { list, activeIdx, inputText, searchText, isShowList } = state;
-  const setInputText = (input) => {
-    dispatch({ type: ActionType.setInputText, payload: input });
-  };
+  // const setInputText = (input) => {
+  //   dispatch({ type: ActionType.setInputText, payload: input });
+  // };
 
-  const {
-    searchChange: autoCompleteSearchChange,
-    keyDown: autoCompleteKeyDown,
-  } = useAutocomplete({
-    enabled: autoComplete,
-    inputText: state.inputText,
-    setInputText,
-    searchText: state.searchText,
-    refInput,
-  });
+  // const {
+  //   searchChange: autoCompleteSearchChange,
+  //   keyDown: autoCompleteKeyDown,
+  // } = useAutocomplete({
+  //   enabled: autoComplete,
+  //   inputText: state.inputText,
+  //   setInputText,
+  //   searchText: state.searchText,
+  //   refInput,
+  // });
 
   function handleChange(e) {
     const newSearchString = e.target.value;
@@ -129,14 +131,23 @@ function SearchInput() {
           return createNewList({ newSearchString, savedData: state.savedData });
         }
 
-        /// If not request for a new data
+        /// If not, request for a new data
         processTimeout(
           refTimeout,
           async () => {
             if (onSearch) {
+              dispatch({
+                type: ActionType.saveDataSearchText,
+                payload: newSearchString,
+              });
+
               const newData = await onSearch(newSearchString);
+
+              /// If returns newData it fetches api directly
+              /// If not returns newData, it uses react query and pass the data through dataProp
               if (newData) {
                 // console.log(`newData result ${newSearchString}`, newData);
+
                 createNewList({ newSearchString, newData });
               }
             }
@@ -144,7 +155,7 @@ function SearchInput() {
           // 1000
         );
       } else {
-        // console.log(' ==== clear data');
+        // console.log(' ==== clearList');
         // dispatch({ type: ActionType.clearData });
         dispatch({ type: ActionType.clearList });
       }
@@ -157,94 +168,94 @@ function SearchInput() {
     }
   }
 
-  function createNewList({ newSearchString, newData, savedData }) {
-    let currentData;
-    if (newData) {
-      /// If new data arrived, the search string & the data is saved
-      ///
-      // console.log('>>> new data', newSearchString);
-      currentData = newData;
-      dispatch({
-        type: ActionType.saveData,
-        payload: newData,
-      });
-      dispatch({
-        type: ActionType.saveDataSearchText,
-        payload: newSearchString,
-      });
+  // function createNewList({ newSearchString, newData, savedData }) {
+  //   let currentData;
+  //   if (newData) {
+  //     /// If new data arrived, the search string & the data is saved
+  //     ///
+  //     // console.log('>>> new data', newSearchString);
+  //     currentData = newData;
+  //     dispatch({
+  //       type: ActionType.saveData,
+  //       payload: newData,
+  //     });
+  //     // dispatch({
+  //     //   type: ActionType.saveDataSearchText,
+  //     //   payload: newSearchString,
+  //     // });
 
-      console.log('> Use new data', currentData);
-    } else if (savedData) {
-      /// If not, using previous savedData
-      ///
-      currentData = savedData;
-      console.log('> Use saved data');
-    } else {
-      // data = dataProp;
-      // console.log('> use data prop', data);
-    }
+  //     console.log('> Use new data', currentData);
+  //   } else if (savedData) {
+  //     /// If not, using previous savedData
+  //     ///
+  //     currentData = savedData;
+  //     console.log('> Use saved data');
+  //   } else {
+  //     // data = dataProp;
+  //     // console.log('> use data prop', data);
+  //   }
 
-    if (newSearchString.length < MIN_CHARACTER_SEARCH) {
-      //
-    } else {
-      const newList = currentData
-        /// Filter items based on the search string
-        .filter((item) =>
-          typeof item === 'string'
-            ? String(item).includes(newSearchString)
-            : searchField !== undefined && item[searchField]
-            ? String(item[searchField]).includes(newSearchString)
-            : false
-        )
-        /// Sort items based on the index where the search string is found
-        .sort((a, b) => {
-          const aString = getSearchedTextFromItem(a);
-          const bString = getSearchedTextFromItem(b);
-          const aIdx = aString.indexOf(newSearchString);
-          const bIdx = bString.indexOf(newSearchString);
+  //   if (newSearchString.length < MIN_CHARACTER_SEARCH) {
+  //     //
+  //   } else {
+  //     const newList = currentData
+  //       /// Filter items based on the search string
+  //       .filter((item) =>
+  //         typeof item === 'string'
+  //           ? String(item).includes(newSearchString)
+  //           : searchField !== undefined && item[searchField]
+  //           ? String(item[searchField]).includes(newSearchString)
+  //           : false
+  //       )
+  //       /// Sort items based on the index where the search string is found
+  //       .sort((a, b) => {
+  //         const aString = getSearchedTextFromItem(a);
+  //         const bString = getSearchedTextFromItem(b);
+  //         const aIdx = aString.indexOf(newSearchString);
+  //         const bIdx = bString.indexOf(newSearchString);
 
-          if (aIdx !== bIdx) {
-            /// If idx are not the same, simply substract the idx.
-            /// Ex: [li]ght !== f[li]ght.
-            /// 'light' should appear before 'flight'.
-            return aIdx - bIdx;
-          } else {
-            /// If idx are the same, compare the remaining word
-            /// Ex: [li]ght === [li]brary. Compare 'ght' with 'brary'
-            /// In this case 'library' should appear before 'light'
-            ///
-            const restAString = String(aString).substring(
-              aString.indexOf(newSearchString) + newSearchString.length
-            );
-            const restbString = String(bString).substring(
-              bString.indexOf(newSearchString) + newSearchString.length
-            );
-            const res =
-              restAString < restbString
-                ? -1
-                : restAString > restbString
-                ? 1
-                : 0;
-            return res;
-          }
-        })
-        /// Limit the number of items to only less or equal than maxResult
-        .filter((el, i) => i < maxResults);
+  //         if (aIdx !== bIdx) {
+  //           /// If idx are not the same, simply substract the idx.
+  //           /// Ex: [li]ght !== f[li]ght.
+  //           /// 'light' should appear before 'flight'.
+  //           return aIdx - bIdx;
+  //         } else {
+  //           /// If idx are the same, compare the remaining word
+  //           /// Ex: [li]ght === [li]brary. Compare 'ght' with 'brary'
+  //           /// In this case 'library' should appear before 'light'
+  //           ///
+  //           const restAString = String(aString).substring(
+  //             aString.indexOf(newSearchString) + newSearchString.length
+  //           );
+  //           const restbString = String(bString).substring(
+  //             bString.indexOf(newSearchString) + newSearchString.length
+  //           );
+  //           const res =
+  //             restAString < restbString
+  //               ? -1
+  //               : restAString > restbString
+  //               ? 1
+  //               : 0;
+  //           return res;
+  //         }
+  //       })
+  //       /// Limit the number of items to only less or equal than maxResult
+  //       .filter((el, i) => i < maxResults);
 
-      // console.log('newList', newList);
+  //     // console.log('newList', newList);
 
-      const newFirstItemStr = getSearchedTextFromItem(newList[0]);
-      /// AUTO COMPLETE part, step 2:
-      /// Set input text for autocomplete
-      autoCompleteSearchChange(newSearchString, newFirstItemStr);
+  //     const newFirstItemStr = getSearchedTextFromItem(newList[0]);
+  //     /// AUTO COMPLETE part, step 2:
+  //     /// Set input text for autocomplete
+  //     autoCompleteSearchChange(newSearchString, newFirstItemStr);
 
-      dispatch({
-        type: ActionType.setList,
-        payload: newList,
-      });
-      showList();
-    }
-  }
+  //     dispatch({
+  //       type: ActionType.setList,
+  //       payload: newList,
+  //     });
+  //     showList();
+  //   }
+  // }
 
   function handleKeyDown(e) {
     // console.log('handleKeyDown', e.key, e.keyCode);

@@ -12,6 +12,10 @@ export async function getGuests() {
 }
 
 export async function searchEmail(search) {
+  if (!search.length) return [];
+
+  // console.log('search email api, search=', search);
+
   const { data, error } = await supabase
     .from('guests')
     .select('*')
@@ -21,6 +25,8 @@ export async function searchEmail(search) {
     console.log('searchEmail error', error);
     throw new Error('Search email error');
   }
+
+  // console.log('data for', search, '=', data);
 
   return data;
 }

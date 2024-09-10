@@ -9,6 +9,8 @@ import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';
 import { useDarkMode } from '../context/DarkModeContext';
 import SpinnerMini from '../ui/SpinnerMini';
 import { searchEmail } from '../services/apiGuests';
+import useSearchEmail from '../features/guests/useSearchEmail';
+import { useState } from 'react';
 
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
@@ -18,9 +20,14 @@ const StyledContainer = styled.div`
 
 function TestingPage() {
   const { guests = [], isLoading } = useGuests();
+  const [emailSearch, setEmailSearch] = useState('');
+  const { guests: guestsFound = [], isLoading: isSearching } = useSearchEmail({
+    search: emailSearch,
+  });
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   // if (isLoading) return <Spinner />;
+  console.log('guestsFound', guestsFound);
 
   return (
     <StyledContainer>
@@ -65,7 +72,7 @@ function TestingPage() {
           </div>
          */}
 
-        {
+        {/* 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <span>Email</span>
             <SearchData
@@ -118,8 +125,8 @@ function TestingPage() {
               // )}
             />
           </div>
-        }
-
+        
+ */}
         {
           <div
             style={{
@@ -134,7 +141,13 @@ function TestingPage() {
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <SearchData
                 key="search_data_request_guest"
-                // data={guests}
+                data={guestsFound}
+                dataSearch={emailSearch}
+                onSearch={(search) => {
+                  // return await searchEmail(search);
+                  setEmailSearch(search);
+                  // return null;
+                }}
                 searchField="email"
                 placeholder="Search email"
                 listWidth="70rem"
@@ -229,11 +242,8 @@ function TestingPage() {
                   console.log('onSelect', idx, selected)
                 }
                 onDeselect={() => console.log('Deselect item')}
-                onSearch={async (search) => {
-                  return await searchEmail(search);
-                }}
               />
-              {isLoading && <SpinnerMini />}
+              {isSearching && <SpinnerMini />}
             </div>
           </div>
         }
