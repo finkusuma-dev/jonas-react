@@ -67,13 +67,13 @@ function SearchData({
   /// Save data to reducer whenever it changes.
   useCompare({
     newValue: dataProp,
-    prevValue: state.savedData,
+    prevValue: state.data,
     callbackFn: (dataProp) => {
       if (dataProp.length > 0) {
         if (dataSearch) {
           // console.log('createNewList');
           createNewListNAutocomplete({
-            newSearchString: state.savedDataSearchText,
+            newSearchString: dataSearch,
             newData: dataProp,
           });
         } else {
@@ -85,7 +85,7 @@ function SearchData({
         }
       }
     },
-    condition: dataSearch && dataSearch === state.savedDataSearchText,
+    condition: dataSearch && dataSearch === state.dataSearch,
   });
 
   const refInput = useRef();
@@ -163,9 +163,9 @@ function SearchData({
       type: ActionType.hideList,
     });
 
-    /// [x]: currently there are two conditions, using state.savedData or dataProp
-    // const data = state.savedData.length > 0 ? state.savedData : dataProp;
-    const curentData = state.savedData;
+    /// [x]: currently there are two conditions, using state.data or dataProp
+    // const data = state.data.length > 0 ? state.data : dataProp;
+    const curentData = state.data;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
@@ -212,7 +212,7 @@ function SearchData({
 
       console.log('> Use new data', currentData);
     } else if (oldData) {
-      /// If not, using previous savedData
+      /// If not, using previous data
       ///
       console.log('> Use saved data');
     }

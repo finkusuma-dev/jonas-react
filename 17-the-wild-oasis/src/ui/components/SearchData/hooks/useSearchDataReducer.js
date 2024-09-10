@@ -3,9 +3,9 @@ import { useReducer } from 'react';
 export const ActionType = Object.freeze({
   searchChange: 'searchChange',
   clearSearch: 'clearSearch',
-  saveData: 'savedData/set',
-  saveDataSearchText: 'savedDataSearchText/set',
-  clearData: 'savedData/clear',
+  saveData: 'data/set',
+  setDataSearch: 'dataSearch/set',
+  clearData: 'data/clear',
   setSearchText: 'searchText/set',
   setInputText: 'inputText/set',
   setList: 'list/set',
@@ -21,8 +21,8 @@ export const ActionType = Object.freeze({
 const initialState = {
   inputText: '', /// Input Text component's value
   searchText: '', /// The actual keyboard keys pressed/search by the user
-  savedDataSearchText: '',
-  savedData: [],
+  dataSearch: '',
+  data: [],
   list: [], /// The results of searching the searchText
   isShowList: false, /// The state of showing the list
   activeIdx: null, /// The active index of item in the list. Set when user presses keydown/keyup/click with mouse.
@@ -66,19 +66,19 @@ function useSearchDataReducer() {
       case ActionType.saveData:
         return {
           ...state,
-          savedData: action.payload,
+          data: action.payload,
         };
       case ActionType.clearData:
-        // console.log('clear savedData');
+        // console.log('clear data');
         return {
           ...state,
-          savedData: [],
-          savedDataSearchText: '',
+          data: [],
+          dataSearch: '',
         };
-      case ActionType.saveDataSearchText:
+      case ActionType.setDataSearch:
         return {
           ...state,
-          savedDataSearchText: action.payload,
+          dataSearch: action.payload,
         };
       case ActionType.setList:
         return {

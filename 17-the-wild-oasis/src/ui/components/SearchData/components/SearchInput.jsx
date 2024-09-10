@@ -124,13 +124,13 @@ function SearchInput() {
         if (
           /// If new search string has saved search string as its substring,
           /// use previous saved data
-          state.savedDataSearchText &&
-          state.savedDataSearchText.length > 0 &&
-          newSearchString.indexOf(state.savedDataSearchText) > -1
+          state.dataSearch &&
+          state.dataSearch.length > 0 &&
+          newSearchString.indexOf(state.dataSearch) > -1
         ) {
           return createNewListNAutocomplete({
             newSearchString,
-            oldData: state.savedData,
+            oldData: state.data,
           });
         }
 
@@ -140,7 +140,7 @@ function SearchInput() {
           async () => {
             if (onSearch) {
               dispatch({
-                type: ActionType.saveDataSearchText,
+                type: ActionType.setDataSearch,
                 payload: newSearchString,
               });
 
@@ -166,7 +166,7 @@ function SearchInput() {
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
         return createNewListNAutocomplete({
           newSearchString,
-          oldData: state.savedData,
+          oldData: state.data,
         });
       } else {
         dispatch({ type: ActionType.clearList });
