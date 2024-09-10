@@ -153,6 +153,10 @@ function TestingPage() {
                 listWidth="70rem"
                 autoComplete
                 isClearable
+                onSelect={(idx, selected) =>
+                  console.log('onSelect', idx, selected)
+                }
+                onDeselect={() => console.log('Deselect item')}
                 columns={[
                   {
                     title: 'Email',
@@ -220,6 +224,7 @@ function TestingPage() {
                     color: 'white',
                   },
                 }}
+
                 // RenderDataItem={(dataItem, i, searchText) => (
                 //   <>
                 //     <Highlight
@@ -238,10 +243,6 @@ function TestingPage() {
                 //     </div>
                 //   </>
                 // )}
-                onSelect={(idx, selected) =>
-                  console.log('onSelect', idx, selected)
-                }
-                onDeselect={() => console.log('Deselect item')}
               />
               {isSearching && <SpinnerMini />}
             </div>
