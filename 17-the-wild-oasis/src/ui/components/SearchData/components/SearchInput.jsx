@@ -65,7 +65,7 @@ function SearchInput() {
     showList,
     selectItem,
     getSearchedTextFromItem,
-    createNewList,
+    createNewListNAutocomplete,
     autoCompleteKeyDown,
   } = useSearchData();
 
@@ -128,7 +128,10 @@ function SearchInput() {
           state.savedDataSearchText.length > 0 &&
           newSearchString.indexOf(state.savedDataSearchText) > -1
         ) {
-          return createNewList({ newSearchString, savedData: state.savedData });
+          return createNewListNAutocomplete({
+            newSearchString,
+            oldData: state.savedData,
+          });
         }
 
         /// If not, request for a new data
@@ -148,7 +151,7 @@ function SearchInput() {
               if (newData) {
                 // console.log(`newData result ${newSearchString}`, newData);
 
-                createNewList({ newSearchString, newData });
+                createNewListNAutocomplete({ newSearchString, newData });
               }
             }
           }
@@ -161,101 +164,15 @@ function SearchInput() {
       }
     } else {
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
-        return createNewList({ newSearchString, savedData: state.savedData });
+        return createNewListNAutocomplete({
+          newSearchString,
+          oldData: state.savedData,
+        });
       } else {
         dispatch({ type: ActionType.clearList });
       }
     }
   }
-
-  // function createNewList({ newSearchString, newData, savedData }) {
-  //   let currentData;
-  //   if (newData) {
-  //     /// If new data arrived, the search string & the data is saved
-  //     ///
-  //     // console.log('>>> new data', newSearchString);
-  //     currentData = newData;
-  //     dispatch({
-  //       type: ActionType.saveData,
-  //       payload: newData,
-  //     });
-  //     // dispatch({
-  //     //   type: ActionType.saveDataSearchText,
-  //     //   payload: newSearchString,
-  //     // });
-
-  //     console.log('> Use new data', currentData);
-  //   } else if (savedData) {
-  //     /// If not, using previous savedData
-  //     ///
-  //     currentData = savedData;
-  //     console.log('> Use saved data');
-  //   } else {
-  //     // data = dataProp;
-  //     // console.log('> use data prop', data);
-  //   }
-
-  //   if (newSearchString.length < MIN_CHARACTER_SEARCH) {
-  //     //
-  //   } else {
-  //     const newList = currentData
-  //       /// Filter items based on the search string
-  //       .filter((item) =>
-  //         typeof item === 'string'
-  //           ? String(item).includes(newSearchString)
-  //           : searchField !== undefined && item[searchField]
-  //           ? String(item[searchField]).includes(newSearchString)
-  //           : false
-  //       )
-  //       /// Sort items based on the index where the search string is found
-  //       .sort((a, b) => {
-  //         const aString = getSearchedTextFromItem(a);
-  //         const bString = getSearchedTextFromItem(b);
-  //         const aIdx = aString.indexOf(newSearchString);
-  //         const bIdx = bString.indexOf(newSearchString);
-
-  //         if (aIdx !== bIdx) {
-  //           /// If idx are not the same, simply substract the idx.
-  //           /// Ex: [li]ght !== f[li]ght.
-  //           /// 'light' should appear before 'flight'.
-  //           return aIdx - bIdx;
-  //         } else {
-  //           /// If idx are the same, compare the remaining word
-  //           /// Ex: [li]ght === [li]brary. Compare 'ght' with 'brary'
-  //           /// In this case 'library' should appear before 'light'
-  //           ///
-  //           const restAString = String(aString).substring(
-  //             aString.indexOf(newSearchString) + newSearchString.length
-  //           );
-  //           const restbString = String(bString).substring(
-  //             bString.indexOf(newSearchString) + newSearchString.length
-  //           );
-  //           const res =
-  //             restAString < restbString
-  //               ? -1
-  //               : restAString > restbString
-  //               ? 1
-  //               : 0;
-  //           return res;
-  //         }
-  //       })
-  //       /// Limit the number of items to only less or equal than maxResult
-  //       .filter((el, i) => i < maxResults);
-
-  //     // console.log('newList', newList);
-
-  //     const newFirstItemStr = getSearchedTextFromItem(newList[0]);
-  //     /// AUTO COMPLETE part, step 2:
-  //     /// Set input text for autocomplete
-  //     autoCompleteSearchChange(newSearchString, newFirstItemStr);
-
-  //     dispatch({
-  //       type: ActionType.setList,
-  //       payload: newList,
-  //     });
-  //     showList();
-  //   }
-  // }
 
   function handleKeyDown(e) {
     // console.log('handleKeyDown', e.key, e.keyCode);

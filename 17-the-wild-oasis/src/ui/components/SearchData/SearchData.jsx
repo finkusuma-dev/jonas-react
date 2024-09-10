@@ -71,8 +71,8 @@ function SearchData({
     callbackFn: (dataProp) => {
       if (dataProp.length > 0) {
         if (dataSearch) {
-          console.log('createNewList');
-          createNewList({
+          // console.log('createNewList');
+          createNewListNAutocomplete({
             newSearchString: state.savedDataSearchText,
             newData: dataProp,
           });
@@ -200,31 +200,21 @@ function SearchData({
     }
   }
 
-  function createNewList({ newSearchString, newData, savedData }) {
-    let currentData;
+  function createNewListNAutocomplete({ newSearchString, newData, oldData }) {
+    let currentData = newData || oldData;
     if (newData) {
       /// If new data arrived, the search string & the data is saved
       ///
-      // console.log('>>> new data', newSearchString);
-      currentData = newData;
       dispatch({
         type: ActionType.saveData,
         payload: newData,
       });
-      // dispatch({
-      //   type: ActionType.saveDataSearchText,
-      //   payload: newSearchString,
-      // });
 
       console.log('> Use new data', currentData);
-    } else if (savedData) {
+    } else if (oldData) {
       /// If not, using previous savedData
       ///
-      currentData = savedData;
       console.log('> Use saved data');
-    } else {
-      // data = dataProp;
-      // console.log('> use data prop', data);
     }
 
     if (newSearchString.length < MIN_CHARACTER_SEARCH) {
@@ -327,7 +317,7 @@ function SearchData({
         showList,
         selectItem,
         getSearchedTextFromItem,
-        createNewList,
+        createNewListNAutocomplete,
         autoCompleteSearchChange,
         autoCompleteKeyDown,
 
