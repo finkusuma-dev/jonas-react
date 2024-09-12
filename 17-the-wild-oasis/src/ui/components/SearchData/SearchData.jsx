@@ -77,7 +77,7 @@ function SearchData({
   // );
   useCompare({
     newValue: dataProp,
-    prevValue: state.data,
+    oldValue: state.data,
     callbackFn: (dataProp) => {
       if (dataProp.length > 0) {
         if (dataSearch) {
@@ -95,7 +95,7 @@ function SearchData({
         }
       }
     },
-    extraCondition:
+    additionalCondition:
       dataSearch && /// if dataSearch is not set (undefined) then extra condition is true
       dataSearch === state.dataSearch &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
