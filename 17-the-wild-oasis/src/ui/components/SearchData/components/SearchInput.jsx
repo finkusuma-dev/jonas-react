@@ -80,7 +80,7 @@ function SearchInput() {
   //   state.list.length
   // );
 
-  // const { list, activeIdx, inputText, searchText, isShowList } = state;
+  // const { list, selectedItemIdx, inputText, searchText, isShowList } = state;
   // const setInputText = (input) => {
   //   dispatch({ type: ActionType.setInputText, payload: input });
   // };
@@ -104,10 +104,10 @@ function SearchInput() {
       payload: newSearchString,
     });
 
-    if (state.activeIdx !== null && onDeselect && onDeselect());
+    if (state.selectedItemIdx !== null && onDeselect && onDeselect());
 
     dispatch({
-      type: ActionType.clearActiveIdx,
+      type: ActionType.clearSelectedItemIdx,
     });
 
     requestData(newSearchString);
@@ -197,12 +197,12 @@ function SearchInput() {
       });
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (state.activeIdx) {
-        selectItem(state.activeIdx);
+      if (state.selectedItemIdx) {
+        selectItem(state.selectedItemIdx);
       } else if (firstItemStr?.indexOf(state.searchText) === 0) {
         selectItem(0);
         dispatch({
-          type: ActionType.setActiveIdx,
+          type: ActionType.setSelectedItemIdx,
           payload: 0,
         });
       }

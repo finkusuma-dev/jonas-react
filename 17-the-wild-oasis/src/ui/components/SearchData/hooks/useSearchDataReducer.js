@@ -3,17 +3,22 @@ import { useReducer } from 'react';
 export const ActionType = Object.freeze({
   searchChange: 'searchChange',
   clearSearch: 'clearSearch',
+
   saveData: 'data/set',
   setDataSearch: 'dataSearch/set',
   clearData: 'data/clear',
+
   setSearchText: 'searchText/set',
   setInputText: 'inputText/set',
   setList: 'list/set',
   clearList: 'list/clear',
+
   showList: 'isShowList/true',
   hideList: 'isShowList/false',
-  setActiveIdx: 'activeIdx/set',
-  clearActiveIdx: 'activeIdx/clear',
+
+  setSelectedItemIdx: 'selectedItemIdx/set',
+  clearSelectedItemIdx: 'selectedItemIdx/clear',
+
   inputKeyDown: 'input/keyDown',
   inputKeyUp: 'input/keyUp',
 });
@@ -25,7 +30,7 @@ const initialState = {
   data: [],
   list: [], /// The results of searching the searchText
   isShowList: false, /// The state of showing the list
-  activeIdx: null, /// The active index of item in the list. Set when user presses keydown/keyup/click with mouse.
+  selectedItemIdx: null, /// The active index of item in the list. Set when user presses keydown/keyup/click with mouse.
 };
 
 function useSearchDataReducer() {
@@ -50,7 +55,7 @@ function useSearchDataReducer() {
           searchText: '',
           inputText: '',
           list: [],
-          activeIdx: null,
+          selectedItemIdx: null,
           isShowList: false,
         };
       case ActionType.setSearchText:
@@ -106,34 +111,34 @@ function useSearchDataReducer() {
       case ActionType.inputKeyDown: {
         return {
           ...state,
-          activeIdx:
-            state.activeIdx === null
+          selectedItemIdx:
+            state.selectedItemIdx === null
               ? 0
-              : state.activeIdx + 1 < state.list.length
-              ? state.activeIdx + 1
-              : state.activeIdx,
+              : state.selectedItemIdx + 1 < state.list.length
+              ? state.selectedItemIdx + 1
+              : state.selectedItemIdx,
         };
       }
       case ActionType.inputKeyUp: {
         return {
           ...state,
-          activeIdx:
-            state.activeIdx === null
+          selectedItemIdx:
+            state.selectedItemIdx === null
               ? 0
-              : state.activeIdx - 1 > -1
-              ? state.activeIdx - 1
-              : state.activeIdx,
+              : state.selectedItemIdx - 1 > -1
+              ? state.selectedItemIdx - 1
+              : state.selectedItemIdx,
         };
       }
-      case ActionType.setActiveIdx:
+      case ActionType.setSelectedItemIdx:
         return {
           ...state,
-          activeIdx: action.payload,
+          selectedItemIdx: action.payload,
         };
-      case ActionType.clearActiveIdx:
+      case ActionType.clearSelectedItemIdx:
         return {
           ...state,
-          activeIdx: null,
+          selectedItemIdx: null,
         };
       default:
         throw new Error('SearchDataReducer action is unknown');

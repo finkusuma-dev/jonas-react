@@ -46,7 +46,7 @@ function Item({ children, idx }) {
   const { columnsProp, stylesProp, selectItem, refInput, state, dispatch } =
     useSearchData();
 
-  const { activeIdx } = state;
+  const { selectedItemIdx } = state;
 
   /// User clicks the list
   function handleItemClick(idx) {
@@ -56,7 +56,7 @@ function Item({ children, idx }) {
 
   function handleItemMouseDown(idx) {
     dispatch({
-      type: ActionType.setActiveIdx,
+      type: ActionType.setSelectedItemIdx,
       payload: idx,
     });
   }
@@ -64,7 +64,7 @@ function Item({ children, idx }) {
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
   let customStyle = getCustomStyle(StyleType.item, stylesProp);
-  if (idx == activeIdx) {
+  if (idx == selectedItemIdx) {
     customStyle = {
       ...customStyle,
       ...getCustomStyle(StyleType.itemActive, stylesProp),
@@ -74,7 +74,7 @@ function Item({ children, idx }) {
   return (
     <StyledItem
       role="row"
-      isActive={idx == activeIdx || false}
+      isActive={idx == selectedItemIdx || false}
       onClick={() => handleItemClick(idx)}
       onMouseDown={() => handleItemMouseDown(idx)}
       columns={columnsStr}

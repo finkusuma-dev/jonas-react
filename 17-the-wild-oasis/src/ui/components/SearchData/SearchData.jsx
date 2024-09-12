@@ -125,7 +125,7 @@ function SearchData({
     //  searchText, inputText,
     list,
     isShowList,
-    activeIdx,
+    selectedItemIdx,
   } = state;
 
   const { listWindow, calculateListWindow } = usePositionListWindow({
@@ -159,7 +159,7 @@ function SearchData({
   /// Scroll item into view
   useScrollItemIntoView({
     enabled: isShowList,
-    itemIdx: activeIdx,
+    itemIdx: selectedItemIdx,
     refListContainer: refListItemsContainer,
   });
 
