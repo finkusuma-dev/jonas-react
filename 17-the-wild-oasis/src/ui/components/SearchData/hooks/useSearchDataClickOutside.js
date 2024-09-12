@@ -15,7 +15,6 @@ function useSearchDataClickOutside({
 }) {
   useEffect(
     /// Custom click outside, used to close the list
-    /// Not using useClickOutside because needs to trigger it outside of 2 components
     function () {
       function handleClick(e) {
         // e.stopPropagation();
