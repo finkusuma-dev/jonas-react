@@ -279,10 +279,10 @@ function SearchData({
 
       // console.log('newList', newList);
 
-      const newFirstItemStr = getSearchedTextFromItem(newList[0]);
+      const firstItemInList = getSearchedTextFromItem(newList[0]);
       /// AUTO COMPLETE part, step 2:
       /// Set input text for autocomplete
-      autoCompleteSearchChange(newSearchString, newFirstItemStr);
+      autoCompleteSearchChange(newSearchString, firstItemInList);
 
       dispatch({
         type: ActionType.setList,
