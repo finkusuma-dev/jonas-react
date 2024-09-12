@@ -67,31 +67,42 @@ function SearchData({
   const { state, dispatch } = useSearchDataReducer();
 
   // === useCompare ===
+  // For static data passed to the dataProp.
+  useCompare({
+    newValue: dataProp,
+    oldValue: state.data,
+    callbackFn: (dataProp) => {
+      if (dataProp.length > 0) {
+        /// When using static data passed into dataProp.
+        console.log('>> Save dataProp', dataProp);
+        dispatch({
+          type: ActionType.saveData,
+          payload: dataProp,
+        });
+      }
+    },
+    additionalCondition: !dataSearch,
+  });
+
+  // === useCompare ===
+  /// For dynamic data passed to the dataProp as a result of
+  /// a search api request.
   useCompare({
     newValue: dataProp,
     oldValue: state.data,
     callbackFn: (dataProp) => {
       if (dataProp.length > 0) {
         if (dataSearch) {
-          /// When using dynamic data passed into dataProp as a result of
-          /// an external search api request.
           // console.log('createNewList');
           createNewListNAutocomplete({
             newSearchString: dataSearch,
             newData: dataProp,
           });
-        } else {
-          /// When using static data passed into dataProp.
-          console.log('>> Save dataProp', dataProp);
-          dispatch({
-            type: ActionType.saveData,
-            payload: dataProp,
-          });
         }
       }
     },
     additionalCondition:
-      dataSearch && /// if dataSearch is not set (undefined) then additional condition is true
+      !!dataSearch && /// if dataSearch is not set (undefined) then additional condition is true
       dataSearch === state.dataSearch &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
