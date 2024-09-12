@@ -27,7 +27,10 @@ function TestingPage() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   // if (isLoading) return <Spinner />;
-  console.log('guestsFound', guestsFound);
+  console.log(
+    'guestsFound',
+    guestsFound.map((guest) => guest.email)
+  );
 
   return (
     <StyledContainer>
@@ -72,12 +75,12 @@ function TestingPage() {
           </div>
          */}
 
-        {/* 
+        {
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <span>Email</span>
             <SearchData
               key="search_data_guests"
-              name="search_data_guests"
+              name="static_data_guests"
               data={guests}
               searchField="email"
               placeholder="Search email"
@@ -125,8 +128,7 @@ function TestingPage() {
               // )}
             />
           </div>
-        
- */}
+        }
         {
           <div
             style={{
@@ -140,7 +142,8 @@ function TestingPage() {
             <span>Email</span>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <SearchData
-                key="search_data_request_guest"
+                key="dynamic_data_guests"
+                name="dynamic_data_guests"
                 data={guestsFound}
                 dataSearch={emailSearch}
                 onSearch={(search) => {

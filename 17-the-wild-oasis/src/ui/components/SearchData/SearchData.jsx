@@ -67,6 +67,14 @@ function SearchData({
   // const currentData = useMemo(() => dataProp, [dataProp]);
 
   /// Save data to reducer whenever it changes.
+  // console.log(
+  //   'name',
+  //   name,
+  //   'extra condition',
+  //   dataSearch &&
+  //     dataSearch === state.dataSearch &&
+  //     state.inputText.length >= MIN_CHARACTER_SEARCH
+  // );
   useCompare({
     newValue: dataProp,
     prevValue: state.data,
@@ -86,7 +94,7 @@ function SearchData({
           });
         }
       }
-    },    
+    },
     extraCondition:
       dataSearch && /// if dataSearch is not set (undefined) then extra condition is true
       dataSearch === state.dataSearch &&
@@ -215,11 +223,11 @@ function SearchData({
         payload: newData,
       });
 
-      console.log('> Use new data', currentData);
+      // console.log('> Use new data', currentData);
     } else if (oldData) {
       /// If not, using previous data
       ///
-      console.log('> Use saved data');
+      // console.log('> Use saved data');
     }
 
     if (newSearchString.length < MIN_CHARACTER_SEARCH) {
