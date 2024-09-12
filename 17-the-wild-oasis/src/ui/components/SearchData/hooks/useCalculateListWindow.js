@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-const SPACE_BROWSER_WINDOW = 8;
+const PADDING_BROWSER_WINDOW = 8;
 const SPACE_INPUT_TEXT = 4;
 const MIN_BROWSER_WINDOW_BOTTOM_SPACE = 130;
 
-function usePositionListWindow({
+function useCalculateListWindow({
   refInput,
   // refListBox,
   refListItemsContainer,
@@ -13,8 +13,10 @@ function usePositionListWindow({
   const [listWindow, setListWindow] = useState({});
 
   /// Calculate & set the maxHeight of list items container window.
-  /// Position & the maxHeight of ListBox is set through
-  /// passing the listWindow to the styled component props,
+
+  /// NOTE: Position & set the maxHeight of ListBox is set by
+  /// passing the listWindow to the ListBox styled component props.
+  /// Because it failed to set the maxHeight of ListBox as a styled component in this JS code.
   useEffect(() => {
     if (refListItemsContainer.current) {
       // console.log(
@@ -54,12 +56,12 @@ function usePositionListWindow({
             maxHeight:
               window.innerHeight -
               rectInput.bottom -
-              SPACE_BROWSER_WINDOW +
+              PADDING_BROWSER_WINDOW +
               'px',
           }
         : {
             bottom: rectInput.height + SPACE_INPUT_TEXT + 'px',
-            maxHeight: rectInput.top - SPACE_BROWSER_WINDOW + 'px',
+            maxHeight: rectInput.top - PADDING_BROWSER_WINDOW + 'px',
           }
     );
   }
@@ -67,4 +69,4 @@ function usePositionListWindow({
   return { listWindow, calculateListWindow };
 }
 
-export { usePositionListWindow };
+export { useCalculateListWindow };

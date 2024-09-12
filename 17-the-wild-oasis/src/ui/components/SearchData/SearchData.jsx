@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import List from './components/List';
-import { usePositionListWindow } from './hooks/usePositionListWindow';
+import { useCalculateListWindow } from './hooks/useCalculateListWindow';
 import SearchInput from './components/SearchInput';
 import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
@@ -111,7 +111,7 @@ function SearchData({
   });
 
   // === usePositionListWindow ===
-  const { listWindow, calculateListWindow } = usePositionListWindow({
+  const { listWindow, calculateListWindow } = useCalculateListWindow({
     refInput,
     refListBox,
     refListItemsContainer,
