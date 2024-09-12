@@ -1,65 +1,65 @@
 import { useEffect } from 'react';
 
 /**
- * Scroll item into view
- * @param {boolean} isShowList
+ * Hook to scroll a specific item into view within a scrollable container.
+ *
+ * @param {Object} params - The parameters for the hook.
+ * @param {boolean} params.enabled - Enable or disable the scroll behavior.
+ * @param {number | null} params.itemIdx - The index of the item to scroll into view. If `null`, scrolls to the top of the container.
+ * @param {Object} params.refListContainer - React ref pointing to the scrollable list container.
+ *
+ * @example
+ * const refListContainer = useRef();
+ * useScrollItemIntoView({
+ *   enabled: true,
+ *   itemIdx: selectedItemIndex,
+ *   refListContainer: refListContainer
+ * });
  */
 function useScrollItemIntoView({
-  isShowList,
-  activeIdx,
-  refListItemsContainer,
+  enabled, // Whether scrolling is enabled
+  itemIdx, // Index of the item to scroll into view. Null to scroll to the top.
+  refListContainer, // Ref to the scrollable list container
 }) {
   useEffect(() => {
-    if (isShowList && refListItemsContainer.current) {
-      // console.log('refListBox', refListBox.current.maxHeight);
-      // console.log(
-      //   'refListItemsContainer',
-      //   refListItemsContainer.current.clientHeight,
-      //   'scrollTop',
-      //   refListItemsContainer.current.scrollTop
-      // );
-      if (activeIdx === null) {
-        refListItemsContainer.current.scrollTop = 0;
+    if (enabled && refListContainer.current) {
+      // Scroll to top of container if no specific item is selected
+      if (itemIdx === null) {
+        refListContainer.current.scrollTop = 0;
       } else {
-        const firstItemTop =
-          refListItemsContainer.current.children[0]?.offsetTop;
-        const listHeight = refListItemsContainer.current.clientHeight;
-        const itemTop =
-          refListItemsContainer.current.children[activeIdx]?.offsetTop;
-        const itemBottom =
-          itemTop +
-          refListItemsContainer.current.children[activeIdx]?.clientHeight;
+        // Get the top offset of the first item in the container
+        const firstItemTop = refListContainer.current.children[0]?.offsetTop;
 
+        // Get the visible height of the container
+        const listHeight = refListContainer.current.clientHeight;
+
+        // Get the top offset of the item to scroll into view
+        const itemTop = refListContainer.current.children[itemIdx]?.offsetTop;
+
+        // Get the bottom offset of the item
+        const itemBottom =
+          itemTop + refListContainer.current.children[itemIdx]?.clientHeight;
+
+        // Calculate the bottom margin (padding) of the container
         const listBoxMarginBlock = Number.parseInt(
-          window.getComputedStyle(refListItemsContainer.current)?.paddingBottom
+          window.getComputedStyle(refListContainer.current)?.paddingBottom
         );
-        // console.log('listbox margin', listBoxMarginBottom);
-        /// Scroll to bottom
-        // console.log(
-        //   'item',
-        //   itemTop,
-        //   itemBottom - firstItemTop,
-        //   '>',
-        //   listHeight + refListItemsContainer.current.scrollTop
-        // );
+
+        // Scroll down if the item is below the current visible area
         if (
           itemBottom - firstItemTop + listBoxMarginBlock >
-          listHeight + refListItemsContainer.current.scrollTop
+          listHeight + refListContainer.current.scrollTop
         ) {
-          refListItemsContainer.current.scrollTop =
+          refListContainer.current.scrollTop =
             itemBottom - firstItemTop - listHeight + listBoxMarginBlock * 2;
-          // console.log('scrollTop', refListItemsContainer.current.scrollTop);
         }
-        /// Scroll to top
-        else if (
-          itemTop - firstItemTop <
-          refListItemsContainer.current.scrollTop
-        ) {
-          refListItemsContainer.current.scrollTop = itemTop - firstItemTop;
+        // Scroll up if the item is above the current visible area
+        else if (itemTop - firstItemTop < refListContainer.current.scrollTop) {
+          refListContainer.current.scrollTop = itemTop - firstItemTop;
         }
       }
     }
-  }, [isShowList, activeIdx, refListItemsContainer]);
+  }, [enabled, itemIdx, refListContainer]);
 }
 
 export default useScrollItemIntoView;

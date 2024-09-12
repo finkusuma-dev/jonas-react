@@ -158,9 +158,9 @@ function SearchData({
 
   /// Scroll item into view
   useScrollItemIntoView({
-    isShowList,
-    activeIdx,
-    refListItemsContainer,
+    enabled: isShowList,
+    itemIdx: activeIdx,
+    refListContainer: refListItemsContainer,
   });
 
   function showList() {
