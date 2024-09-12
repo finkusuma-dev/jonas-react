@@ -76,7 +76,7 @@ function SearchData({
         /// When using static data passed into dataProp.
         console.log('>> Save dataProp', dataProp);
         dispatch({
-          type: ActionType.saveData,
+          type: ActionType.updateData,
           payload: dataProp,
         });
       }
@@ -199,7 +199,7 @@ function SearchData({
       /// If new data arrived, the search string & the data is saved
       ///
       dispatch({
-        type: ActionType.saveData,
+        type: ActionType.updateData,
         payload: newData,
       });
 
@@ -265,7 +265,7 @@ function SearchData({
       autoCompleteSearchChange(newSearchString, firstItemInList);
 
       dispatch({
-        type: ActionType.setList,
+        type: ActionType.updateList,
         payload: newList,
       });
       showList();

@@ -4,13 +4,13 @@ export const ActionType = Object.freeze({
   searchChange: 'search/change',
   clearSearch: 'search/clear',
 
-  saveData: 'data/update',
+  updateData: 'data/update',
   clearData: 'data/clear',
-  setDataSearch: 'dataSearch/update',
+  setDataSearch: 'dataSearch/set',
 
-  setSearchText: 'searchText/update',
-  setInputText: 'inputText/update',
-  setList: 'list/update',
+  setSearchText: 'searchText/set',
+  setInputText: 'inputText/set',
+  updateList: 'list/update',
   clearList: 'list/clear',
 
   setSelectedItemIdx: 'selectedItemIdx/set',
@@ -67,7 +67,7 @@ function useSearchDataReducer() {
           ...state,
           inputText: action.payload,
         };
-      case ActionType.saveData:
+      case ActionType.updateData:
         return {
           ...state,
           data: action.payload,
@@ -84,7 +84,7 @@ function useSearchDataReducer() {
           ...state,
           dataSearch: action.payload,
         };
-      case ActionType.setList:
+      case ActionType.updateList:
         return {
           ...state,
           list: action.payload,
