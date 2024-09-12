@@ -1,26 +1,25 @@
 import { useReducer } from 'react';
 
 export const ActionType = Object.freeze({
-  searchChange: 'searchChange',
-  clearSearch: 'clearSearch',
+  searchChange: 'search/change',
+  clearSearch: 'search/clear',
 
-  saveData: 'data/set',
-  setDataSearch: 'dataSearch/set',
+  saveData: 'data/update',
   clearData: 'data/clear',
+  setDataSearch: 'dataSearch/update',
 
-  setSearchText: 'searchText/set',
-  setInputText: 'inputText/set',
-  setList: 'list/set',
+  setSearchText: 'searchText/update',
+  setInputText: 'inputText/update',
+  setList: 'list/update',
   clearList: 'list/clear',
-
-  showList: 'isShowList/true',
-  hideList: 'isShowList/false',
 
   setSelectedItemIdx: 'selectedItemIdx/set',
   clearSelectedItemIdx: 'selectedItemIdx/clear',
 
   inputKeyDown: 'input/keyDown',
   inputKeyUp: 'input/keyUp',
+  showList: 'list/show',
+  hideList: 'list/hide',
 });
 
 const initialState = {
