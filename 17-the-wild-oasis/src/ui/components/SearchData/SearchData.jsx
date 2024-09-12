@@ -84,8 +84,11 @@ function SearchData({
           });
         }
       }
-    },
-    condition: dataSearch && dataSearch === state.dataSearch,
+    },    
+    extraCondition:
+      dataSearch && /// if dataSearch is not set (undefined) then extra condition is true
+      dataSearch === state.dataSearch &&
+      state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
 
   const refInput = useRef();

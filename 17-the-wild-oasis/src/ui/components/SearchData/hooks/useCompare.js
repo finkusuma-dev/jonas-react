@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 
-function useCompare({ newValue, prevValue, callbackFn, condition = true }) {
+function useCompare({
+  newValue,
+  prevValue,
+  callbackFn,
+  extraCondition = true,
+}) {
   const isSameData = JSON.stringify(newValue) === JSON.stringify(prevValue);
   // console.log(
   //   'useCompare condition',
@@ -9,12 +14,12 @@ function useCompare({ newValue, prevValue, callbackFn, condition = true }) {
   //   isSameData,
   //   JSON.stringify(newValue)
   // );
-
+  // console.log('extraCondition', extraCondition);
   useEffect(() => {
-    if (!isSameData && condition) {
+    if (!isSameData && extraCondition) {
       callbackFn(newValue);
     }
-  }, [isSameData, condition, newValue, callbackFn]);
+  }, [isSameData, extraCondition, newValue, callbackFn]);
 }
 
 export default useCompare;
