@@ -60,33 +60,28 @@ function SearchData({
   onDeselect,
   onSearch,
 }) {
+  const refInput = useRef();
+  const refListBox = useRef();
+  const refListItemsContainer = useRef();
+
   const { state, dispatch } = useSearchDataReducer();
 
-  /// NOTE: using useEffect to save data results in infinite loop
-
-  // const currentData = useMemo(() => dataProp, [dataProp]);
-
-  /// Save data to reducer whenever it changes.
-  // console.log(
-  //   'name',
-  //   name,
-  //   'extra condition',
-  //   dataSearch &&
-  //     dataSearch === state.dataSearch &&
-  //     state.inputText.length >= MIN_CHARACTER_SEARCH
-  // );
+  // === useCompare ===
   useCompare({
     newValue: dataProp,
     oldValue: state.data,
     callbackFn: (dataProp) => {
       if (dataProp.length > 0) {
         if (dataSearch) {
+          /// When using dynamic data passed into dataProp as a result of
+          /// an external search api request.
           // console.log('createNewList');
           createNewListNAutocomplete({
             newSearchString: dataSearch,
             newData: dataProp,
           });
         } else {
+          /// When using static data passed into dataProp.
           console.log('>> Save dataProp', dataProp);
           dispatch({
             type: ActionType.saveData,
@@ -96,72 +91,48 @@ function SearchData({
       }
     },
     additionalCondition:
-      dataSearch && /// if dataSearch is not set (undefined) then extra condition is true
+      dataSearch && /// if dataSearch is not set (undefined) then additional condition is true
       dataSearch === state.dataSearch &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
 
-  const refInput = useRef();
-  const refListBox = useRef();
-  const refListItemsContainer = useRef();
-
-  //console.log('autoComplete', typeof autoComplete, autoComplete);
-  const setInputText = (input) => {
-    dispatch({ type: ActionType.setInputText, payload: input });
-  };
-
+  // === useAutocomplete ===
   const {
     searchChange: autoCompleteSearchChange,
     keyDown: autoCompleteKeyDown,
   } = useAutocomplete({
     enabled: autoComplete,
     inputText: state.inputText,
-    setInputText,
+    setInputText: (input) => {
+      dispatch({ type: ActionType.setInputText, payload: input });
+    },
     searchText: state.searchText,
     refInput,
   });
 
-  const {
-    //  searchText, inputText,
-    list,
-    isShowList,
-    selectedItemIdx,
-  } = state;
-
+  // === usePositionListWindow ===
   const { listWindow, calculateListWindow } = usePositionListWindow({
     refInput,
     refListBox,
     refListItemsContainer,
   });
 
-  useSearchDataClickOutside({ refInput, refListBox, isShowList, dispatch });
+  // === useSearchDataClickOutside ===
+  useSearchDataClickOutside({
+    refInput,
+    refListBox,
+    isShowList: state.isShowList,
+    dispatch,
+  });
 
-  /// refInput scroll event listener
-  // useEffect(() => {
-  //   function onScroll() {
-  //     console.log(
-  //       'refListItemsContainer.scrollTop',
-  //       refListItemsContainer.current.scrollTop
-  //     );
-  //   }
-  //   // console.log('isShowList', isShowList, refListBox.current);
-  //   if (isShowList && refListItemsContainer.current) {
-  //     console.log('inside');
-  //     const ref = refListItemsContainer.current;
-  //     const res = ref.addEventListener('scroll', onScroll);
-  //     console.log('addevent result', res);
-
-  //     return () => ref.removeEventListener('scroll', onScroll);
-  //   }
-  // }, [isShowList]);
-  /** */
-
-  /// Scroll item into view
+  /// == useScrollItemIntoView ===
   useScrollItemIntoView({
-    enabled: isShowList,
-    itemIdx: selectedItemIdx,
+    enabled: state.isShowList,
+    itemIdx: state.selectedItemIdx,
     refListContainer: refListItemsContainer,
   });
+
+  // ----- The end of hooks -----
 
   function showList() {
     dispatch({
@@ -176,15 +147,13 @@ function SearchData({
       type: ActionType.hideList,
     });
 
-    /// [x]: currently there are two conditions, using state.data or dataProp
-    // const data = state.data.length > 0 ? state.data : dataProp;
     const curentData = state.data;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
-        ? obj === list[itemIdx]
+        ? obj === state.list[itemIdx]
         : searchField !== undefined && obj[searchField]
-        ? obj[searchField] === list[itemIdx][searchField]
+        ? obj[searchField] === state.list[itemIdx][searchField]
         : false
     );
 
@@ -341,7 +310,7 @@ function SearchData({
     >
       <Box>
         <SearchInput />
-        {isShowList && list.length > 0 && <List />}
+        {state.isShowList && state.list.length > 0 && <List />}
       </Box>
     </SearchDataContext.Provider>
   );
