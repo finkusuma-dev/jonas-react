@@ -21,6 +21,7 @@ const Box = styled.div`
 `;
 
 SearchData.propTypes = {
+  name: PropTypes.string, // prop to search if data.element is an object
   data: PropTypes.array,
   dataSearch: PropTypes.string, // prop to search if data.element is an object
   searchField: PropTypes.string, // prop to search if data.element is an object
@@ -41,6 +42,7 @@ export const SearchDataContext = createContext();
 export const useSearchData = () => useContext(SearchDataContext);
 
 function SearchData({
+  name,
   data: dataProp = [],
   dataSearch,
   searchField,
@@ -297,6 +299,7 @@ function SearchData({
     <SearchDataContext.Provider
       value={{
         // props
+        name,
         listWidth,
         placeholder,
         searchField,
