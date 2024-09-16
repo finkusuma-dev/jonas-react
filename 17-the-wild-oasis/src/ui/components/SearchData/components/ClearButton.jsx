@@ -1,12 +1,6 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-// const rotate = keyframes`
-//   to {
-//     transform: rotate(1turn)
-//   }
-// `;
-
 const StyledClearButton = styled.button`
   border: none;
   padding: 10px;
@@ -28,11 +22,12 @@ const StyledClearButton = styled.button`
 
 ClearButton.propTypes = {
   style: PropTypes.object,
+  onClick: PropTypes.func,
 };
 
-function ClearButton({ style }) {
+function ClearButton({ style, onClick }) {
   return (
-    <StyledClearButton style={style}>
+    <StyledClearButton style={style} onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

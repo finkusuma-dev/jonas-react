@@ -248,7 +248,6 @@ function SearchInput() {
           bottom: '1px',
           display: 'flex',
         }}
-        // onClick={() => console.log('right container click')}
       >
         {!isLoadingProp && isClearableProp && state.inputText.length > 0 && (
           <ClearButton
