@@ -4,7 +4,7 @@ import { useSearchData } from '../SearchData';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { getCustomStyle, StyleName } from '../helpers/styles';
 import { useRef } from 'react';
-import { processTimeout } from '../helpers/func';
+import { cancelTimeout, processTimeout } from '../helpers/func';
 import ClearButton from './ClearButton';
 import SpinnerMini from './SpinnerMini';
 
@@ -116,6 +116,7 @@ function SearchInput() {
 
   function requestData(newSearchString) {
     if (onSearch) {
+      cancelTimeout(refTimeout);
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
         if (
           /// If new search string has saved search string as its substring,
@@ -131,28 +132,24 @@ function SearchInput() {
         }
 
         /// If not, request for a new data
-        processTimeout(
-          refTimeout,
-          async () => {
-            if (onSearch) {
-              dispatch({
-                type: ActionType.setDataSearch,
-                payload: newSearchString,
-              });
+        processTimeout(refTimeout, async () => {
+          if (onSearch) {
+            dispatch({
+              type: ActionType.setDataSearch,
+              payload: newSearchString,
+            });
 
-              const newData = await onSearch(newSearchString);
+            const newData = await onSearch(newSearchString);
 
-              /// If returns newData it fetches api directly
-              /// If not returns newData, it uses react query and pass the data through dataProp
-              if (newData) {
-                // console.log(`newData result ${newSearchString}`, newData);
+            /// If returns newData it fetches api directly
+            /// If not returns newData, it uses react query and pass the data through dataProp
+            if (newData) {
+              // console.log(`newData result ${newSearchString}`, newData);
 
-                createNewListNAutocomplete({ newSearchString, newData });
-              }
+              createNewListNAutocomplete({ newSearchString, newData });
             }
-          },
-          700
-        );
+          }
+        });
       } else {
         // console.log(' ==== clearList');
         // dispatch({ type: ActionType.clearData });
