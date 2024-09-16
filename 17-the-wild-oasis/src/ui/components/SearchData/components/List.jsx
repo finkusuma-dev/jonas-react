@@ -80,7 +80,7 @@ export function RenderList() {
     RenderDataItem,
     columnsProp,
     stylesProp,
-
+    searchFieldProp,
     ///
     state,
     // dispatch,
@@ -100,7 +100,14 @@ export function RenderList() {
       if (RenderDataItem !== undefined) {
         itemEl = RenderDataItem(item, i, searchText);
       } else {
-        itemEl = DefaultRenderDataItem(item, i, searchText);
+        itemEl = DefaultRenderDataItem({
+          item,
+          itemidx: i,
+          searchText,
+          columnsProp,
+          searchFieldProp,
+          stylesProp,
+        });
       }
     }
 
