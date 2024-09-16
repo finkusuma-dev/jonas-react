@@ -3,7 +3,7 @@ import { useSearchData } from '../SearchData';
 import { cloneElement } from 'react';
 import Header from './Header';
 import Item, { DefaultRenderDataItem } from './Item';
-import { getCustomStyle, StyleType } from '../helpers/styles';
+import { getCustomStyle, StyleName } from '../helpers/styles';
 
 const ListBox = styled.div`
   position: absolute;
@@ -55,7 +55,7 @@ export default function List() {
   const { listWidthProp, listWindow, refListBox, stylesProp, columnsProp } =
     useSearchData();
 
-  const customStyle = getCustomStyle(StyleType.list, stylesProp);
+  const customStyle = getCustomStyle(StyleName.list, stylesProp);
 
   return (
     <ListBox

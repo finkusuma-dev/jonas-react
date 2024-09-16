@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSearchData } from '../SearchData';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { Highlight } from './Highlight';
-import { getCustomStyle, StyleType } from '../helpers/styles';
+import { getCustomStyle, StyleName } from '../helpers/styles';
 
 const StyledItem = styled.div`
   cursor: pointer;
@@ -63,11 +63,11 @@ function Item({ children, idx }) {
 
   const columnsStr = columnsProp.map((item) => item.width ?? '1fr').join(' ');
 
-  let customStyle = getCustomStyle(StyleType.item, stylesProp);
+  let customStyle = getCustomStyle(StyleName.item, stylesProp);
   if (idx == selectedItemIdx) {
     customStyle = {
       ...customStyle,
-      ...getCustomStyle(StyleType.itemActive, stylesProp),
+      ...getCustomStyle(StyleName.itemActive, stylesProp),
     };
   }
 
@@ -88,7 +88,7 @@ function Item({ children, idx }) {
 export function DefaultRenderDataItem(item, i, searchText) {
   const { columnsProp, searchFieldProp, stylesProp } = useSearchData();
 
-  const highlightStyle = getCustomStyle(StyleType.textHighlight, stylesProp);
+  const highlightStyle = getCustomStyle(StyleName.textHighlight, stylesProp);
   if (columnsProp.length) {
     const renderedItems = columnsProp.map((column, i) => {
       // console.log('column', column, i);

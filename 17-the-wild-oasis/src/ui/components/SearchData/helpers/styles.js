@@ -1,4 +1,4 @@
-export const StyleType = Object.freeze({
+export const StyleName = Object.freeze({
   inputText: 'inputText',
   inputTextClearButton: 'inputTextClearButton',
   header: 'header',
@@ -13,21 +13,21 @@ const defaultStyles = {
   headerTitle: { justifySelf: 'left' },
 };
 
-export function getCustomStyle(name, stylesProp) {
-  switch (name) {
-    case StyleType.headerTitle:
-      return headerTitleStyle(name, stylesProp);
+export function getCustomStyle(styleName, stylesProp) {
+  switch (styleName) {
+    case StyleName.headerTitle:
+      return headerTitleStyle(styleName, stylesProp);
     default:
-      return styleDefault(name, stylesProp);
+      return styleDefault(styleName, stylesProp);
   }
 }
 
-const styleDefault = (name, stylesProp) => {
-  return stylesProp[name];
+const styleDefault = (styleName, stylesProp) => {
+  return stylesProp[styleName];
 };
 
-const headerTitleStyle = (name, stylesProp) => (colProp) => {
-  const customStyle = styleDefault(name, stylesProp);
+const headerTitleStyle = (styleName, stylesProp) => (colProp) => {
+  const customStyle = styleDefault(styleName, stylesProp);
 
   return {
     justifySelf: colProp.align ?? defaultStyles.headerTitle.justifySelf,

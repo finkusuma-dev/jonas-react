@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useSearchData } from '../SearchData';
 // import useAutocomplete from '../hooks/useAutocomplete';
 import { ActionType } from '../hooks/useSearchDataReducer';
-import { getCustomStyle, StyleType } from '../helpers/styles';
+import { getCustomStyle, StyleName } from '../helpers/styles';
 import { useRef } from 'react';
 import { processTimeout } from '../helpers/func';
 
@@ -228,10 +228,10 @@ function SearchInput() {
     refInput.current.focus();
   }
 
-  const customStyle = getCustomStyle(StyleType.inputText, stylesProp);
+  const customStyle = getCustomStyle(StyleName.inputText, stylesProp);
 
   const clearButtonCustomStyle = getCustomStyle(
-    StyleType.inputTextClearButton,
+    StyleName.inputTextClearButton,
     stylesProp
   );
 
