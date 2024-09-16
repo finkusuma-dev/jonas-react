@@ -102,7 +102,7 @@ function SearchInput() {
 
     clearSelectedItemIdx();
 
-    requestData(newSearchString);
+    createNewListOrCallOnSearch(newSearchString);
     // console.log(
     //   'refSearchStringData.current',
     //   refSearchStringData.current,
@@ -110,7 +110,7 @@ function SearchInput() {
     // );
   }
 
-  function requestData(newSearchString) {
+  function createNewListOrCallOnSearch(newSearchString) {
     if (onSearch) {
       cancelTimeout(refTimeout);
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
