@@ -7,7 +7,6 @@ import Row from '../ui/Row';
 import ButtonIcon from '../ui/ButtonIcon';
 import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi2';
 import { useDarkMode } from '../context/DarkModeContext';
-import SpinnerMini from '../ui/SpinnerMini';
 import { searchEmail } from '../services/apiGuests';
 import useSearchEmail from '../features/guests/useSearchEmail';
 import { useState } from 'react';
@@ -28,6 +27,7 @@ function TestingPage() {
 
   // if (isLoading) return <Spinner />;
   console.log(
+    `emailSearch: ${emailSearch}`,
     'guestsFound',
     guestsFound.map((guest) => guest.email)
   );
