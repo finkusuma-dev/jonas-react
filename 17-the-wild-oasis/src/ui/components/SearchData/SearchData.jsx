@@ -12,7 +12,6 @@ import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
 import useCompare from './hooks/useCompare';
 import useAutocomplete from './hooks/useAutocomplete';
-// import { useMemo } from 'react';
 
 const MIN_CHARACTER_SEARCH = 2;
 
@@ -42,12 +41,12 @@ export const SearchDataContext = createContext();
 export const useSearchData = () => useContext(SearchDataContext);
 
 function SearchData({
-  name,
+  name: nameProp,
   data: dataProp = [],
-  dataSearch,
-  searchField,
+  dataSearch: dataSearchProp,
+  searchField: searchFieldProp,
   // RenderDataItem,
-  placeholder,
+  placeholder: placeholderProp,
   maxResults = 7,
   listWidth,
   columns: columnsProp = [],
@@ -81,7 +80,7 @@ function SearchData({
         });
       }
     },
-    additionalCondition: !dataSearch,
+    additionalCondition: !dataSearchProp,
   });
 
   // === useCompare ===
@@ -92,18 +91,18 @@ function SearchData({
     oldValue: state.data,
     callbackFn: (dataProp) => {
       if (dataProp.length > 0) {
-        if (dataSearch) {
+        if (dataSearchProp) {
           // console.log('createNewList');
           createNewListNAutocomplete({
-            newSearchString: dataSearch,
+            newSearchString: dataSearchProp,
             newData: dataProp,
           });
         }
       }
     },
     additionalCondition:
-      !!dataSearch && /// if dataSearch is not set (undefined) then additional condition is true
-      dataSearch === state.dataSearch &&
+      !!dataSearchProp && /// if dataSearchProp is not set (undefined) then additional condition is true
+      dataSearchProp === state.dataSearchProp &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
 
@@ -163,8 +162,8 @@ function SearchData({
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
         ? obj === state.list[itemIdx]
-        : searchField !== undefined && obj[searchField]
-        ? obj[searchField] === state.list[itemIdx][searchField]
+        : searchFieldProp !== undefined && obj[searchFieldProp]
+        ? obj[searchFieldProp] === state.list[itemIdx][searchFieldProp]
         : false
     );
 
@@ -173,8 +172,8 @@ function SearchData({
     const selectedText =
       typeof curentData[dataIdx] === 'string'
         ? curentData[dataIdx]
-        : searchField !== undefined
-        ? curentData[dataIdx][searchField]
+        : searchFieldProp !== undefined
+        ? curentData[dataIdx][searchFieldProp]
         : '';
     const selectedObj = curentData[dataIdx];
 
@@ -218,8 +217,8 @@ function SearchData({
         .filter((item) =>
           typeof item === 'string'
             ? String(item).includes(newSearchString)
-            : searchField !== undefined && item[searchField]
-            ? String(item[searchField]).includes(newSearchString)
+            : searchFieldProp !== undefined && item[searchFieldProp]
+            ? String(item[searchFieldProp]).includes(newSearchString)
             : false
         )
         /// Sort items based on the index where the search string is found
@@ -274,12 +273,12 @@ function SearchData({
 
   function getSearchedTextFromItem(item) {
     /// Searched text is item itself if it's a string,
-    /// Otherwise it's defined by searchField, searched text = item[searchField]
+    /// Otherwise it's defined by searchFieldProp, searched text = item[searchFieldProp]
     return (
       item &&
       (typeof item === 'string'
         ? item
-        : searchField !== undefined && item[searchField])
+        : searchFieldProp !== undefined && item[searchFieldProp])
     );
   }
 
@@ -287,17 +286,17 @@ function SearchData({
     <SearchDataContext.Provider
       value={{
         // props
-        name,
+        nameProp,
         listWidth,
-        placeholder,
-        searchField,
+        placeholderProp,
+        searchFieldProp,
         maxResults,
         // RenderDataItem,/
         columnsProp,
         autoComplete,
         isClearable,
         dataProp,
-        dataSearch,
+        dataSearchProp,
         stylesProp,
         onDeselect,
         onSearch,

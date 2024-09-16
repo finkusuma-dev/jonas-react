@@ -48,8 +48,8 @@ function SearchInput() {
     // props
     // autoComplete,
     isClearable,
-    placeholder,
-    // searchField,
+    placeholderProp,
+    // searchFieldProp,
     // maxResults,
     // dataProp,
     stylesProp,
@@ -124,9 +124,9 @@ function SearchInput() {
         if (
           /// If new search string has saved search string as its substring,
           /// use previous saved data
-          state.dataSearch &&
-          state.dataSearch.length > 0 &&
-          newSearchString.indexOf(state.dataSearch) > -1
+          state.dataSearchProp &&
+          state.dataSearchProp.length > 0 &&
+          newSearchString.indexOf(state.dataSearchProp) > -1
         ) {
           return createNewListNAutocomplete({
             newSearchString,
@@ -243,7 +243,7 @@ function SearchInput() {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         // onBlur={handleBlur}
-        placeholder={placeholder || 'Search for data'}
+        placeholder={placeholderProp || 'Search for data'}
         ref={refInput}
         style={customStyle}
       />

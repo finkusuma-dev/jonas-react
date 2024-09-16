@@ -6,7 +6,7 @@ export const ActionType = Object.freeze({
 
   updateData: 'data/update',
   clearData: 'data/clear',
-  setDataSearch: 'dataSearch/set',
+  setDataSearch: 'dataSearchProp/set',
 
   setSearchText: 'searchText/set',
   setInputText: 'inputText/set',
@@ -25,7 +25,7 @@ export const ActionType = Object.freeze({
 const initialState = {
   inputText: '', /// Input Text component's value
   searchText: '', /// The actual keyboard keys pressed/search by the user
-  dataSearch: '',
+  dataSearchProp: '',
   data: [],
   list: [], /// The results of searching the searchText
   isShowList: false, /// The state of showing the list
@@ -77,12 +77,12 @@ function useSearchDataReducer() {
         return {
           ...state,
           data: [],
-          dataSearch: '',
+          dataSearchProp: '',
         };
       case ActionType.setDataSearch:
         return {
           ...state,
-          dataSearch: action.payload,
+          dataSearchProp: action.payload,
         };
       case ActionType.updateList:
         return {

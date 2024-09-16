@@ -86,13 +86,13 @@ function Item({ children, idx }) {
 }
 
 export function DefaultRenderDataItem(item, i, searchText) {
-  const { columnsProp, searchField, stylesProp } = useSearchData();
+  const { columnsProp, searchFieldProp, stylesProp } = useSearchData();
 
   const highlightStyle = getCustomStyle(StyleType.textHighlight, stylesProp);
   if (columnsProp.length) {
     const renderedItems = columnsProp.map((column, i) => {
       // console.log('column', column, i);
-      if (column.field === searchField) {
+      if (column.field === searchFieldProp) {
         return (
           <Highlight
             key={i}
@@ -120,7 +120,7 @@ export function DefaultRenderDataItem(item, i, searchText) {
   } else {
     return (
       <Highlight key={i} highlightString={searchText} style={highlightStyle}>
-        {item[searchField]}
+        {item[searchFieldProp]}
       </Highlight>
     );
   }
