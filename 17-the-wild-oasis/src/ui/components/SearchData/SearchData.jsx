@@ -21,10 +21,11 @@ const Box = styled.div`
 
 SearchData.propTypes = {
   name: PropTypes.string, // prop to search if data.element is an object
+  placeholder: PropTypes.string,
   data: PropTypes.array,
   dataSearch: PropTypes.string, // prop to search if data.element is an object
   searchField: PropTypes.string, // prop to search if data.element is an object
-  placeholder: PropTypes.string,
+  isLoading: PropTypes.bool,
   // RenderDataItem: PropTypes.func,
   maxItems: PropTypes.number,
   listWidth: PropTypes.string,
@@ -45,6 +46,7 @@ function SearchData({
   data: dataProp = [],
   dataSearch: dataSearchProp,
   searchField: searchFieldProp,
+  isLoading: isLoadingProp,
   // RenderDataItem,
   placeholder: placeholderProp,
   maxItems: maxItemsProp = 7,
@@ -290,6 +292,8 @@ function SearchData({
         listWidthProp,
         placeholderProp,
         searchFieldProp,
+        isLoadingProp,
+
         maxItemsProp,
         // RenderDataItem,/
         columnsProp,

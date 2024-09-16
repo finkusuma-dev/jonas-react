@@ -6,6 +6,7 @@ import { getCustomStyle, StyleName } from '../helpers/styles';
 import { useRef } from 'react';
 import { processTimeout } from '../helpers/func';
 import ClearButton from './ClearButton';
+import SpinnerMini from './SpinnerMini';
 
 const MIN_CHARACTER_SEARCH = 2;
 
@@ -27,6 +28,16 @@ const Input = styled.input`
   }
 `;
 
+// const RightContainer = styled.div`
+//   position: absolute;
+//   right: 1px;
+//   top: 1px;
+//   bottom: 1px;
+//   display: flex;
+//   /* align-items: center; */
+//   /* border: 1px solid red; */
+// `;
+
 function SearchInput() {
   const {
     // props
@@ -39,6 +50,7 @@ function SearchInput() {
     stylesProp,
     onDeselect,
     onSearch,
+    isLoadingProp,
 
     state,
     dispatch,
@@ -231,13 +243,24 @@ function SearchInput() {
         ref={refInput}
         style={customStyle}
       />
-      {isClearableProp && state.inputText.length > 0 && (
-        /// Clear Button
-        <ClearButton
-          onClick={handleClearInput}
-          style={clearButtonCustomStyle}
-        />
-      )}
+      <div
+        style={{
+          position: 'absolute',
+          right: '1px',
+          top: '1px',
+          bottom: '1px',
+          display: 'flex',
+        }}
+        // onClick={() => console.log('right container click')}
+      >
+        {!isLoadingProp && isClearableProp && state.inputText.length > 0 && (
+          <ClearButton
+            onClick={handleClearInput}
+            style={clearButtonCustomStyle}
+          />
+        )}
+        {!!isLoadingProp && <SpinnerMini />}
+      </div>
     </>
   );
 }

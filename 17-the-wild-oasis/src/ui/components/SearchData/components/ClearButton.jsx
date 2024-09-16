@@ -1,13 +1,21 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+// const rotate = keyframes`
+//   to {
+//     transform: rotate(1turn)
+//   }
+// `;
+
 const StyledClearButton = styled.button`
   border: none;
   padding: 10px;
-  position: absolute;
+  display: flex;
+  align-items: center;
+  /* position: absolute;
   right: 1px;
   top: 1px;
-  bottom: 1px;
+  bottom: 1px; */
   background-color: transparent;
   color: #4b5563;
   cursor: pointer;

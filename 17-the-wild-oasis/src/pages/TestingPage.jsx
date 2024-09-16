@@ -151,6 +151,7 @@ function TestingPage() {
                   setEmailSearch(search);
                   // return null;
                 }}
+                isLoading={isSearching}
                 searchField="email"
                 placeholder="Search email"
                 listWidth="70rem"
@@ -247,7 +248,7 @@ function TestingPage() {
                 //   </>
                 // )}
               />
-              {isSearching && <SpinnerMini />}
+              {/* {isSearching && <SpinnerMini />} */}
             </div>
           </div>
         }
