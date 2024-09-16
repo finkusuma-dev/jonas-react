@@ -46,7 +46,7 @@ const ClearButton = styled.button`
 function SearchInput() {
   const {
     // props
-    // autoComplete,
+    // autoCompleteProp,
     isClearable,
     placeholderProp,
     // searchFieldProp,
@@ -89,7 +89,7 @@ function SearchInput() {
   //   searchChange: autoCompleteSearchChange,
   //   keyDown: autoCompleteKeyDown,
   // } = useAutocomplete({
-  //   enabled: autoComplete,
+  //   enabled: autoCompleteProp,
   //   inputText: state.inputText,
   //   setInputText,
   //   searchText: state.searchText,

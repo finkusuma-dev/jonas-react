@@ -50,7 +50,7 @@ function SearchData({
   maxItems: maxItemsProp = 7,
   listWidth: listWidthProp,
   columns: columnsProp = [],
-  autoComplete = false,
+  autoComplete: autoCompleteProp = false,
   isClearable = false,
   styles: stylesProp = [],
 
@@ -111,7 +111,7 @@ function SearchData({
     searchChange: autoCompleteSearchChange,
     keyDown: autoCompleteKeyDown,
   } = useAutocomplete({
-    enabled: autoComplete,
+    enabled: autoCompleteProp,
     inputText: state.inputText,
     setInputText: (input) => {
       dispatch({ type: ActionType.setInputText, payload: input });
@@ -293,7 +293,7 @@ function SearchData({
         maxItemsProp,
         // RenderDataItem,/
         columnsProp,
-        autoComplete,
+        autoCompleteProp,
         isClearable,
         dataProp,
         dataSearchProp,
