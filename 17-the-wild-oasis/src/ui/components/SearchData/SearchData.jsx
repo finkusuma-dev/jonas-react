@@ -70,7 +70,7 @@ function SearchData({
   useCompare({
     newValue: dataProp,
     oldValue: state.data,
-    callbackFn: (dataProp) => {
+    callbackFn: () => {
       if (dataProp.length > 0) {
         /// When using static data passed into dataProp.
         console.log('>> Save dataProp', dataProp);
@@ -89,7 +89,7 @@ function SearchData({
   useCompare({
     newValue: dataProp,
     oldValue: state.data,
-    callbackFn: (dataProp) => {
+    callbackFn: () => {
       if (dataProp.length > 0) {
         if (dataSearchProp) {
           // console.log('createNewList');

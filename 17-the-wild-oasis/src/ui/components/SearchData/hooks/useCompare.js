@@ -36,9 +36,9 @@ function useCompare({
   // console.log('extraCondition', extraCondition);
   useEffect(() => {
     if (!isSameData && additionalCondition) {
-      callbackFn(newValue);
+      callbackFn();
     }
-  }, [isSameData, additionalCondition, newValue, callbackFn]);
+  }, [isSameData, additionalCondition, callbackFn]);
 }
 
 export default useCompare;
