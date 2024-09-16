@@ -223,11 +223,6 @@ function SearchInput() {
 
   const customStyle = getCustomStyle(StyleName.inputText, stylesProp);
 
-  const clearButtonCustomStyle = getCustomStyle(
-    StyleName.inputTextClearButton,
-    stylesProp
-  );
-
   return (
     <>
       <Input
@@ -250,10 +245,7 @@ function SearchInput() {
         }}
       >
         {!isLoadingProp && isClearableProp && state.inputText.length > 0 && (
-          <ClearButton
-            onClick={handleClearInput}
-            style={clearButtonCustomStyle}
-          />
+          <ClearButton onClick={handleClearInput} />
         )}
         {!!isLoadingProp && <SpinnerMini />}
       </div>

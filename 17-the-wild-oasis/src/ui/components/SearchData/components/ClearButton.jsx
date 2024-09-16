@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { getCustomStyle, StyleName } from '../helpers/styles';
+import { useSearchData } from '../SearchData';
 
 const StyledClearButton = styled.button`
   border: none;
@@ -21,13 +23,17 @@ const StyledClearButton = styled.button`
 `;
 
 ClearButton.propTypes = {
-  style: PropTypes.object,
   onClick: PropTypes.func,
 };
 
-function ClearButton({ style, onClick }) {
+function ClearButton({ onClick }) {
+  const { stylesProp } = useSearchData();
+  const customStyle = getCustomStyle(
+    StyleName.inputTextClearButton,
+    stylesProp
+  );
   return (
-    <StyledClearButton style={style} onClick={onClick}>
+    <StyledClearButton style={customStyle} onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
