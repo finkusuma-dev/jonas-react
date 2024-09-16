@@ -100,11 +100,7 @@ function SearchInput() {
       payload: newSearchString,
     });
 
-    if (state.selectedItemIdx !== null && onDeselect && onDeselect());
-
-    dispatch({
-      type: ActionType.clearSelectedItemIdx,
-    });
+    clearSelectedItemIdx();
 
     requestData(newSearchString);
     // console.log(
@@ -217,8 +213,17 @@ function SearchInput() {
   }
 
   function handleClearInput() {
+    clearSelectedItemIdx();
     dispatch({ type: ActionType.clearSearch });
     refInput.current.focus();
+  }
+
+  function clearSelectedItemIdx() {
+    if (state.selectedItemIdx != null && onDeselect && onDeselect());
+
+    dispatch({
+      type: ActionType.clearSelectedItemIdx,
+    });
   }
 
   const customStyle = getCustomStyle(StyleName.inputText, stylesProp);
