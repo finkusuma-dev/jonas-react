@@ -138,8 +138,8 @@ function SearchInput() {
                 createNewListNAutocomplete({ newSearchString, newData });
               }
             }
-          }
-          // 1000
+          },
+          700
         );
       } else {
         // console.log(' ==== clearList');
