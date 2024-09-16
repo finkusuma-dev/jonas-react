@@ -50,7 +50,7 @@ function SearchInput() {
     isClearable,
     placeholderProp,
     // searchFieldProp,
-    // maxResults,
+    // maxItemsProp,
     // dataProp,
     stylesProp,
     onDeselect,

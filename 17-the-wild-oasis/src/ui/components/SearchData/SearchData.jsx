@@ -26,7 +26,7 @@ SearchData.propTypes = {
   searchField: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
   // RenderDataItem: PropTypes.func,
-  maxResults: PropTypes.number,
+  maxItems: PropTypes.number,
   listWidth: PropTypes.string,
   columns: PropTypes.array,
   autoComplete: PropTypes.bool,
@@ -47,7 +47,7 @@ function SearchData({
   searchField: searchFieldProp,
   // RenderDataItem,
   placeholder: placeholderProp,
-  maxResults = 7,
+  maxItems: maxItemsProp = 7,
   listWidth,
   columns: columnsProp = [],
   autoComplete = false,
@@ -253,8 +253,8 @@ function SearchData({
             return res;
           }
         })
-        /// Limit the number of items to only less or equal than maxResult
-        .filter((el, i) => i < maxResults);
+        /// Limit the number of items to less or equal than maxItemsProp
+        .filter((el, i) => i < maxItemsProp);
 
       // console.log('newList', newList);
 
@@ -290,7 +290,7 @@ function SearchData({
         listWidth,
         placeholderProp,
         searchFieldProp,
-        maxResults,
+        maxItemsProp,
         // RenderDataItem,/
         columnsProp,
         autoComplete,
