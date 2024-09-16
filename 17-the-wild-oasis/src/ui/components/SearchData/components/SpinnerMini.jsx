@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-// import { BiLoaderAlt } from "react-icons/bi";
+import { getCustomStyle, StyleName } from '../helpers/styles';
+import { useSearchData } from '../SearchData';
 
 const rotate = keyframes`
   to {
@@ -25,8 +26,10 @@ const StyledSpinnerMini = styled.div`
 `;
 
 function SpinnerMini() {
+  const { stylesProp } = useSearchData();
+  const customStyle = getCustomStyle(StyleName.inputTextSpinner, stylesProp);
   return (
-    <StyledSpinnerMini>
+    <StyledSpinnerMini style={customStyle}>
       <svg
         stroke="currentColor"
         fill="currentColor"

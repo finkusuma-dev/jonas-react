@@ -201,6 +201,9 @@ function TestingPage() {
                     // borderBottomRightRadius: 'var(--border-radius-sm)',
                     color: 'var(--color-grey-500)',
                   },
+                  inputTextSpinner: {
+                    color: 'var(--color-grey-500)',
+                  },
                   header: {
                     backgroundColor: 'var(--color-grey-200)',
                     color: 'var(--color-grey-700)',

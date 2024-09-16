@@ -1,6 +1,7 @@
 export const StyleName = Object.freeze({
   inputText: 'inputText',
   inputTextClearButton: 'inputTextClearButton',
+  inputTextSpinner: 'inputTextSpinner',
   header: 'header',
   headerTitle: 'headerTitle',
   list: 'list',
