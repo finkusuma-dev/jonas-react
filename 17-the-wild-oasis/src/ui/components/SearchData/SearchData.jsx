@@ -51,7 +51,7 @@ function SearchData({
   listWidth: listWidthProp,
   columns: columnsProp = [],
   autoComplete: autoCompleteProp = false,
-  isClearable = false,
+  isClearable: isClearableProp = false,
   styles: stylesProp = [],
 
   /// Events
@@ -294,7 +294,7 @@ function SearchData({
         // RenderDataItem,/
         columnsProp,
         autoCompleteProp,
-        isClearable,
+        isClearableProp,
         dataProp,
         dataSearchProp,
         stylesProp,
