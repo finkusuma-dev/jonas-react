@@ -93,7 +93,7 @@ function TestingPage() {
                   boxShadow: 'var(--shadow-sm)',
                 },
                 inputTextClearButton: {
-                  color: 'var(--color-grey-500)',
+                  color: 'red', //var(--color-grey-500)
                 },
                 list: {
                   backgroundColor: 'var(--color-grey-0)',
