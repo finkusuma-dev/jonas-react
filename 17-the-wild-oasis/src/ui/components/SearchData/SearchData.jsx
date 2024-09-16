@@ -48,7 +48,7 @@ function SearchData({
   // RenderDataItem,
   placeholder: placeholderProp,
   maxItems: maxItemsProp = 7,
-  listWidth,
+  listWidth: listWidthProp,
   columns: columnsProp = [],
   autoComplete = false,
   isClearable = false,
@@ -287,7 +287,7 @@ function SearchData({
       value={{
         // props
         nameProp,
-        listWidth,
+        listWidthProp,
         placeholderProp,
         searchFieldProp,
         maxItemsProp,

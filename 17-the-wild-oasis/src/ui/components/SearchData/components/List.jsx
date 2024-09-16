@@ -52,7 +52,7 @@ const ListBox = styled.div`
 `;
 
 export default function List() {
-  const { listWidth, listWindow, refListBox, stylesProp, columnsProp } =
+  const { listWidthProp, listWindow, refListBox, stylesProp, columnsProp } =
     useSearchData();
 
   const customStyle = getCustomStyle(StyleType.list, stylesProp);
@@ -60,7 +60,7 @@ export default function List() {
   return (
     <ListBox
       ref={refListBox}
-      width={listWidth}
+      width={listWidthProp}
       window={listWindow}
       style={customStyle}
       columns={columnsProp}
