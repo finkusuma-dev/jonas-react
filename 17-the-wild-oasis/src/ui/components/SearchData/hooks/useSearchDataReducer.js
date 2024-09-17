@@ -6,6 +6,8 @@ export const ActionType = Object.freeze({
 
   updateData: 'data/update',
   clearData: 'data/clear',
+  updateDataSearchResults: 'dataSearchResults/update',
+  clearDataSearchResults: 'dataSearchResults/clear',
   setDataSearch: 'dataSearch/set',
 
   setSearchText: 'searchText/set',
@@ -25,8 +27,9 @@ export const ActionType = Object.freeze({
 const initialState = {
   inputText: '', /// Input Text component's value
   searchText: '', /// The actual keyboard keys pressed/search by the user
-  dataSearch: '',
   data: [],
+  dataSearch: '',
+  dataSearchResults: [],
   list: [], /// The results of searching the searchText
   isShowList: false, /// The state of showing the list
   selectedItemIdx: null, /// The active index of item in the list. Set when user presses keydown/keyup/click with mouse.
@@ -77,6 +80,17 @@ function useSearchDataReducer() {
         return {
           ...state,
           data: [],
+        };
+      case ActionType.updateDataSearchResults:
+        return {
+          ...state,
+          dataSearchResults: action.payload,
+        };
+      case ActionType.clearDataSearchResults:
+        // console.log('clear data');
+        return {
+          ...state,
+          dataSearchResults: [],
           dataSearch: '',
         };
       case ActionType.setDataSearch:

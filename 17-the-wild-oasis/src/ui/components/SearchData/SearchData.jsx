@@ -23,7 +23,8 @@ SearchData.propTypes = {
   name: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
   data: PropTypes.array,
-  dataSearch: PropTypes.string, // prop to search if data.element is an object
+  searchResults: PropTypes.array,
+  search: PropTypes.string, // prop to search if data.element is an object
   searchField: PropTypes.string, // prop to search if data.element is an object
   isLoading: PropTypes.bool,
   // RenderDataItem: PropTypes.func,
@@ -44,7 +45,8 @@ export const useSearchData = () => useContext(SearchDataContext);
 function SearchData({
   name: nameProp,
   data: dataProp = [],
-  dataSearch: dataSearchProp,
+  searchResults: dataSearchResultsProp = [],
+  search: dataSearchProp,
   searchField: searchFieldProp,
   isLoading: isLoadingProp,
   // RenderDataItem,
@@ -86,25 +88,22 @@ function SearchData({
   });
 
   // === useCompare ===
-  /// For dynamic data passed to the dataProp as a result of
-  /// a search api request.
+  /// For dynamic data passed to the dataSearchResultsProp as a result of
+  /// an api request.
   useCompare({
-    newValue: dataProp,
-    oldValue: state.data,
-    callbackFn: (dataProp) => {
-      if (dataProp.length > 0) {
-        if (dataSearchProp) {
-          // console.log('createNewList');
-          createNewListNAutocomplete({
-            newSearchString: dataSearchProp,
-            newData: dataProp,
-          });
-        }
-      }
+    newValue: dataSearchResultsProp,
+    oldValue: state.dataSearchResults,
+    callbackFn: (dataSearchResultsProp) => {
+      // console.log('createNewList');
+      createNewListNAutocomplete({
+        newSearchString: dataSearchProp,
+        newDataSearchResults: dataSearchResultsProp,
+      });
     },
     additionalCondition:
-      !!dataSearchProp && /// if dataSearchProp is not set (undefined) then additional condition is true
+      dataSearchProp && /// if dataSearchProp is not set (undefined) then additional condition is true
       dataSearchProp === state.dataSearch &&
+      dataSearchResultsProp.length > 0 &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
 
@@ -194,9 +193,24 @@ function SearchData({
     }
   }
 
-  function createNewListNAutocomplete({ newSearchString, newData, oldData }) {
-    let currentData = newData || oldData;
-    if (newData) {
+  function createNewListNAutocomplete({
+    newSearchString,
+    newDataSearchResults,
+    oldDataSearchResults,
+    newData,
+    oldData,
+  }) {
+    const currentData =
+      newDataSearchResults || oldDataSearchResults || newData || oldData;
+    if (newDataSearchResults) {
+      // console.log('newDataSearchResults', newDataSearchResults);
+      /// If new data arrived, the search string & the data is saved
+      ///
+      dispatch({
+        type: ActionType.updateDataSearchResults,
+        payload: newDataSearchResults,
+      });
+    } else if (newData) {
       /// If new data arrived, the search string & the data is saved
       ///
       dispatch({
@@ -204,11 +218,7 @@ function SearchData({
         payload: newData,
       });
 
-      // console.log('> Use new data', currentData);
-    } else if (oldData) {
-      /// If not, using previous data
-      ///
-      // console.log('> Use saved data');
+      console.log('> Use new data searchResult');
     }
 
     if (newSearchString.length < MIN_CHARACTER_SEARCH) {

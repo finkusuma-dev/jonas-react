@@ -75,7 +75,7 @@ function TestingPage() {
           </div>
          */}
 
-        {
+        {/* 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <span>Email</span>
             <SearchData
@@ -127,8 +127,8 @@ function TestingPage() {
               //   </Highlight>
               // )}
             />
-          </div>
-        }
+          </div> */}
+
         {
           <div
             style={{
@@ -144,8 +144,8 @@ function TestingPage() {
               <SearchData
                 key="dynamic_data_guests"
                 name="dynamic_data_guests"
-                data={guestsFound}
-                dataSearch={emailSearch}
+                searchResults={guestsFound}
+                search={emailSearch}
                 onSearch={(search) => {
                   // return await searchEmail(search);
                   setEmailSearch(search);

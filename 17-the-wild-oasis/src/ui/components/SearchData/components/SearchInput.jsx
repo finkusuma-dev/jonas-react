@@ -123,7 +123,7 @@ function SearchInput() {
         ) {
           return createNewListNAutocomplete({
             newSearchString,
-            oldData: state.data,
+            oldDataSearchResults: state.dataSearchResults,
           });
         }
 
