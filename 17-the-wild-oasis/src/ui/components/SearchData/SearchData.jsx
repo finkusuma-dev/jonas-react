@@ -158,7 +158,7 @@ function SearchData({
       type: ActionType.hideList,
     });
 
-    const curentData = state.data;
+    const curentData = state.dataSearchResults || state.data;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
