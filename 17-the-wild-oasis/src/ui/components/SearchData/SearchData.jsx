@@ -104,7 +104,7 @@ function SearchData({
     },
     additionalCondition:
       !!dataSearchProp && /// if dataSearchProp is not set (undefined) then additional condition is true
-      dataSearchProp === state.dataSearchProp &&
+      dataSearchProp === state.dataSearch &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
 

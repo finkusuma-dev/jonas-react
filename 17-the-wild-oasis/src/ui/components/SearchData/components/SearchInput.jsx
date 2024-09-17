@@ -117,9 +117,9 @@ function SearchInput() {
         if (
           /// If new search string has saved search string as its substring,
           /// use previous saved data
-          state.dataSearchProp &&
-          state.dataSearchProp.length > 0 &&
-          newSearchString.indexOf(state.dataSearchProp) > -1
+          state.dataSearch &&
+          state.dataSearch.length > 0 &&
+          newSearchString.indexOf(state.dataSearch) > -1
         ) {
           return createNewListNAutocomplete({
             newSearchString,
