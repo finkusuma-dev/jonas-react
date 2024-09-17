@@ -37,6 +37,7 @@ SearchData.propTypes = {
   onSelect: PropTypes.func,
   onDeselect: PropTypes.func,
   onSearch: PropTypes.func,
+  onSearchRequest: PropTypes.func,
 };
 
 export const SearchDataContext = createContext();
@@ -62,6 +63,7 @@ function SearchData({
   onSelect,
   onDeselect,
   onSearch,
+  onSearchRequest,
 }) {
   const refInput = useRef();
   const refListBox = useRef();
@@ -314,6 +316,7 @@ function SearchData({
         stylesProp,
         onDeselect,
         onSearch,
+        onSearchRequest,
 
         //ref
         refInput,

@@ -50,6 +50,7 @@ function SearchInput() {
     stylesProp,
     onDeselect,
     onSearch,
+    onSearchRequest,
     isLoadingProp,
 
     state,
@@ -111,7 +112,7 @@ function SearchInput() {
   }
 
   function createNewListOrCallOnSearch(newSearchString) {
-    if (onSearch) {
+    if (onSearch || onSearchRequest) {
       cancelTimeout(refTimeout);
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
         if (
@@ -129,20 +130,22 @@ function SearchInput() {
 
         /// If not, request for a new data
         processTimeout(refTimeout, async () => {
-          if (onSearch) {
+          if (onSearch || onSearchRequest) {
             dispatch({
               type: ActionType.setDataSearch,
               payload: newSearchString,
             });
 
-            const newData = await onSearch(newSearchString);
+            if (onSearch) {
+              /// Call onSearch. It's used when using dynamic data outside of the component.
+              onSearch(newSearchString);
+            } else if (onSearchRequest) {
+              const newData = await onSearchRequest(newSearchString);
 
-            /// If returns newData it fetches api directly
-            /// If not returns newData, it uses react query and pass the data through dataProp
-            if (newData) {
-              // console.log(`newData result ${newSearchString}`, newData);
-
-              createNewListNAutocomplete({ newSearchString, newData });
+              /// Get the returned data
+              if (newData) {
+                createNewListNAutocomplete({ newSearchString, newData });
+              }
             }
           }
         });

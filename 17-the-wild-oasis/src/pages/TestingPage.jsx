@@ -146,11 +146,7 @@ function TestingPage() {
                 name="dynamic_data_guests"
                 searchResults={guestsFound}
                 search={emailSearch}
-                onSearch={(search) => {
-                  // return await searchEmail(search);
-                  setEmailSearch(search);
-                  // return null;
-                }}
+                onSearch={setEmailSearch}
                 isLoading={isSearching}
                 searchField="email"
                 placeholder="Search email"
