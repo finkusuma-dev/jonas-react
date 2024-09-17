@@ -5,7 +5,7 @@ import { useSearchData } from '../SearchData';
 
 const StyledClearButton = styled.button`
   border: none;
-  padding: 10px;
+  padding: 10px 10px;
   display: flex;
   align-items: center;
   /* position: absolute;
@@ -14,6 +14,7 @@ const StyledClearButton = styled.button`
   bottom: 1px; */
   background-color: transparent;
   color: #4b5563;
+  /* border: 1px solid red; */
   cursor: pointer;
 
   &:focus {

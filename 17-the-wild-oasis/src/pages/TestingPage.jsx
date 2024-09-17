@@ -89,6 +89,7 @@ function TestingPage() {
               searchField="email"
               placeholder="Search email"
               defaultFilled
+              dropDownButton
               autoComplete
               isClearable
               styles={{
@@ -98,7 +99,7 @@ function TestingPage() {
                   boxShadow: 'var(--shadow-sm)',
                 },
                 inputTextClearButton: {
-                  color: 'red', //var(--color-grey-500)
+                  color: 'var(--color-grey-500)',
                 },
                 list: {
                   backgroundColor: 'var(--color-grey-0)',

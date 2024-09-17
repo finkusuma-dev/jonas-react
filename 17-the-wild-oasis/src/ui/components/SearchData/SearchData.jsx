@@ -32,6 +32,7 @@ SearchData.propTypes = {
   listWidth: PropTypes.string,
   columns: PropTypes.array,
   defaultFilled: PropTypes.bool,
+  dropDownButton: PropTypes.bool,
   autoComplete: PropTypes.bool,
   isClearable: PropTypes.bool,
   styles: PropTypes.object,
@@ -57,6 +58,7 @@ function SearchData({
   listWidth: listWidthProp,
   columns: columnsProp = [],
   defaultFilled: defaultFilledProp = false,
+  dropDownButton: dropDownButtonProp = false,
   autoComplete: autoCompleteProp = false,
   isClearable: isClearableProp = false,
   styles: stylesProp = [],
@@ -320,6 +322,7 @@ function SearchData({
         // RenderDataItem,/
         columnsProp,
         defaultFilledProp,
+        dropDownButtonProp,
         autoCompleteProp,
         isClearableProp,
         dataProp,

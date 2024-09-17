@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import { cancelTimeout, processTimeout } from '../helpers/func';
 import ClearButton from './ClearButton';
 import SpinnerMini from './SpinnerMini';
+import DropdownButton from './DropdownButton';
 
 const MIN_CHARACTER_SEARCH = 2;
 
@@ -53,6 +54,7 @@ function SearchInput() {
     onSearchRequest,
     isLoadingProp,
     defaultFilledProp,
+    dropDownButtonProp,
 
     state,
     dispatch,
@@ -233,6 +235,21 @@ function SearchInput() {
     refInput.current.focus();
   }
 
+  function handleShowList() {
+    if (!state.isShowList) {
+      if (!state.list.length) return;
+      // console.log('showList');
+      showList();
+      refInput.current.focus();
+    } else {
+      // console.log('hideList');
+      dispatch({
+        type: ActionType.hideList,
+      });
+      refInput.current.focus();
+    }
+  }
+
   function clearSelectedItemIdx() {
     if (state.selectedItemIdx != null && onDeselect && onDeselect());
 
@@ -268,6 +285,12 @@ function SearchInput() {
           <ClearButton onClick={handleClearInput} />
         )}
         {!!isLoadingProp && <SpinnerMini />}
+        {dropDownButtonProp && (
+          <DropdownButton
+            onClick={handleShowList}
+            isActive={state.isShowList}
+          />
+        )}
       </div>
     </>
   );
