@@ -70,6 +70,7 @@ function SearchData({
   const refInput = useRef();
   const refListBox = useRef();
   const refListItemsContainer = useRef();
+  const refThisComponent = useRef();
 
   const { state, dispatch } = useSearchDataReducer();
 
@@ -140,8 +141,7 @@ function SearchData({
 
   // === useSearchDataClickOutside ===
   useSearchDataClickOutside({
-    refInput,
-    refListBox,
+    ref: refThisComponent,
     isShowList: state.isShowList,
     dispatch,
   });
@@ -333,6 +333,7 @@ function SearchData({
         refInput,
         refListBox,
         refListItemsContainer,
+        refThisComponent,
 
         listWindow,
         showList,
@@ -346,7 +347,7 @@ function SearchData({
         dispatch,
       }}
     >
-      <Box>
+      <Box ref={refThisComponent}>
         <SearchInput />
         {state.isShowList && state.list.length > 0 && <List />}
       </Box>

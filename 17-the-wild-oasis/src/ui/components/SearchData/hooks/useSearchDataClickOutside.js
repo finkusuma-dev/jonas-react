@@ -8,8 +8,9 @@ useSearchDataClickOutside.propTypes = {
 };
 
 function useSearchDataClickOutside({
-  refInput,
-  refListBox,
+  // refInput,
+  ref,
+  // refListBox,
   isShowList,
   dispatch,
 }) {
@@ -21,12 +22,17 @@ function useSearchDataClickOutside({
         // console.log('clickOutside', ref.current, e.target);
         if (
           isShowList &&
-          refInput.current &&
-          refListBox.current &&
-          !refInput.current.contains(e.target) &&
-          !refListBox.current.contains(e.target)
+          // refInput.current &&
+          // refListBox.current &&
+          // !refInput.current.contains(e.target) &&
+          // !refListBox.current.contains(e.target) &&
+          ref.current &&
+          !ref.current.contains(e.target)
+          // (!refInputButtonContainer.current ||
+          //   (refInputButtonContainer.current &&
+          //     refInputButtonContainer.current.contains(e.target)))
         ) {
-          // console.log('Click outside');
+          console.log('Click outside');
           dispatch({
             type: ActionType.hideList,
           });
@@ -37,7 +43,7 @@ function useSearchDataClickOutside({
 
       return () => document.removeEventListener('click', handleClick);
     },
-    [isShowList, dispatch, refInput, refListBox]
+    [isShowList, dispatch, ref]
   );
 }
 
