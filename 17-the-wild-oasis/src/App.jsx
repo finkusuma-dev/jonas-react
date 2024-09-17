@@ -22,6 +22,7 @@ import ProtectedRoute from './ui/ProtectedRoute';
 import DarkModeProvider from './context/DarkModeContext';
 import GlobalTableStateProvider from './context/GlobalTableStateContext';
 import Guests from './pages/Guests';
+import TestingPage from './pages/TestingPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -68,6 +69,8 @@ function App() {
               <Route path="account" element={<Account />} />
             </Route>
             <Route path="login" element={<Login />} />
+            <Route path="testing-page" element={<TestingPage />} />
+
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
