@@ -56,7 +56,6 @@ function useSearchDataReducer() {
           ...state,
           searchText: '',
           inputText: '',
-          list: [],
           selectedItemIdx: null,
           isShowList: false,
         };

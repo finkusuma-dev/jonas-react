@@ -25,6 +25,10 @@ function TestingPage() {
   });
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
+  const sortedGuests = guests.sort((a, b) =>
+    a.email < b.email ? -1 : a.email > b.email ? 1 : 0
+  );
+
   // if (isLoading) return <Spinner />;
   console.log(
     `emailSearch: ${emailSearch}`,
@@ -75,15 +79,16 @@ function TestingPage() {
           </div>
          */}
 
-        {/* 
+        {
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <span>Email</span>
             <SearchData
               key="search_data_guests"
               name="static_data_guests"
-              data={guests}
+              data={sortedGuests}
               searchField="email"
               placeholder="Search email"
+              defaultFilled
               autoComplete
               isClearable
               styles={{
@@ -127,7 +132,8 @@ function TestingPage() {
               //   </Highlight>
               // )}
             />
-          </div> */}
+          </div>
+        }
 
         {
           <div
@@ -151,6 +157,7 @@ function TestingPage() {
                 searchField="email"
                 placeholder="Search email"
                 listWidth="70rem"
+                defaultFilled
                 autoComplete
                 isClearable
                 onSelect={(idx, selected) =>

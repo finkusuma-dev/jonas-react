@@ -52,6 +52,7 @@ function SearchInput() {
     onSearch,
     onSearchRequest,
     isLoadingProp,
+    defaultFilledProp,
 
     state,
     dispatch,
@@ -155,13 +156,18 @@ function SearchInput() {
         dispatch({ type: ActionType.clearList });
       }
     } else {
+      /// If onSearch && onSearchRequest is not set
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
         return createNewListNAutocomplete({
           newSearchString,
           oldData: state.data,
         });
       } else {
-        dispatch({ type: ActionType.clearList });
+        if (defaultFilledProp) {
+          dispatch({ type: ActionType.updateList, payload: state.data });
+        } else {
+          dispatch({ type: ActionType.clearList });
+        }
       }
     }
   }
@@ -218,6 +224,12 @@ function SearchInput() {
   function handleClearInput() {
     clearSelectedItemIdx();
     dispatch({ type: ActionType.clearSearch });
+
+    if (defaultFilledProp) {
+      dispatch({ type: ActionType.updateList, payload: state.data });
+    } else {
+      dispatch({ type: ActionType.clearList });
+    }
     refInput.current.focus();
   }
 

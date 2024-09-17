@@ -31,6 +31,7 @@ SearchData.propTypes = {
   maxItems: PropTypes.number,
   listWidth: PropTypes.string,
   columns: PropTypes.array,
+  defaultFilled: PropTypes.bool,
   autoComplete: PropTypes.bool,
   isClearable: PropTypes.bool,
   styles: PropTypes.object,
@@ -55,6 +56,7 @@ function SearchData({
   maxItems: maxItemsProp = 7,
   listWidth: listWidthProp,
   columns: columnsProp = [],
+  defaultFilled: defaultFilledProp = false,
   autoComplete: autoCompleteProp = false,
   isClearable: isClearableProp = false,
   styles: stylesProp = [],
@@ -84,6 +86,12 @@ function SearchData({
           type: ActionType.updateData,
           payload: dataProp,
         });
+        if (defaultFilledProp) {
+          dispatch({
+            type: ActionType.updateList,
+            payload: dataProp,
+          });
+        }
       }
     },
     additionalCondition: !dataSearchProp,
@@ -160,7 +168,9 @@ function SearchData({
       type: ActionType.hideList,
     });
 
-    const curentData = state.dataSearchResults || state.data;
+    const curentData = state.dataSearchResults.length
+      ? state.dataSearchResults
+      : state.data;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
@@ -309,6 +319,7 @@ function SearchData({
         maxItemsProp,
         // RenderDataItem,/
         columnsProp,
+        defaultFilledProp,
         autoCompleteProp,
         isClearableProp,
         dataProp,
