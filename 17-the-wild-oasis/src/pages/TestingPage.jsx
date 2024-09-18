@@ -98,6 +98,12 @@ function TestingPage() {
                   backgroundColor: 'var(--color-grey-0)',
                   boxShadow: 'var(--shadow-sm)',
                 },
+                inputTextDropDownButton: {
+                  color: 'var(--color-grey-500)',
+                },
+                inputTextDropDownButtonActive: {
+                  color: 'var(--color-brand-500)',
+                },
                 inputTextClearButton: {
                   color: 'var(--color-grey-500)',
                 },
@@ -199,6 +205,7 @@ function TestingPage() {
                     padding: '0.8rem 1.2rem',
                     boxShadow: 'var(--shadow-sm)',
                   },
+
                   inputTextClearButton: {
                     // backgroundColor: '#eee',
                     // borderTopRightRadius: 'var(--border-radius-sm)',

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-// import { getCustomStyle, StyleName } from '../helpers/styles';
-// import { useSearchData } from '../SearchData';
+import { getCustomStyle, StyleName } from '../helpers/styles';
+import { useSearchData } from '../SearchData';
 
 // const rotate = keyframes`
 //   to {
@@ -35,17 +35,27 @@ DropdownButton.propTypes = {
 };
 
 function DropdownButton({ onClick, isActive = false }) {
-  // const { stylesProp } = useSearchData();
-  // const customStyle = getCustomStyle(
-  //   StyleName.inputTextClearButton,
-  //   stylesProp
-  // );
+  const { stylesProp } = useSearchData();
+  const customStyle = getCustomStyle(
+    StyleName.inputTextDropDownButton,
+    stylesProp
+  );
+  const customStyleActive = getCustomStyle(
+    StyleName.inputTextDropDownButtonActive,
+    stylesProp
+  );
+  let style = {
+    ...customStyle,
+  };
+  if (isActive) {
+    style = {
+      ...style,
+      ...customStyleActive,
+    };
+  }
+  console.log('DropdownButton style', style);
   return (
-    <StyledButton
-      // style={customStyle}
-      onClick={onClick}
-      isActive={isActive}
-    >
+    <StyledButton onClick={onClick} isActive={isActive} style={style}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
