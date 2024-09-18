@@ -4,6 +4,7 @@ import { useState } from 'react';
 const PADDING_BROWSER_WINDOW = 8;
 const SPACE_INPUT_TEXT = 4;
 const MIN_BROWSER_WINDOW_BOTTOM_SPACE = 130;
+const MAX_LIST_HEIGHT = '500px';
 
 function useCalculateListWindow({
   refInput,
@@ -48,20 +49,26 @@ function useCalculateListWindow({
     // );
     const isOnBottom =
       MIN_BROWSER_WINDOW_BOTTOM_SPACE <= bottomSpace || bottomSpace > topSpace;
+    const maxHeight = (() => {
+      const mh = isOnBottom
+        ? window.innerHeight - rectInput.bottom - PADDING_BROWSER_WINDOW + 'px'
+        : rectInput.top - PADDING_BROWSER_WINDOW + 'px';
+
+      // console.log('max height', mh, MAX_LIST_HEIGHT, MAX_LIST_HEIGHT < mh);
+      if (Number.parseInt(MAX_LIST_HEIGHT) < Number.parseInt(mh))
+        return MAX_LIST_HEIGHT;
+      return mh;
+    })();
 
     setListWindow(
       isOnBottom
         ? {
             top: rectInput.height + SPACE_INPUT_TEXT + 'px',
-            maxHeight:
-              window.innerHeight -
-              rectInput.bottom -
-              PADDING_BROWSER_WINDOW +
-              'px',
+            maxHeight: maxHeight,
           }
         : {
             bottom: rectInput.height + SPACE_INPUT_TEXT + 'px',
-            maxHeight: rectInput.top - PADDING_BROWSER_WINDOW + 'px',
+            maxHeight: maxHeight,
           }
     );
   }
