@@ -60,6 +60,7 @@ function SearchInput() {
 
     //ref
     refInput,
+    refIsUsingData,
 
     showList,
     selectItem,
@@ -78,22 +79,6 @@ function SearchInput() {
   //   'state.list.length',
   //   state.list.length
   // );
-
-  // const { list, selectedItemIdx, inputText, searchText, isShowList } = state;
-  // const setInputText = (input) => {
-  //   dispatch({ type: ActionType.setInputText, payload: input });
-  // };
-
-  // const {
-  //   searchChange: autoCompleteSearchChange,
-  //   keyDown: autoCompleteKeyDown,
-  // } = useAutocomplete({
-  //   enabled: autoCompleteProp,
-  //   inputText: state.inputText,
-  //   setInputText,
-  //   searchText: state.searchText,
-  //   refInput,
-  // });
 
   function handleChange(e) {
     const newSearchString = e.target.value;
@@ -276,7 +261,7 @@ function SearchInput() {
           <ClearButton onClick={handleClearInput} />
         )}
         {!!isLoadingProp && <SpinnerMini />}
-        {(isUseDataProp || !onSearch) && state.list.length > 0 && (
+        {refIsUsingData.current && state.list.length > 0 && (
           <DropdownButton
             onClick={handleShowList}
             isActive={state.isShowList}

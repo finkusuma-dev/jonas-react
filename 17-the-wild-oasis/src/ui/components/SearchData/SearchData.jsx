@@ -71,6 +71,7 @@ function SearchData({
   const refListBox = useRef();
   const refListItemsContainer = useRef();
   const refThisComponent = useRef();
+  const refIsUsingData = useRef();
 
   const { state, dispatch } = useSearchDataReducer();
 
@@ -116,10 +117,12 @@ function SearchData({
   // console.log('isUseDataProp', nameProp, isUseDataProp);
   // console.log('SearchData.length', nameProp, !state.dataSearchResults.lengths);
 
-  ///
+  refIsUsingData.current = isUseDataProp || !onSearch;
+  // console.log('refIsUsingData', nameProp, refIsUsingData.current);
+
   useEffect(() => {
     if (state.inputText.length < MIN_CHARACTER_SEARCH && state.data.length) {
-      if (isUseDataProp || !onSearch) {
+      if (refIsUsingData.current) {
         // console.log('Fill List', nameProp);
         dispatch({ type: ActionType.updateList, payload: state.data });
       } else {
@@ -185,8 +188,9 @@ function SearchData({
       type: ActionType.hideList,
     });
 
-    const curentData =
-      isUseDataProp || !onSearch ? state.data : state.dataSearchResults;
+    const curentData = refIsUsingData.current
+      ? state.data
+      : state.dataSearchResults;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
@@ -350,6 +354,7 @@ function SearchData({
         refListBox,
         refListItemsContainer,
         refThisComponent,
+        refIsUsingData,
 
         listWindow,
         showList,
