@@ -165,6 +165,7 @@ function TestingPage() {
                 placeholder="Search email"
                 listWidth="70rem"
                 defaultFilled
+                dropDownButton
                 autoComplete
                 isClearable
                 onSelect={(idx, selected) =>

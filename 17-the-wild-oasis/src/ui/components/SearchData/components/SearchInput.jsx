@@ -237,9 +237,7 @@ function SearchInput() {
 
   function handleShowList() {
     if (!state.isShowList) {
-      if (!state.list.length) return;
-      // console.log('showList');
-      showList();
+      if (state.list.length) showList();
       refInput.current.focus();
     } else {
       // console.log('hideList');
