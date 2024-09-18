@@ -12,6 +12,7 @@ import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
 import useCompare from './hooks/useCompare';
 import useAutocomplete from './hooks/useAutocomplete';
+import { forwardRef } from 'react';
 
 const MIN_CHARACTER_SEARCH = 2;
 
@@ -19,59 +20,43 @@ const Box = styled.div`
   position: relative;
 `;
 
-SearchData.propTypes = {
-  name: PropTypes.string, // prop to search if data.element is an object
-  placeholder: PropTypes.string,
-  data: PropTypes.array,
-  searchData: PropTypes.array,
-  search: PropTypes.string, // prop to search if data.element is an object
-  searchField: PropTypes.string, // prop to search if data.element is an object
-  isLoading: PropTypes.bool,
-  // RenderDataItem: PropTypes.func,
-  maxItems: PropTypes.number,
-  listWidth: PropTypes.string,
-  columns: PropTypes.array,
-  isUseData: PropTypes.bool,
-  autoComplete: PropTypes.bool,
-  isClearable: PropTypes.bool,
-  styles: PropTypes.object,
-  onSelect: PropTypes.func,
-  onDeselect: PropTypes.func,
-  onSearch: PropTypes.func,
-  onSearchRequest: PropTypes.func,
-};
-
 export const SearchDataContext = createContext();
 export const useSearchData = () => useContext(SearchDataContext);
 
-function SearchData({
-  name: nameProp,
-  data: dataProp = [],
-  searchData: dataSearchResultsProp = [],
-  search: dataSearchProp,
-  searchField: searchFieldProp,
-  isLoading: isLoadingProp,
-  // RenderDataItem,
-  placeholder: placeholderProp,
-  maxItems: maxItemsProp = 7,
-  listWidth: listWidthProp,
-  columns: columnsProp = [],
-  isUseData: isUseDataProp,
-  autoComplete: autoCompleteProp = false,
-  isClearable: isClearableProp = false,
-  styles: stylesProp = [],
+// const testComp = forwardRef((props, ref) => <div>test</div>);
 
-  /// Events
-  onSelect,
-  onDeselect,
-  onSearch,
-  onSearchRequest,
-}) {
+const SearchData = forwardRef(function SearchData(
+  {
+    name: nameProp,
+    data: dataProp = [],
+    searchData: dataSearchResultsProp = [],
+    search: dataSearchProp,
+    searchField: searchFieldProp,
+    isLoading: isLoadingProp,
+    // RenderDataItem,
+    placeholder: placeholderProp,
+    maxItems: maxItemsProp = 7,
+    listWidth: listWidthProp,
+    columns: columnsProp = [],
+    isUseData: isUseDataProp,
+    autoComplete: autoCompleteProp = false,
+    isClearable: isClearableProp = false,
+    styles: stylesProp = [],
+    /// Events
+    onSelect,
+    onDeselect,
+    onSearch,
+    onSearchRequest,
+  },
+  ref
+) {
   const refInput = useRef();
   const refListBox = useRef();
   const refListItemsContainer = useRef();
-  const refThisComponent = useRef();
+  const refThisComponent = useRef(null);
   const refIsUsingData = useRef();
+
+  // TODO: add ref to this component input box
 
   const { state, dispatch } = useSearchDataReducer();
 
@@ -129,14 +114,7 @@ function SearchData({
         dispatch({ type: ActionType.clearList });
       }
     }
-  }, [
-    state.inputText.length,
-    state.data.length,
-    isUseDataProp,
-    state.data,
-    onSearch,
-    dispatch,
-  ]);
+  }, [state.inputText.length, state.data.length, isUseDataProp, state.data, onSearch, dispatch]);
 
   // === useAutocomplete ===
   const {
@@ -368,12 +346,40 @@ function SearchData({
         dispatch,
       }}
     >
-      <Box ref={refThisComponent}>
-        <SearchInput />
+      <Box
+        // ref={ref}
+        ref={(el) => {
+          refThisComponent.current = el;
+          // if (refProp) refProp.current = el;
+        }}
+      >
+        <SearchInput ref={ref} />
         {state.isShowList && state.list.length > 0 && <List />}
       </Box>
     </SearchDataContext.Provider>
   );
-}
+});
+
+SearchData.propTypes = {
+  name: PropTypes.string, // prop to search if data.element is an object
+  placeholder: PropTypes.string,
+  data: PropTypes.array,
+  searchData: PropTypes.array,
+  search: PropTypes.string, // prop to search if data.element is an object
+  searchField: PropTypes.string, // prop to search if data.element is an object
+  isLoading: PropTypes.bool,
+  // RenderDataItem: PropTypes.func,
+  maxItems: PropTypes.number,
+  listWidth: PropTypes.string,
+  columns: PropTypes.array,
+  isUseData: PropTypes.bool,
+  autoComplete: PropTypes.bool,
+  isClearable: PropTypes.bool,
+  styles: PropTypes.object,  
+  onSelect: PropTypes.func,
+  onDeselect: PropTypes.func,
+  onSearch: PropTypes.func,
+  onSearchRequest: PropTypes.func,
+};
 
 export default SearchData;

@@ -8,6 +8,7 @@ import { cancelTimeout, processTimeout } from '../helpers/func';
 import ClearButton from './ClearButton';
 import SpinnerMini from './SpinnerMini';
 import DropdownButton from './DropdownButton';
+import { forwardRef } from 'react';
 
 const MIN_CHARACTER_SEARCH = 2;
 
@@ -39,7 +40,7 @@ const Input = styled.input`
 //   /* border: 1px solid red; */
 // `;
 
-function SearchInput() {
+const SearchInput = forwardRef(function SearchInput(_, ref) {
   const {
     // props
     // autoCompleteProp,
@@ -245,7 +246,10 @@ function SearchInput() {
         onKeyDown={handleKeyDown}
         // onBlur={handleBlur}
         placeholder={placeholderProp || 'Search for data'}
-        ref={refInput}
+        ref={(el) => {
+          refInput.current = el;
+          if (ref) ref.current = el;
+        }}
         style={customStyle}
       />
       <div
@@ -270,6 +274,6 @@ function SearchInput() {
       </div>
     </>
   );
-}
+});
 
 export default SearchInput;

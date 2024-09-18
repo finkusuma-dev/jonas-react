@@ -10,6 +10,7 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { searchEmail } from '../services/apiGuests';
 import useSearchEmail from '../features/guests/useSearchEmail';
 import { useState } from 'react';
+import { useRef } from 'react';
 
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
@@ -25,6 +26,8 @@ function TestingPage() {
     search: emailSearch,
   });
   const { isDarkMode, toggleDarkMode } = useDarkMode();
+
+  const refSearchData = useRef();
 
   const sortedGuests = guests.sort((a, b) =>
     a.email < b.email ? -1 : a.email > b.email ? 1 : 0
@@ -156,6 +159,7 @@ function TestingPage() {
               <SearchData
                 key="dynamic_data_guests"
                 name="dynamic_data_guests"
+                ref={refSearchData}
                 data={sortedGuests}
                 searchData={guestsFound}
                 search={emailSearch}
@@ -279,6 +283,7 @@ function TestingPage() {
                   }}
                   onClick={() => {
                     setshowAllGuests((show) => !show);
+                    refSearchData.current.focus();
                   }}
                 >
                   {showAllGuests ? 'Hide all guests' : 'Show all guests'}
