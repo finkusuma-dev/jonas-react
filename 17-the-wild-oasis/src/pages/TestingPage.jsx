@@ -89,7 +89,6 @@ function TestingPage() {
               data={sortedGuests}
               searchField="email"
               placeholder="Search email"
-              dropDownButton
               autoComplete
               isClearable
               styles={{
@@ -166,7 +165,6 @@ function TestingPage() {
                 placeholder="Search email"
                 listWidth="70rem"
                 isUseData={showAllGuests}
-                dropDownButton
                 autoComplete
                 isClearable
                 onSelect={(idx, selected) =>

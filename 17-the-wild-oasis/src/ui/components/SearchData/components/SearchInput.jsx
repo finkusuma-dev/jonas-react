@@ -54,7 +54,6 @@ function SearchInput() {
     onSearchRequest,
     isLoadingProp,
     isUseDataProp,
-    dropDownButtonProp,
 
     state,
     dispatch,
@@ -277,7 +276,7 @@ function SearchInput() {
           <ClearButton onClick={handleClearInput} />
         )}
         {!!isLoadingProp && <SpinnerMini />}
-        {dropDownButtonProp && state.list.length > 0 && (
+        {(isUseDataProp || !onSearch) && state.list.length > 0 && (
           <DropdownButton
             onClick={handleShowList}
             isActive={state.isShowList}
