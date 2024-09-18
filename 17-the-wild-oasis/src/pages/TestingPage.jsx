@@ -20,6 +20,7 @@ const StyledContainer = styled.div`
 function TestingPage() {
   const { guests = [], isLoading } = useGuests();
   const [emailSearch, setEmailSearch] = useState('');
+  const [showAllGuests, setshowAllGuests] = useState(false);
   const { guests: guestsFound = [], isLoading: isSearching } = useSearchEmail({
     search: emailSearch,
   });
@@ -157,6 +158,7 @@ function TestingPage() {
               <SearchData
                 key="dynamic_data_guests"
                 name="dynamic_data_guests"
+                data={sortedGuests}
                 searchResults={guestsFound}
                 search={emailSearch}
                 onSearch={setEmailSearch}
@@ -164,7 +166,7 @@ function TestingPage() {
                 searchField="email"
                 placeholder="Search email"
                 listWidth="70rem"
-                defaultFilled
+                defaultFilled={showAllGuests}
                 dropDownButton
                 autoComplete
                 isClearable
@@ -206,7 +208,16 @@ function TestingPage() {
                     padding: '0.8rem 1.2rem',
                     boxShadow: 'var(--shadow-sm)',
                   },
-
+                  inputTextDropDownButton: {
+                    borderTopRightRadius: 'var(--border-radius-sm)',
+                    borderBottomRightRadius: 'var(--border-radius-sm)',
+                    backgroundColor: 'var(--color-grey-100)',
+                    paddingLeft: '10px',
+                    color: 'var(--color-grey-500)',
+                  },
+                  inputTextDropDownButtonActive: {
+                    color: 'var(--color-brand-500)',
+                  },
                   inputTextClearButton: {
                     // backgroundColor: '#eee',
                     // borderTopRightRadius: 'var(--border-radius-sm)',
@@ -263,7 +274,19 @@ function TestingPage() {
                 //   </>
                 // )}
               />
-              {/* {isSearching && <SpinnerMini />} */}
+              {
+                <label
+                  style={{
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    setshowAllGuests((show) => !show);
+                  }}
+                >
+                  {showAllGuests ? 'Hide all guests' : 'Show all guests'}
+                </label>
+              }
             </div>
           </div>
         }

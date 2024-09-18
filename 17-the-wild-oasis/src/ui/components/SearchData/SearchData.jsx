@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useEffect } from 'react';
 import { useContext } from 'react';
 import { useRef } from 'react';
 import useSearchDataReducer, { ActionType } from './hooks/useSearchDataReducer';
@@ -57,7 +57,7 @@ function SearchData({
   maxItems: maxItemsProp = 7,
   listWidth: listWidthProp,
   columns: columnsProp = [],
-  defaultFilled: defaultFilledProp = false,
+  defaultFilled: defaultFilledProp,
   dropDownButton: dropDownButtonProp = false,
   autoComplete: autoCompleteProp = false,
   isClearable: isClearableProp = false,
@@ -78,6 +78,7 @@ function SearchData({
 
   // === useCompare ===
   // For static data passed to the dataProp.
+  // console.log('defaultFilledProp', defaultFilledProp);
   useCompare({
     newValue: dataProp,
     oldValue: state.data,
@@ -89,15 +90,23 @@ function SearchData({
           type: ActionType.updateData,
           payload: dataProp,
         });
-        if (defaultFilledProp) {
-          dispatch({
-            type: ActionType.updateList,
-            payload: dataProp,
-          });
-        }
+        // if (defaultFilledProp != undefined) {
+        //   if (defaultFilledProp) {
+        //     dispatch({
+        //       type: ActionType.updateList,
+        //       payload: dataProp,
+        //     });
+        //   } else {
+        //     dispatch({
+        //       type: ActionType.clearList,
+        //     });
+        //   }
+        // }
+        // else {
+        // }
       }
     },
-    additionalCondition: !dataSearchProp,
+    // additionalCondition: !dataSearchProp,
   });
 
   // === useCompare ===
@@ -119,6 +128,28 @@ function SearchData({
       dataSearchResultsProp.length > 0 &&
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
+
+  // console.log('defaultFilledProp', nameProp, defaultFilledProp);
+
+  useEffect(() => {
+    if (
+      // defaultFilledProp != undefined &&
+      state.inputText.length < MIN_CHARACTER_SEARCH &&
+      state.data.length
+    ) {
+      if (defaultFilledProp) {
+        dispatch({ type: ActionType.updateList, payload: state.data });
+      } else {
+        dispatch({ type: ActionType.clearList });
+      }
+    }
+  }, [
+    state.inputText.length,
+    state.data.length,
+    defaultFilledProp,
+    state.data,
+    dispatch,
+  ]);
 
   // === useAutocomplete ===
   const {
@@ -170,9 +201,10 @@ function SearchData({
       type: ActionType.hideList,
     });
 
-    const curentData = state.dataSearchResults.length
-      ? state.dataSearchResults
-      : state.data;
+    const curentData =
+      state.data.length && defaultFilledProp
+        ? state.data
+        : state.dataSearchResults;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'

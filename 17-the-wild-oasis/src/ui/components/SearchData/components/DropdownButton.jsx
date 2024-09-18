@@ -53,7 +53,7 @@ function DropdownButton({ onClick, isActive = false }) {
       ...customStyleActive,
     };
   }
-  console.log('DropdownButton style', style);
+  /* console.log('DropdownButton style', style); */
   return (
     <StyledButton onClick={onClick} isActive={isActive} style={style}>
       <svg

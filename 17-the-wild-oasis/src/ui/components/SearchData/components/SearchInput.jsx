@@ -115,7 +115,7 @@ function SearchInput() {
   }
 
   function createNewListOrCallOnSearch(newSearchString) {
-    if (onSearch || onSearchRequest) {
+    if ((onSearch || onSearchRequest) && !defaultFilledProp) {
       cancelTimeout(refTimeout);
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
         if (
@@ -155,7 +155,11 @@ function SearchInput() {
       } else {
         // console.log(' ==== clearList');
         // dispatch({ type: ActionType.clearData });
-        dispatch({ type: ActionType.clearList });
+        // if (defaultFilledProp && state.data.length) {
+        //   dispatch({ type: ActionType.updateList, payload: state.data });
+        // } else {
+        //   dispatch({ type: ActionType.clearList });
+        // }
       }
     } else {
       /// If onSearch && onSearchRequest is not set
@@ -165,11 +169,11 @@ function SearchInput() {
           oldData: state.data,
         });
       } else {
-        if (defaultFilledProp) {
-          dispatch({ type: ActionType.updateList, payload: state.data });
-        } else {
-          dispatch({ type: ActionType.clearList });
-        }
+        // if (defaultFilledProp) {
+        //   dispatch({ type: ActionType.updateList, payload: state.data });
+        // } else {
+        //   dispatch({ type: ActionType.clearList });
+        // }
       }
     }
   }
@@ -227,11 +231,11 @@ function SearchInput() {
     clearSelectedItemIdx();
     dispatch({ type: ActionType.clearSearch });
 
-    if (defaultFilledProp) {
-      dispatch({ type: ActionType.updateList, payload: state.data });
-    } else {
-      dispatch({ type: ActionType.clearList });
-    }
+    // if (defaultFilledProp) {
+    //   dispatch({ type: ActionType.updateList, payload: state.data });
+    // } else {
+    //   dispatch({ type: ActionType.clearList });
+    // }
     refInput.current.focus();
   }
 
@@ -283,7 +287,7 @@ function SearchInput() {
           <ClearButton onClick={handleClearInput} />
         )}
         {!!isLoadingProp && <SpinnerMini />}
-        {dropDownButtonProp && (
+        {dropDownButtonProp && state.list.length > 0 && (
           <DropdownButton
             onClick={handleShowList}
             isActive={state.isShowList}
