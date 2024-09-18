@@ -23,7 +23,7 @@ SearchData.propTypes = {
   name: PropTypes.string, // prop to search if data.element is an object
   placeholder: PropTypes.string,
   data: PropTypes.array,
-  searchResults: PropTypes.array,
+  searchData: PropTypes.array,
   search: PropTypes.string, // prop to search if data.element is an object
   searchField: PropTypes.string, // prop to search if data.element is an object
   isLoading: PropTypes.bool,
@@ -31,7 +31,7 @@ SearchData.propTypes = {
   maxItems: PropTypes.number,
   listWidth: PropTypes.string,
   columns: PropTypes.array,
-  defaultFilled: PropTypes.bool,
+  isUseData: PropTypes.bool,
   dropDownButton: PropTypes.bool,
   autoComplete: PropTypes.bool,
   isClearable: PropTypes.bool,
@@ -48,7 +48,7 @@ export const useSearchData = () => useContext(SearchDataContext);
 function SearchData({
   name: nameProp,
   data: dataProp = [],
-  searchResults: dataSearchResultsProp = [],
+  searchData: dataSearchResultsProp = [],
   search: dataSearchProp,
   searchField: searchFieldProp,
   isLoading: isLoadingProp,
@@ -57,7 +57,7 @@ function SearchData({
   maxItems: maxItemsProp = 7,
   listWidth: listWidthProp,
   columns: columnsProp = [],
-  defaultFilled: defaultFilledProp,
+  isUseData: isUseDataProp,
   dropDownButton: dropDownButtonProp = false,
   autoComplete: autoCompleteProp = false,
   isClearable: isClearableProp = false,
@@ -78,7 +78,7 @@ function SearchData({
 
   // === useCompare ===
   // For static data passed to the dataProp.
-  // console.log('defaultFilledProp', defaultFilledProp);
+  // console.log('isUseDataProp', isUseDataProp);
   useCompare({
     newValue: dataProp,
     oldValue: state.data,
@@ -90,20 +90,6 @@ function SearchData({
           type: ActionType.updateData,
           payload: dataProp,
         });
-        // if (defaultFilledProp != undefined) {
-        //   if (defaultFilledProp) {
-        //     dispatch({
-        //       type: ActionType.updateList,
-        //       payload: dataProp,
-        //     });
-        //   } else {
-        //     dispatch({
-        //       type: ActionType.clearList,
-        //     });
-        //   }
-        // }
-        // else {
-        // }
       }
     },
     // additionalCondition: !dataSearchProp,
@@ -129,15 +115,14 @@ function SearchData({
       state.inputText.length >= MIN_CHARACTER_SEARCH,
   });
 
-  // console.log('defaultFilledProp', nameProp, defaultFilledProp);
+  // console.log('isUseDataProp', nameProp, isUseDataProp);
+  // console.log('SearchData.length', nameProp, !state.dataSearchResults.lengths);
 
+  ///
   useEffect(() => {
-    if (
-      // defaultFilledProp != undefined &&
-      state.inputText.length < MIN_CHARACTER_SEARCH &&
-      state.data.length
-    ) {
-      if (defaultFilledProp) {
+    if (state.inputText.length < MIN_CHARACTER_SEARCH && state.data.length) {
+      if (isUseDataProp || !onSearch) {
+        // console.log('Fill List', nameProp);
         dispatch({ type: ActionType.updateList, payload: state.data });
       } else {
         dispatch({ type: ActionType.clearList });
@@ -146,8 +131,9 @@ function SearchData({
   }, [
     state.inputText.length,
     state.data.length,
-    defaultFilledProp,
+    isUseDataProp,
     state.data,
+    onSearch,
     dispatch,
   ]);
 
@@ -202,9 +188,7 @@ function SearchData({
     });
 
     const curentData =
-      state.data.length && defaultFilledProp
-        ? state.data
-        : state.dataSearchResults;
+      isUseDataProp || !onSearch ? state.data : state.dataSearchResults;
 
     const dataIdx = curentData.findIndex((obj) =>
       typeof obj === 'string'
@@ -353,7 +337,7 @@ function SearchData({
         maxItemsProp,
         // RenderDataItem,/
         columnsProp,
-        defaultFilledProp,
+        isUseDataProp,
         dropDownButtonProp,
         autoCompleteProp,
         isClearableProp,

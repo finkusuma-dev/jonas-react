@@ -53,7 +53,7 @@ function SearchInput() {
     onSearch,
     onSearchRequest,
     isLoadingProp,
-    defaultFilledProp,
+    isUseDataProp,
     dropDownButtonProp,
 
     state,
@@ -115,7 +115,7 @@ function SearchInput() {
   }
 
   function createNewListOrCallOnSearch(newSearchString) {
-    if ((onSearch || onSearchRequest) && !defaultFilledProp) {
+    if ((onSearch || onSearchRequest) && !isUseDataProp) {
       cancelTimeout(refTimeout);
       if (newSearchString.length >= MIN_CHARACTER_SEARCH) {
         if (
@@ -153,13 +153,7 @@ function SearchInput() {
           }
         });
       } else {
-        // console.log(' ==== clearList');
-        // dispatch({ type: ActionType.clearData });
-        // if (defaultFilledProp && state.data.length) {
-        //   dispatch({ type: ActionType.updateList, payload: state.data });
-        // } else {
-        //   dispatch({ type: ActionType.clearList });
-        // }
+        /// filling and clearing list uses useEffect
       }
     } else {
       /// If onSearch && onSearchRequest is not set
@@ -169,11 +163,7 @@ function SearchInput() {
           oldData: state.data,
         });
       } else {
-        // if (defaultFilledProp) {
-        //   dispatch({ type: ActionType.updateList, payload: state.data });
-        // } else {
-        //   dispatch({ type: ActionType.clearList });
-        // }
+        /// filling and clearing list uses useEffect
       }
     }
   }
@@ -231,7 +221,7 @@ function SearchInput() {
     clearSelectedItemIdx();
     dispatch({ type: ActionType.clearSearch });
 
-    // if (defaultFilledProp) {
+    // if (isUseDataProp) {
     //   dispatch({ type: ActionType.updateList, payload: state.data });
     // } else {
     //   dispatch({ type: ActionType.clearList });

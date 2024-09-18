@@ -89,7 +89,6 @@ function TestingPage() {
               data={sortedGuests}
               searchField="email"
               placeholder="Search email"
-              defaultFilled
               dropDownButton
               autoComplete
               isClearable
@@ -159,14 +158,14 @@ function TestingPage() {
                 key="dynamic_data_guests"
                 name="dynamic_data_guests"
                 data={sortedGuests}
-                searchResults={guestsFound}
+                searchData={guestsFound}
                 search={emailSearch}
                 onSearch={setEmailSearch}
                 isLoading={isSearching}
                 searchField="email"
                 placeholder="Search email"
                 listWidth="70rem"
-                defaultFilled={showAllGuests}
+                isUseData={showAllGuests}
                 dropDownButton
                 autoComplete
                 isClearable
