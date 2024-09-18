@@ -11,8 +11,8 @@ function useSearchDataClickOutside({
   // refInput,
   ref,
   // refListBox,
-  isShowList,
-  dispatch,
+  // isShowList,
+  onClick,
 }) {
   useEffect(
     /// Custom click outside, used to close the list
@@ -21,7 +21,7 @@ function useSearchDataClickOutside({
         // e.stopPropagation();
         // console.log('clickOutside', ref.current, e.target);
         if (
-          isShowList &&
+          // isShowList &&
           // refInput.current &&
           // refListBox.current &&
           // !refInput.current.contains(e.target) &&
@@ -32,10 +32,8 @@ function useSearchDataClickOutside({
           //   (refInputButtonContainer.current &&
           //     refInputButtonContainer.current.contains(e.target)))
         ) {
-          console.log('Click outside');
-          dispatch({
-            type: ActionType.hideList,
-          });
+          // console.log('Click outside');
+          onClick();
         }
       }
 
@@ -43,7 +41,7 @@ function useSearchDataClickOutside({
 
       return () => document.removeEventListener('click', handleClick);
     },
-    [isShowList, dispatch, ref]
+    [onClick, ref]
   );
 }
 

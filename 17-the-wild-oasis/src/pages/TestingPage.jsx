@@ -25,6 +25,7 @@ function TestingPage() {
   const { guests: guestsFound = [], isLoading: isSearching } = useSearchEmail({
     search: emailSearch,
   });
+  const [isShowList, setIsShowList] = useState(false);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const refSearchData = useRef();
@@ -165,6 +166,11 @@ function TestingPage() {
                 search={emailSearch}
                 onSearch={setEmailSearch}
                 isLoading={isSearching}
+                isShowList={isShowList}
+                onShowList={(show) => {
+                  // setshowAllGuests(show);
+                  setIsShowList(show);
+                }}
                 searchField="email"
                 placeholder="Search email"
                 listWidth="70rem"
@@ -283,6 +289,7 @@ function TestingPage() {
                   }}
                   onClick={() => {
                     setshowAllGuests((show) => !show);
+                    setIsShowList(!showAllGuests);
                     refSearchData.current.focus();
                   }}
                 >

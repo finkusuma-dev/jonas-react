@@ -13,6 +13,7 @@ import useScrollItemIntoView from './hooks/useScrollItemIntoView';
 import useCompare from './hooks/useCompare';
 import useAutocomplete from './hooks/useAutocomplete';
 import { forwardRef } from 'react';
+import { useCallback } from 'react';
 
 const MIN_CHARACTER_SEARCH = 2;
 
@@ -28,20 +29,25 @@ export const useSearchData = () => useContext(SearchDataContext);
 const SearchData = forwardRef(function SearchData(
   {
     name: nameProp,
+    isUseData: isUseDataProp,
     data: dataProp = [],
     searchData: dataSearchResultsProp = [],
     search: dataSearchProp,
     searchField: searchFieldProp,
     isLoading: isLoadingProp,
+
+    isShowList: isShowListProp,
+    onShowList,
     // RenderDataItem,
     placeholder: placeholderProp,
     maxItems: maxItemsProp = 7,
     listWidth: listWidthProp,
+
     columns: columnsProp = [],
-    isUseData: isUseDataProp,
+    styles: stylesProp = [],
+
     autoComplete: autoCompleteProp = false,
     isClearable: isClearableProp = false,
-    styles: stylesProp = [],
     /// Events
     onSelect,
     onDeselect,
@@ -116,6 +122,25 @@ const SearchData = forwardRef(function SearchData(
     }
   }, [state.inputText.length, state.data.length, isUseDataProp, state.data, onSearch, dispatch]);
 
+  /// isShowList prop
+  // useEffect(() => {
+  //   if (isShowListProp) {
+  //     showList();
+  //   }
+  // }, [isShowListProp, showList]);
+  useCompare({
+    newValue: isShowListProp,
+    oldValue: state.isShowList,
+    callbackFn: () => {
+      if (isShowListProp) {
+        showList();
+      } else {
+        hideList();
+      }
+    },
+    additionalCondition: isShowListProp != undefined,
+  });
+
   // === useAutocomplete ===
   const {
     searchChange: autoCompleteSearchChange,
@@ -140,8 +165,11 @@ const SearchData = forwardRef(function SearchData(
   // === useSearchDataClickOutside ===
   useSearchDataClickOutside({
     ref: refThisComponent,
-    isShowList: state.isShowList,
-    dispatch,
+    // isShowList: state.isShowList,
+    // dispatch,
+    onClick: () => {
+      if (state.isShowList) hideList();
+    },
   });
 
   /// == useScrollItemIntoView ===
@@ -153,18 +181,43 @@ const SearchData = forwardRef(function SearchData(
 
   // ----- The end of hooks -----
 
-  function showList() {
-    dispatch({
-      type: ActionType.showList,
-    });
+  const showList = useCallback(
+    function showList() {
+      if (!state.list.length) return;
+      dispatch({
+        type: ActionType.showList,
+      });
 
-    calculateListWindow();
-  }
+      calculateListWindow();
+      if (onShowList && isShowListProp != undefined && isShowListProp !== true)
+        onShowList(true);
+    },
+    [
+      calculateListWindow,
+      dispatch,
+      onShowList,
+      isShowListProp,
+      state.list.length,
+    ]
+  );
+
+  const hideList = useCallback(
+    function hideList() {
+      dispatch({
+        type: ActionType.hideList,
+      });
+
+      if (onShowList && isShowListProp != undefined && isShowListProp !== false)
+        onShowList(false);
+    },
+    [dispatch, isShowListProp, onShowList]
+  );
 
   function selectItem(itemIdx) {
-    dispatch({
-      type: ActionType.hideList,
-    });
+    hideList();
+    // dispatch({
+    //   type: ActionType.hideList,
+    // });
 
     const curentData = refIsUsingData.current
       ? state.data
@@ -336,6 +389,7 @@ const SearchData = forwardRef(function SearchData(
 
         listWindow,
         showList,
+        hideList,
         selectItem,
         getSearchedTextFromItem,
         createNewListNAutocomplete,
@@ -375,7 +429,7 @@ SearchData.propTypes = {
   isUseData: PropTypes.bool,
   autoComplete: PropTypes.bool,
   isClearable: PropTypes.bool,
-  styles: PropTypes.object,  
+  styles: PropTypes.object,
   onSelect: PropTypes.func,
   onDeselect: PropTypes.func,
   onSearch: PropTypes.func,

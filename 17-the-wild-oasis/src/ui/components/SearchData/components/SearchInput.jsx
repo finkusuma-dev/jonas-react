@@ -64,6 +64,7 @@ const SearchInput = forwardRef(function SearchInput(_, ref) {
     refIsUsingData,
 
     showList,
+    hideList,
     selectItem,
     getSearchedTextFromItem,
     createNewListNAutocomplete,
@@ -171,9 +172,10 @@ const SearchInput = forwardRef(function SearchInput(_, ref) {
       });
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      dispatch({
-        type: ActionType.hideList,
-      });
+      hideList();
+      // dispatch({
+      //   type: ActionType.hideList,
+      // });
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (state.selectedItemIdx) {
@@ -186,9 +188,10 @@ const SearchInput = forwardRef(function SearchInput(_, ref) {
         });
       }
     } else if (e.key === 'Tab') {
-      dispatch({
-        type: ActionType.hideList,
-      });
+      hideList();
+      // dispatch({
+      //   type: ActionType.hideList,
+      // });
     }
 
     /// AUTO COMPLETE part, step 1: determine isAutoComplete on keyDown event
@@ -220,9 +223,10 @@ const SearchInput = forwardRef(function SearchInput(_, ref) {
       refInput.current.focus();
     } else {
       // console.log('hideList');
-      dispatch({
-        type: ActionType.hideList,
-      });
+      hideList();
+      // dispatch({
+      //   type: ActionType.hideList,
+      // });
       refInput.current.focus();
     }
   }
