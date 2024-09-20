@@ -423,6 +423,8 @@ SearchData.propTypes = {
   search: PropTypes.string, // prop to search if data.element is an object
   searchField: PropTypes.string, // prop to search if data.element is an object
   isLoading: PropTypes.bool,
+  isShowList: PropTypes.bool, // Prop to control list visibility from outside
+  onShowList: PropTypes.func, // Prop to change outside state of list visibility
   // RenderDataItem: PropTypes.func,
   maxItems: PropTypes.number,
   listWidth: PropTypes.string,
