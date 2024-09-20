@@ -6,7 +6,7 @@ const SPACE_INPUT_TEXT = 4;
 const MIN_BROWSER_WINDOW_BOTTOM_SPACE = 130;
 const MAX_LIST_HEIGHT = '500px';
 
-function useCalculateListWindow({
+function usePositionListWindow({
   refInput,
   refListBox,
   refListItemsContainer,
@@ -168,4 +168,4 @@ function useCalculateListWindow({
   return;
 }
 
-export { useCalculateListWindow };
+export { usePositionListWindow };

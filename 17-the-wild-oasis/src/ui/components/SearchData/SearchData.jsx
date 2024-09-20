@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import List from './components/List';
-import { useCalculateListWindow } from './hooks/useCalculateListWindow';
+import { usePositionListWindow } from './hooks/usePositionListWindow';
 import SearchInput from './components/SearchInput';
 import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
@@ -156,7 +156,7 @@ const SearchData = forwardRef(function SearchData(
   });
 
   // === useCalculateListWindow ===
-  useCalculateListWindow({
+  usePositionListWindow({
     refInput,
     refListBox,
     refListItemsContainer,
