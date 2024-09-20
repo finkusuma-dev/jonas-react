@@ -108,9 +108,14 @@ const SearchData = forwardRef(function SearchData(
   // console.log('isUseDataProp', nameProp, isUseDataProp);
   // console.log('SearchData.length', nameProp, !state.dataSearchResults.lengths);
 
+  /// isUsingdata :
+  /// - dataProp is filled & isUseDataProp is undefined.
+  /// - dataProp is filled & onSearch is set and isUseDataProp: true.
+  ///   Not using dataSearchResultsProp.length because at start it's empty.
   refIsUsingData.current = isUseDataProp || !onSearch;
   // console.log('refIsUsingData', nameProp, refIsUsingData.current);
 
+  /// If isUsingData fill list with data
   useEffect(() => {
     if (state.inputText.length < MIN_CHARACTER_SEARCH && state.data.length) {
       if (refIsUsingData.current) {
