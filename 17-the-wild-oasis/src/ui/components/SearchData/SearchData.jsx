@@ -156,10 +156,11 @@ const SearchData = forwardRef(function SearchData(
   });
 
   // === usePositionListWindow ===
-  const { listWindow, calculateListWindow } = useCalculateListWindow({
+  const { calculateListWindow } = useCalculateListWindow({
     refInput,
     refListBox,
     refListItemsContainer,
+    state,
   });
 
   // === useSearchDataClickOutside ===
@@ -189,11 +190,13 @@ const SearchData = forwardRef(function SearchData(
       });
 
       calculateListWindow();
+      // positionListWindow();
       if (onShowList && isShowListProp != undefined && isShowListProp !== true)
         onShowList(true);
     },
     [
       calculateListWindow,
+      // positionListWindow,
       dispatch,
       onShowList,
       isShowListProp,
@@ -387,7 +390,7 @@ const SearchData = forwardRef(function SearchData(
         refThisComponent,
         refIsUsingData,
 
-        listWindow,
+        // listWindow,
         showList,
         hideList,
         selectItem,

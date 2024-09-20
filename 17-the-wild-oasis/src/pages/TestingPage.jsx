@@ -35,11 +35,11 @@ function TestingPage() {
   );
 
   // if (isLoading) return <Spinner />;
-  console.log(
-    `emailSearch: ${emailSearch}`,
-    'guestsFound',
-    guestsFound.map((guest) => guest.email)
-  );
+  // console.log(
+  //   `emailSearch: ${emailSearch}`,
+  //   'guestsFound',
+  //   guestsFound.map((guest) => guest.email)
+  // );
 
   return (
     <StyledContainer>

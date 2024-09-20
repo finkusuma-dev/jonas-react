@@ -1,72 +1,105 @@
-import styled, { css } from 'styled-components';
+// import styled, { css } from 'styled-components';
 import { useSearchData } from '../SearchData';
 import { cloneElement } from 'react';
 import Header from './Header';
 import Item, { DefaultRenderDataItem } from './Item';
 import { getCustomStyle, StyleName } from '../helpers/styles';
 
-const ListBox = styled.div`
-  position: absolute;
-  ${(props) => {
-    if (props.window?.top) {
-      return css`
-        top: ${props.window.top};
-        max-height: ${props.window.maxHeight};
-      `;
-    } else if (props.window?.bottom) {
-      return css`
-        bottom: ${props.window.bottom};
-        max-height: ${props.window.maxHeight};
-      `;
-    }
-    return css`
-      top: 45px;
-      max-height: 260px;
-    `;
-  }};
+// const ListBox = styled.div`
+//   position: absolute;
+//   /* ${(props) => {
+//     if (props.window?.top) {
+//       return css`
+//         top: ${props.window.top};
+//         max-height: ${props.window.maxHeight};
+//       `;
+//     } else if (props.window?.bottom) {
+//       return css`
+//         bottom: ${props.window.bottom};
+//         max-height: ${props.window.maxHeight};
+//       `;
+//     }
+//     return css`
+//       top: 45px;
+//       max-height: 260px;
+//     `;
+//   }}; */
 
-  left: 0;
-  ${(props) => {
-    if (props.width)
-      return css`
-        width: ${props.width};
-      `;
-    /// Calculate width based on columns prop length
-    else if (props.columns.length > 2) {
-      const width = props.columns.length * 130 + 'px';
-      console.log('width', width);
-      return css`
-        width: ${width};
-      `;
-    }
-    /// Set width the same as inputText width
-    return css`
-      right: 0;
-    `;
-  }};
-  z-index: 100;
-  background-color: white;
-  border: 1px solid #ddd;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  font-size: 14px;
-`;
+//   left: 0;
+//   ${(props) => {
+//     if (props.width)
+//       return css`
+//         width: ${props.width};
+//       `;
+//     /// Calculate width based on columns prop length
+//     else if (props.columns.length > 2) {
+//       const width = props.columns.length * 130 + 'px';
+//       console.log('width', width);
+//       return css`
+//         width: ${width};
+//       `;
+//     }
+//     /// Set width the same as inputText width
+//     return css`
+//       right: 0;
+//     `;
+//   }};
+//   z-index: 100;
+//   background-color: white;
+//   border: 1px solid #ddd;
+//   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+//   font-size: 14px;
+// `;
 
 export default function List() {
-  const { listWidthProp, listWindow, refListBox, stylesProp, columnsProp } =
-    useSearchData();
+  const {
+    listWidthProp,
+    /* listWindow,  */ refListBox,
+    stylesProp,
+    columnsProp,
+  } = useSearchData();
+
+  const width = (() => {
+    if (listWidthProp) {
+      return listWidthProp;
+    } else if (columnsProp.length > 2) {
+      const width = columnsProp.length * 130 + 'px';
+      console.log('width', width);
+      return width;
+    } else {
+      return undefined;
+    }
+  })();
+
+  const defaultStyle = {
+    position: 'absolute',
+    left: 0,
+    width: width,
+    right: width == undefined ? 0 : undefined,
+    zIndex: 100,
+    backgroundColor: 'white',
+    border: '1px solid #ddd',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+    fontSize: '14px',
+  };
 
   const customStyle = getCustomStyle(StyleName.list, stylesProp);
 
+  const style = {
+    ...defaultStyle,
+    ...customStyle,
+  };
+
   return (
-    <ListBox
+    <div
       ref={refListBox}
       width={listWidthProp}
-      window={listWindow}
-      style={customStyle}
-      columns={columnsProp}
+      // window={listWindow}
+      style={style}
+      // columns={columnsProp}
     >
       <RenderList />
-    </ListBox>
+    </div>
   );
 }
 
@@ -148,7 +181,7 @@ export function RenderList() {
         style={{
           overflow: 'scroll',
           border: '0px solid red',
-          padding: '0.8rem 0',
+          padding: '0.5rem 0 ',
         }}
       >
         {list.map((_, i) => (
