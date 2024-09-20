@@ -1,14 +1,14 @@
-import styled from 'styled-components';
-import { useSearchData } from '../SearchData';
-// import useAutocomplete from '../hooks/useAutocomplete';
-import { ActionType } from '../hooks/useSearchDataReducer';
-import { getCustomStyle, StyleName } from '../helpers/styles';
+import { forwardRef } from 'react';
 import { useRef } from 'react';
+import styled from 'styled-components';
+
+import { ActionType } from '../hooks/useSearchDataReducer';
+import { useSearchData } from '../SearchData';
+import { getCustomStyle, StyleName } from '../helpers/styles';
 import { cancelTimeout, processTimeout } from '../helpers/func';
 import ClearButton from './ClearButton';
 import SpinnerMini from './SpinnerMini';
 import DropdownButton from './DropdownButton';
-import { forwardRef } from 'react';
 
 const MIN_CHARACTER_SEARCH = 2;
 

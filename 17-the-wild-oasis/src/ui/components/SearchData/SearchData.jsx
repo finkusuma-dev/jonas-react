@@ -1,19 +1,19 @@
 import { createContext, useEffect } from 'react';
 import { useContext } from 'react';
+import { forwardRef } from 'react';
+import { useCallback } from 'react';
 import { useRef } from 'react';
-import useSearchDataReducer, { ActionType } from './hooks/useSearchDataReducer';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import List from './components/List';
+import useSearchDataReducer, { ActionType } from './hooks/useSearchDataReducer';
 import { usePositionListWindow } from './hooks/usePositionListWindow';
-import SearchInput from './components/SearchInput';
 import useSearchDataClickOutside from './hooks/useSearchDataClickOutside';
 import useScrollItemIntoView from './hooks/useScrollItemIntoView';
 import useCompare from './hooks/useCompare';
 import useAutocomplete from './hooks/useAutocomplete';
-import { forwardRef } from 'react';
-import { useCallback } from 'react';
+import List from './components/List';
+import SearchInput from './components/SearchInput';
 
 export const MIN_CHARACTER_SEARCH = 2;
 
