@@ -122,12 +122,7 @@ const SearchData = forwardRef(function SearchData(
     }
   }, [state.inputText.length, state.data.length, isUseDataProp, state.data, onSearch, dispatch]);
 
-  /// isShowList prop
-  // useEffect(() => {
-  //   if (isShowListProp) {
-  //     showList();
-  //   }
-  // }, [isShowListProp, showList]);
+  /// show & hide list from outside, based on isShowList prop value.
   useCompare({
     newValue: isShowListProp,
     oldValue: state.isShowList,
@@ -184,7 +179,6 @@ const SearchData = forwardRef(function SearchData(
 
   const showList = useCallback(
     function showList() {
-      if (!state.list.length) return;
       dispatch({
         type: ActionType.showList,
       });
@@ -200,7 +194,6 @@ const SearchData = forwardRef(function SearchData(
       dispatch,
       onShowList,
       isShowListProp,
-      state.list.length,
     ]
   );
 

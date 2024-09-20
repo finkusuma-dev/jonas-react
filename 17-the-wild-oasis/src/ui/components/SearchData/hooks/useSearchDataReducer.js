@@ -111,6 +111,7 @@ function useSearchDataReducer() {
         };
 
       case ActionType.showList:
+        if (!state.list.length) return state;
         return {
           ...state,
           isShowList: true,
@@ -121,10 +122,12 @@ function useSearchDataReducer() {
           isShowList: false,
         };
       case ActionType.inputKeyDown: {
+        if (!state.list.length) return state;
+
         return {
           ...state,
           selectedItemIdx:
-            state.selectedItemIdx === null
+            state.selectedItemIdx == null
               ? 0
               : state.selectedItemIdx + 1 < state.list.length
               ? state.selectedItemIdx + 1
@@ -132,6 +135,7 @@ function useSearchDataReducer() {
         };
       }
       case ActionType.inputKeyUp: {
+        if (!state.list.length) return state;
         return {
           ...state,
           selectedItemIdx:
