@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-import { useSearchData } from '../SearchData';
+import { MIN_CHARACTER_SEARCH, useSearchData } from '../SearchData';
 import { ActionType } from '../hooks/useSearchDataReducer';
 import { Highlight } from './Highlight';
 import { getCustomStyle, StyleName } from '../helpers/styles';
@@ -109,7 +109,9 @@ export function DefaultRenderDataItem({
         return (
           <Highlight
             key={i}
-            highlightString={searchText}
+            highlightString={
+              searchText?.length >= MIN_CHARACTER_SEARCH ? searchText : ''
+            }
             style={highlightStyle}
           >
             {item[column.field]}
@@ -134,7 +136,9 @@ export function DefaultRenderDataItem({
     return (
       <Highlight
         key={itemIdx}
-        highlightString={searchText}
+        highlightString={
+          searchText?.length >= MIN_CHARACTER_SEARCH ? searchText : ''
+        }
         style={highlightStyle}
       >
         {item[searchFieldProp]}

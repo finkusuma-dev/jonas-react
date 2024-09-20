@@ -15,7 +15,7 @@ import useAutocomplete from './hooks/useAutocomplete';
 import { forwardRef } from 'react';
 import { useCallback } from 'react';
 
-const MIN_CHARACTER_SEARCH = 2;
+export const MIN_CHARACTER_SEARCH = 2;
 
 const Box = styled.div`
   position: relative;
