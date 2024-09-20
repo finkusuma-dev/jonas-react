@@ -1,6 +1,5 @@
+import { useLayoutEffect } from 'react';
 import { useCallback } from 'react';
-import { useEffect } from 'react';
-// import { useState } from 'react';
 
 const PADDING_BROWSER_WINDOW = 8;
 const SPACE_INPUT_TEXT = 4;
@@ -64,7 +63,7 @@ function useCalculateListWindow({
   /// NOTE: Position & set the maxHeight of ListBox is set by
   /// passing the listWindow to the ListBox styled component props.
   /// Because it failed to set the maxHeight of ListBox as a styled component in this JS code.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!state.isShowList) return;
     const lw = calculate();
     // console.log('listWindow', lw);
@@ -130,7 +129,7 @@ function useCalculateListWindow({
   //   }
   // }
 
-  function calculateListWindow() {
+  function positionListWindow() {
     console.log('refListBox.current', refListBox.current);
     // const rectInput = refInput.current.getBoundingClientRect();
     // const topSpace = rectInput.top;
@@ -166,7 +165,7 @@ function useCalculateListWindow({
     // );
   }
 
-  return { calculateListWindow };
+  return;
 }
 
 export { useCalculateListWindow };

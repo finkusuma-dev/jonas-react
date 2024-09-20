@@ -155,8 +155,8 @@ const SearchData = forwardRef(function SearchData(
     refInput,
   });
 
-  // === usePositionListWindow ===
-  const { calculateListWindow } = useCalculateListWindow({
+  // === useCalculateListWindow ===
+  useCalculateListWindow({
     refInput,
     refListBox,
     refListItemsContainer,
@@ -189,13 +189,13 @@ const SearchData = forwardRef(function SearchData(
         type: ActionType.showList,
       });
 
-      calculateListWindow();
+      // calculateListWindow();
       // positionListWindow();
       if (onShowList && isShowListProp != undefined && isShowListProp !== true)
         onShowList(true);
     },
     [
-      calculateListWindow,
+      // calculateListWindow,
       // positionListWindow,
       dispatch,
       onShowList,
