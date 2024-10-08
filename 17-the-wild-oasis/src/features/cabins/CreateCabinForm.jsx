@@ -175,6 +175,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
         {/* type is an HTML attribute! */}
 
         <Button
+          className="formButton"
           variation="secondary"
           type="reset"
           disabled={isBusy}
@@ -183,7 +184,9 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
           Cancel
         </Button>
 
-        <Button disabled={isBusy}>{isEdit ? 'Save' : 'Add cabin'}</Button>
+        <Button className="formButton" disabled={isBusy}>
+          {isEdit ? 'Save' : 'Add cabin'}
+        </Button>
       </FormRow>
     </Form>
   );

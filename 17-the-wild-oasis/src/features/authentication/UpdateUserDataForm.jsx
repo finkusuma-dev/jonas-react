@@ -111,6 +111,7 @@ function UpdateUserDataForm() {
       </FormRow>
       <FormRow>
         <Button
+          className="formButton"
           type="reset"
           variation="secondary"
           disabled={isUpdating || !isChanged}
@@ -118,7 +119,9 @@ function UpdateUserDataForm() {
         >
           Cancel
         </Button>
-        <Button disabled={isUpdating || !isChanged}>Update account</Button>
+        <Button className="formButton" disabled={isUpdating || !isChanged}>
+          Update account
+        </Button>
       </FormRow>
     </Form>
   );
