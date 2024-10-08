@@ -62,7 +62,7 @@ const SearchData = forwardRef(function SearchData(
   const refThisComponent = useRef(null);
   const refIsUsingData = useRef();
 
-  // TODO: add ref to this component input box
+  // [x]: add ref to this component input box
 
   const { state, dispatch } = useSearchDataReducer();
 
