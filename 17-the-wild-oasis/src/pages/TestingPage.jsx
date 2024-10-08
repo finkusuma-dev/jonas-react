@@ -11,6 +11,9 @@ import { searchEmail } from '../services/apiGuests';
 import useSearchEmail from '../features/guests/useSearchEmail';
 import { useState } from 'react';
 import { useRef } from 'react';
+import FormRow from '../ui/FormRow';
+import Form from '../ui/Form';
+import Button from '../ui/Button';
 
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
@@ -52,41 +55,45 @@ function TestingPage() {
       <Row>
         <Heading as="h1">Testing Page</Heading>
 
-        {/* 
+        {
+          /* 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <span>Animal</span>
-            <SearchData
-              key="search_data_animal"
-              name="search_data_animal"
-              // data={['dog', 'cat', 'giraw', 'giraffe']}
-              data={[
-                { name: 'dog', color: 'white' },
-                { name: 'cat', color: 'blue' },
-                { name: 'dinosaurus', color: 'grey' },
-                { name: 'duck', color: 'orange' },
-              ]}
-              searchField="name"
-              placeholder="Search animal"
-              // listWidth="40rem"
-              columns={[
-                {
-                  field: 'name',
-                },
-                {
-                  field: 'color',
-                },
-              ]}
-              autoComplete
-              onSelect={(idx, selected) =>
-                console.log('onSelect', idx, selected)
-              }
-            />
-          </div>
-         */}
+            <div /* style={{ display: 'flex', alignItems: 'center', gap: '20px' }} */
+          // >
+          //   <SearchData
+          //     key="search_data_animal"
+          //     name="search_data_animal"
+          //     // data={['dog', 'cat', 'giraw', 'giraffe']}
+          //     data={[
+          //       { name: 'dog', color: 'white' },
+          //       { name: 'cat', color: 'blue' },
+          //       { name: 'dinosaurus', color: 'grey' },
+          //       { name: 'duck', color: 'orange' },
+          //     ]}
+          //     searchField="name"
+          //     placeholder="Search animal"
+          //     // listWidth="40rem"
+          //     columns={[
+          //       {
+          //         field: 'name',
+          //       },
+          //       {
+          //         field: 'color',
+          //       },
+          //     ]}
+          //     autoComplete
+          //     onSelect={(idx, selected) =>
+          //       console.log('onSelect', idx, selected)
+          //     }
+          //   />
+          // </div>
+        }
 
-        {
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <span>Email</span>
+        <Form>
+          {/* <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}> */}
+          {/* <span>Email</span> */}
+          <FormRow label="Email 1">
             <SearchData
               key="search_data_guests"
               name="static_data_guests"
@@ -142,11 +149,16 @@ function TestingPage() {
               //   </Highlight>
               // )}
             />
-          </div>
-        }
-
-        {
+          </FormRow>
           <div
+            style={{
+              marginTop: '100px',
+            }}
+          ></div>
+
+          {/* </div> */}
+
+          {/* <div
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -154,8 +166,9 @@ function TestingPage() {
               // marginTop: '300px',
               // marginBottom: '300px',
             }}
-          >
-            <span>Email</span>
+          > */}
+          {/* <span>Email</span> */}
+          <FormRow label="Email 2">
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <SearchData
                 key="dynamic_data_guests"
@@ -300,10 +313,15 @@ function TestingPage() {
                 </label>
               }
             </div>
-          </div>
-        }
+          </FormRow>
+          <FormRow>
+            <Button className="formButton" variation="secondary" type="reset">
+              Cancel
+            </Button>
+          </FormRow>
 
-        {/* <div>
+          {/* </div>           */}
+          {/* <div>
           <select inputMode="search">
             <option>Giraffe</option>
             <option>Elephant</option>
@@ -316,16 +334,18 @@ function TestingPage() {
             <option value="Cambridge">Cambridge</option>
           </datalist>
         </div> */}
-        <Highlight
-          highlightString="dee"
-          style={{
-            backgroundColor: 'var(--color-brand-300)',
-            color: 'black',
-          }}
-        >
-          Raindeer
-        </Highlight>
+        </Form>
       </Row>
+      <div style={{ marginTop: '100px' }} />
+      <Highlight
+        highlightString="dee"
+        style={{
+          backgroundColor: 'var(--color-brand-300)',
+          color: 'black',
+        }}
+      >
+        Raindeer
+      </Highlight>
     </StyledContainer>
   );
 }
