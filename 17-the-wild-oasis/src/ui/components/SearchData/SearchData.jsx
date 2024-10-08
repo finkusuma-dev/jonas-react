@@ -53,6 +53,7 @@ const SearchData = forwardRef(function SearchData(
     onDeselect,
     onSearch,
     onSearchRequest,
+    ...props /// Pass the remaining props to the input text
   },
   ref
 ) {
@@ -408,7 +409,7 @@ const SearchData = forwardRef(function SearchData(
           // if (refProp) refProp.current = el;
         }}
       >
-        <SearchInput ref={ref} />
+        <SearchInput ref={ref} {...props} />
         {state.isShowList && state.list.length > 0 && <List />}
       </Box>
     </SearchDataContext.Provider>

@@ -177,6 +177,9 @@ function TestingPage() {
                 isUseData={showAllGuests}
                 autoComplete
                 isClearable
+                /* Props to be passed to input text  */
+                disabled={false}
+                /* --- */
                 onSelect={(idx, selected) =>
                   console.log('onSelect', idx, selected)
                 }

@@ -40,7 +40,7 @@ const Input = styled.input`
 //   /* border: 1px solid red; */
 // `;
 
-const SearchInput = forwardRef(function SearchInput(_, ref) {
+const SearchInput = forwardRef(function SearchInput(props, ref) {
   const {
     // props
     // autoCompleteProp,
@@ -255,6 +255,7 @@ const SearchInput = forwardRef(function SearchInput(_, ref) {
           if (ref) ref.current = el;
         }}
         style={customStyle}
+        {...props}
       />
       <div
         style={{
