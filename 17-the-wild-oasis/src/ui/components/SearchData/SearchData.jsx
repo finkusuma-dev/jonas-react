@@ -17,7 +17,7 @@ import SearchInput from './components/SearchInput';
 
 export const MIN_CHARACTER_SEARCH = 2;
 
-const Box = styled.div`
+const Box = styled.span`
   position: relative;
 `;
 
@@ -403,6 +403,7 @@ const SearchData = forwardRef(function SearchData(
       }}
     >
       <Box
+        className="box"
         // ref={ref}
         ref={(el) => {
           refThisComponent.current = el;
