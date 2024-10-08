@@ -60,9 +60,7 @@ function usePositionListWindow({
     [refInput]
   );
 
-  /// NOTE: Position & set the maxHeight of ListBox is set by
-  /// passing the listWindow to the ListBox styled component props.
-  /// Because it failed to set the maxHeight of ListBox as a styled component in this JS code.
+  /// Position & set the maxHeight of ListBox
   useLayoutEffect(() => {
     if (!state.isShowList) return;
     const lw = calculate();
@@ -107,65 +105,47 @@ function usePositionListWindow({
     state.isShowList,
   ]);
 
+  /// This function was used to set the state containing list window position
+  /// then pass the state to the ListBox styled component props.
+  /// Because it failed to set the maxHeight of ListBox as a styled component in this JS code.
+  /// As the ListBox component is not used styled component anymore, this func is not used.
   // function positionListWindow() {
-  //   const lw = calculate();
-  //   console.log('listWindow', lw);
-  //   console.log('refListBox', refListBox.current);
-  //   if (refListBox.current) {
-  //     refListBox.current.maxHeight = lw.maxHeight;
-  //     if (lw.top) {
-  //       refListBox.current.top = lw.top;
-  //       refListBox.current.bottom = undefined;
-  //     } else if (lw.bottom) {
-  //       refListBox.current.bottom = lw.bottom;
-  //       refListBox.current.top = undefined;
-  //     }
-  //     console.log(
-  //       'refListBox',
-  //       refListBox.current.top,
-  //       refListBox.current.offsetTop,
-  //       refListBox.current
-  //     );
-  //   }
+  // console.log('refListBox.current', refListBox.current);
+  // const rectInput = refInput.current.getBoundingClientRect();
+  // const topSpace = rectInput.top;
+  // const bottomSpace = window.innerHeight - rectInput.bottom;
+  // // console.log(
+  // //   'Top space',
+  // //   rectInput.top,
+  // //   'Bottom space',
+  // //   window.innerHeight - rectInput.bottom
+  // // );
+  // const isOnBottom =
+  //   MIN_BROWSER_WINDOW_BOTTOM_SPACE <= bottomSpace || bottomSpace > topSpace;
+  // const maxHeight = (() => {
+  //   const mh = isOnBottom
+  //     ? window.innerHeight - rectInput.bottom - PADDING_BROWSER_WINDOW + 'px'
+  //     : rectInput.top - PADDING_BROWSER_WINDOW + 'px';
+  //   // console.log('max height', mh, MAX_LIST_HEIGHT, MAX_LIST_HEIGHT < mh);
+  //   if (Number.parseInt(MAX_LIST_HEIGHT) < Number.parseInt(mh))
+  //     return MAX_LIST_HEIGHT;
+  //   return mh;
+  // })();
+  // const window = calculate();
+  // setListWindow(
+  //   isOnBottom
+  //     ? {
+  //         top: rectInput.height + SPACE_INPUT_TEXT + 'px',
+  //         maxHeight: maxHeight,
+  //       }
+  //     : {
+  //         bottom: rectInput.height + SPACE_INPUT_TEXT + 'px',
+  //         maxHeight: maxHeight,
+  //       }
+  // );
   // }
 
-  function positionListWindow() {
-    console.log('refListBox.current', refListBox.current);
-    // const rectInput = refInput.current.getBoundingClientRect();
-    // const topSpace = rectInput.top;
-    // const bottomSpace = window.innerHeight - rectInput.bottom;
-    // // console.log(
-    // //   'Top space',
-    // //   rectInput.top,
-    // //   'Bottom space',
-    // //   window.innerHeight - rectInput.bottom
-    // // );
-    // const isOnBottom =
-    //   MIN_BROWSER_WINDOW_BOTTOM_SPACE <= bottomSpace || bottomSpace > topSpace;
-    // const maxHeight = (() => {
-    //   const mh = isOnBottom
-    //     ? window.innerHeight - rectInput.bottom - PADDING_BROWSER_WINDOW + 'px'
-    //     : rectInput.top - PADDING_BROWSER_WINDOW + 'px';
-    //   // console.log('max height', mh, MAX_LIST_HEIGHT, MAX_LIST_HEIGHT < mh);
-    //   if (Number.parseInt(MAX_LIST_HEIGHT) < Number.parseInt(mh))
-    //     return MAX_LIST_HEIGHT;
-    //   return mh;
-    // })();
-    // const window = calculate();
-    // setListWindow(
-    //   isOnBottom
-    //     ? {
-    //         top: rectInput.height + SPACE_INPUT_TEXT + 'px',
-    //         maxHeight: maxHeight,
-    //       }
-    //     : {
-    //         bottom: rectInput.height + SPACE_INPUT_TEXT + 'px',
-    //         maxHeight: maxHeight,
-    //       }
-    // );
-  }
-
-  return;
+  // return;
 }
 
 export { usePositionListWindow };
