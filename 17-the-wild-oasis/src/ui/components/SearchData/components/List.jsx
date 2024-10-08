@@ -4,6 +4,7 @@ import { cloneElement } from 'react';
 import Header from './Header';
 import Item, { DefaultRenderDataItem } from './Item';
 import { getCustomStyle, StyleName } from '../helpers/styles';
+import { createPortal } from 'react-dom';
 
 // const ListBox = styled.div`
 //   position: absolute;
@@ -75,7 +76,12 @@ export default function List() {
     position: 'absolute',
     left: 0,
     width: width,
-    right: width == undefined ? 0 : undefined,
+    /// right prop is no longer needed because of use createPortal on document.body.
+    /// So List is no longer have absolute pos from Box.
+    /// If the width is undefined it will be set on usePositionListWindow hook
+    /// to have the same width with the input text.
+    ///
+    // right: width == undefined ? 0 : undefined,
     zIndex: 100,
     backgroundColor: 'white',
     border: '1px solid #ddd',
@@ -90,7 +96,7 @@ export default function List() {
     ...customStyle,
   };
 
-  return (
+  return createPortal(
     <div
       ref={refListBox}
       width={listWidthProp}
@@ -99,7 +105,8 @@ export default function List() {
       // columns={columnsProp}
     >
       <RenderList />
-    </div>
+    </div>,
+    document.body
   );
 }
 

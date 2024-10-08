@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 
 const PADDING_BROWSER_WINDOW = 8;
 const SPACE_INPUT_TEXT = 4;
-const MIN_BROWSER_WINDOW_BOTTOM_SPACE = 130;
+const MIN_BROWSER_WINDOW_BOTTOM_SPACE = 200; /* 130 */
 const MAX_LIST_HEIGHT = '500px';
 
 function usePositionListWindow({
@@ -23,6 +23,8 @@ function usePositionListWindow({
 
       const topSpace = rectInput.top;
       const bottomSpace = window.innerHeight - rectInput.bottom;
+
+      // console.log('usePositionListWindow rectInput', rectInput);
 
       // console.log(
       //   'Top space',
@@ -46,14 +48,31 @@ function usePositionListWindow({
           return MAX_LIST_HEIGHT;
         return mh;
       })();
+      // console.log('position list on bottom', isOnBottom, rectInput.top);
 
+      /// Top, bottom, left are calculated based on absolute pos from document.body
+      /// because list component is shown with the react createPortal()
       return isOnBottom
         ? {
-            top: rectInput.height + SPACE_INPUT_TEXT + 'px',
+            top:
+              rectInput.bottom +
+              document.documentElement.scrollTop +
+              SPACE_INPUT_TEXT +
+              'px',
+            left: rectInput.left + 'px',
+            width: rectInput.width + 'px',
+
             maxHeight: maxHeight,
           }
         : {
-            bottom: rectInput.height + SPACE_INPUT_TEXT + 'px',
+            bottom:
+              0 +
+              (document.documentElement.clientHeight - rectInput.top) +
+              SPACE_INPUT_TEXT -
+              document.documentElement.scrollTop +
+              'px',
+            left: rectInput.left + 'px',
+            width: rectInput.width + 'px',
             maxHeight: maxHeight,
           };
     },
@@ -63,16 +82,31 @@ function usePositionListWindow({
   /// Position & set the maxHeight of ListBox
   useLayoutEffect(() => {
     if (!state.isShowList) return;
-    const lw = calculate();
+    const windowProps = calculate();
     // console.log('listWindow', lw);
-    // console.log('refListBox', refListBox.current);
+    // console.log(
+    //   'document.documentElement.scrollTop',
+    //   document.documentElement.scrollTop
+    // );
     if (refListBox.current) {
-      refListBox.current.style.maxHeight = lw.maxHeight;
-      if (lw.top) {
-        refListBox.current.style.top = lw.top;
+      // console.log('refListBox.current', refListBox.current);
+      // console.log('refListBox.current.style', refListBox.current.style);
+      //
+      refListBox.current.style.maxHeight = windowProps.maxHeight;
+      if (windowProps.top) {
+        refListBox.current.style.top = windowProps.top;
+        refListBox.current.style.left = windowProps.left;
+
+        /// List width is set based on listWidthProp & other methods on List.js.
+        /// If it's undefined then it needs to be the same with input width (windowProps.width)
+        refListBox.current.style.width =
+          refListBox.current.style.width || windowProps.width;
         refListBox.current.style.bottom = undefined;
-      } else if (lw.bottom) {
-        refListBox.current.style.bottom = lw.bottom;
+      } else if (windowProps.bottom) {
+        refListBox.current.style.bottom = windowProps.bottom;
+        refListBox.current.style.left = windowProps.left;
+        refListBox.current.style.width =
+          refListBox.current.style.width || windowProps.width;
         refListBox.current.style.top = undefined;
       }
       // console.log({
@@ -80,6 +114,7 @@ function usePositionListWindow({
       //   top: refListBox.current.style.top,
       //   bottom: refListBox.current.style.bottom,
       //   offsetTop: refListBox.current.style.offsetTop,
+      //   clientHeight: refListBox.current.clientHeight,
       //   current: refListBox.current,
       // });
     }
@@ -93,7 +128,7 @@ function usePositionListWindow({
       // console.log('listWindow', listWindow);
 
       refListItemsContainer.current.style.maxHeight =
-        Number.parseInt(lw.maxHeight) -
+        Number.parseInt(windowProps.maxHeight) -
         refListItemsContainer.current.offsetTop +
         'px';
     }
