@@ -117,11 +117,63 @@ const SearchData = forwardRef(function SearchData(
   refIsUsingData.current = isUseDataProp || !onSearch;
   // console.log('refIsUsingData', nameProp, refIsUsingData.current);
 
+  /// Callback hooks
+  ///
+  const EmitOnChange = useCallback(
+    function (e) {
+      if (onChange) {
+        onChange(e);
+      }
+    },
+    [onChange]
+  );
+
+  const clearSelectedItemIdx = useCallback(
+    function () {
+      if (state.selectedItemIdx != null) {
+        if (onDeselect) onDeselect();
+        // handleChange(state.inputText, undefined);
+      }
+
+      dispatch({
+        type: ActionType.clearSelectedItemIdx,
+      });
+    },
+    [state, onDeselect]
+  );
+
+  const clearInput = useCallback(
+    function () {
+      clearSelectedItemIdx();
+      dispatch({ type: ActionType.clearSearch });
+
+      EmitOnChange({
+        /// simulate ChangeEvent object
+        target: {
+          name: nameProp,
+          value: '',
+        },
+        type: 'change', // Mimics the ChangeEvent type
+      });
+
+      // if (isUseDataProp) {
+      //   dispatch({ type: ActionType.updateList, payload: state.data });
+      // } else {
+      //   dispatch({ type: ActionType.clearList });
+      // }
+      refInput.current.focus();
+    },
+    [clearSelectedItemIdx, nameProp]
+  );
+
+  ///
   useEffect(() => {
     if (!valueProp) {
-      console.log('value is undefined');
+      // console.log('value is undefined');
+      // FIXME: Warning maximum update depth exceeded. Cause is maybe 'dispatch' method.
+      clearInput();
     } else {
-      console.log('value is', valueProp);
+      // console.log('value is', valueProp);
     }
   }, [valueProp]);
 
@@ -264,27 +316,17 @@ const SearchData = forwardRef(function SearchData(
 
     if (onSelect) {
       onSelect(dataIdx, selectedData);
-    }
-
-    handleChange(state.inputText, selectedData);
-  }
-
-  function handleChange(input, selectedData) {
-    if (onChange) {
-      onChange(
+      EmitOnChange({
         /// simulate ChangeEvent object
-        {
-          target: {
-            name: nameProp,
-            value: {
-              input,
-              data: selectedData,
-            }, // Custom value modification
-          },
-          type: 'change', // Mimics the ChangeEvent type
-        }
-      );
+        target: {
+          name: nameProp,
+          value: state.inputText,
+        },
+        type: 'change', // Mimics the ChangeEvent type
+      });
     }
+
+    // handleChange(state.inputText);
   }
 
   function createNewListNAutocomplete({
@@ -411,7 +453,7 @@ const SearchData = forwardRef(function SearchData(
         onSearch,
         onSearchRequest,
         // onChange,
-        handleChange,
+        EmitOnChange,
 
         //ref
         refInput,
@@ -426,6 +468,8 @@ const SearchData = forwardRef(function SearchData(
         selectItem,
         getSearchedTextFromItem,
         createNewListNAutocomplete,
+        clearInput,
+        clearSelectedItemIdx,
         autoCompleteSearchChange,
         autoCompleteKeyDown,
 

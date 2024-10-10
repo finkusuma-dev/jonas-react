@@ -15,6 +15,7 @@ import FormRow from '../ui/FormRow';
 import Form from '../ui/Form';
 import Button from '../ui/Button';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
@@ -30,6 +31,8 @@ function TestingPage() {
     search: emailSearch,
   });
   const [isShowList, setIsShowList] = useState(false);
+  const [selectedGuest, setSelectedGuest] = useState(null);
+  // console.log('selectedEmail', JSON.stringify(selectedEmail));
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const refSearchData = useRef();
@@ -37,7 +40,11 @@ function TestingPage() {
   const { register, handleSubmit, setValue, formState, watch, reset, trigger } =
     useForm();
   const { errors } = formState;
-  console.log('errors', errors);
+  // console.log('errors', errors);
+
+  useEffect(() => {
+    setValue('guest', selectedGuest);
+  }, [selectedGuest, setValue]);
 
   const sortedGuests = guests.sort((a, b) =>
     a.email < b.email ? -1 : a.email > b.email ? 1 : 0
@@ -54,8 +61,7 @@ function TestingPage() {
   //   guestsFound.map((guest) => guest.email)
   // );
 
-  const email2Value = watch('email2');
-  // console.log('email2', email2Value);
+  const emailInputValue = watch('emailInput');
 
   return (
     <StyledContainer>
@@ -169,9 +175,7 @@ function TestingPage() {
               marginTop: '100px',
             }}
           ></div>
-
           {/* </div> */}
-
           {/* <div
             style={{
               display: 'flex',
@@ -182,11 +186,11 @@ function TestingPage() {
             }}
           > */}
           {/* <span>Email</span> */}
-          <FormRow label="Email 2" errorMsg={errors?.email2?.message}>
+          <FormRow label="Email" errorMsg={errors?.emailInput?.message}>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <SearchData
                 key="dynamic_data_guests"
-                name="email2"
+                name="emailInput"
                 ref={refSearchData}
                 data={sortedGuests}
                 searchData={guestsFound}
@@ -207,25 +211,30 @@ function TestingPage() {
                 /* Props to be passed to input text  */
                 disabled={false}
                 /* --- */
-                {...register('email2', {
-                  required: 'Please insert email',
+                {...register('emailInput', {
+                  required: 'This field is required',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Please enter a valid email address',
+                  },
                 })}
-                value={email2Value}
+                value={emailInputValue}
                 onChange={(e) => {
-                  console.log('onChange', e);
-                  // if (e.target.value) {
-                  //   errors.email2.message = undefined;
-                  // }
-                  setValue('email2', e.target.value);
+                  // console.log('onChange', e.target.value);
 
+                  setValue('emailInput', e.target.value);
                   /// trigger revalidation (reset the error of email2)
-                  trigger('email2');
+                  trigger('emailInput');
                 }}
                 ///
-                onSelect={(idx, selected) =>
-                  console.log('onSelect', idx, selected)
-                }
-                onDeselect={() => console.log('Deselect item')}
+                onSelect={(idx, selected) => {
+                  console.log('onSelect', idx, selected);
+                  setSelectedGuest(selected);
+                }}
+                onDeselect={() => {
+                  console.log('Deselect item');
+                  setSelectedGuest(null);
+                }}
                 columns={[
                   {
                     title: 'Email',
@@ -335,7 +344,7 @@ function TestingPage() {
                   onClick={() => {
                     setshowAllGuests((show) => !show);
                     setIsShowList(!showAllGuests);
-                    refSearchData.current.focus();
+                    refSearchData.current?.focus();
                   }}
                 >
                   {showAllGuests ? 'Hide all guests' : 'Show all guests'}
@@ -343,6 +352,14 @@ function TestingPage() {
               }
             </div>
           </FormRow>
+          <label htmlFor="email">Hidden Guest Data</label>{' '}
+          <input
+            type="text"
+            id="guest"
+            name="guest"
+            {...register('guest')}
+            value={selectedGuest ? JSON.stringify(selectedGuest) : null}
+          />
           <FormRow>
             <Button
               className="formButton"
@@ -350,27 +367,21 @@ function TestingPage() {
               type="reset"
               onClick={() => reset()}
             >
-              Cancel
+              Reset
             </Button>
             <Button className="formButton" variation="primary">
               Submit
             </Button>
           </FormRow>
-
-          {/* </div>           */}
-          {/* <div>
-          <select inputMode="search">
-            <option>Giraffe</option>
-            <option>Elephant</option>
-          </select>
-        </div>
-        <div>
-          <input type="text" name="city" list="cityname" autoComplete="true" />
-          <datalist id="cityname">
-            <option value="Boston">Boston</option>
-            <option value="Cambridge">Cambridge</option>
-          </datalist>
-        </div> */}
+          {/* <div>          
+            </div>
+            <div>
+              <input type="text" name="city" list="cityname" autoComplete="true" />
+              <datalist id="cityname">
+                <option value="Boston">Boston</option>
+                <option value="Cambridge">Cambridge</option>
+              </datalist>
+            </div> */}
         </Form>
       </Row>
       <div style={{ marginTop: '100px' }} />

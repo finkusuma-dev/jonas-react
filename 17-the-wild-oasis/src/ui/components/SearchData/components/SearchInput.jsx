@@ -51,9 +51,9 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
     // maxItemsProp,
     // dataProp,
     stylesProp,
-    onDeselect,
+    // onDeselect,
     // onChange,
-    handleChange: handleChangeProp,
+    EmitOnChange,
     onSearch,
     onSearchRequest,
     isLoadingProp,
@@ -70,6 +70,8 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
     hideList,
     selectItem,
     getSearchedTextFromItem,
+    clearInput,
+    clearSelectedItemIdx,
     createNewListNAutocomplete,
     autoCompleteKeyDown,
   } = useSearchData();
@@ -86,6 +88,8 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
   // );
 
   function handleChange(e) {
+    EmitOnChange(e);
+
     const newSearchString = e.target.value;
 
     dispatch({
@@ -183,7 +187,10 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
       e.preventDefault();
       if (state.selectedItemIdx) {
         selectItem(state.selectedItemIdx);
-      } else if (firstItemStr?.indexOf(state.searchText) === 0) {
+      } else if (
+        firstItemStr &&
+        firstItemStr?.indexOf(state.searchText) === 0
+      ) {
         selectItem(0);
         dispatch({
           type: ActionType.setSelectedItemIdx,
@@ -208,18 +215,6 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
     // );
   }
 
-  function handleClearInput() {
-    clearSelectedItemIdx();
-    dispatch({ type: ActionType.clearSearch });
-
-    // if (isUseDataProp) {
-    //   dispatch({ type: ActionType.updateList, payload: state.data });
-    // } else {
-    //   dispatch({ type: ActionType.clearList });
-    // }
-    refInput.current.focus();
-  }
-
   function handleShowList() {
     if (!state.isShowList) {
       if (state.list.length) showList();
@@ -234,16 +229,29 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
     }
   }
 
-  function clearSelectedItemIdx() {
-    if (state.selectedItemIdx != null) {
-      if (onDeselect) onDeselect();
-      handleChangeProp(state.inputText, undefined);
-    }
+  function handleClearInput() {
+    clearInput();
+    // clearSelectedItemIdx();
+    // dispatch({ type: ActionType.clearSearch });
 
-    dispatch({
-      type: ActionType.clearSelectedItemIdx,
-    });
+    // // if (isUseDataProp) {
+    // //   dispatch({ type: ActionType.updateList, payload: state.data });
+    // // } else {
+    // //   dispatch({ type: ActionType.clearList });
+    // // }
+    // refInput.current.focus();
   }
+
+  // function clearSelectedItemIdx() {
+  //   if (state.selectedItemIdx != null) {
+  //     if (onDeselect) onDeselect();
+  //     handleChangeProp(state.inputText, undefined);
+  //   }
+
+  //   dispatch({
+  //     type: ActionType.clearSelectedItemIdx,
+  //   });
+  // }
 
   const customStyle = getCustomStyle(StyleName.inputText, stylesProp);
 
