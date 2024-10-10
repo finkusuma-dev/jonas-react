@@ -29,13 +29,13 @@ export const useSearchData = () => useContext(SearchDataContext);
 const SearchData = forwardRef(function SearchData(
   {
     name: nameProp,
+    value: valueProp,
     isUseData: isUseDataProp,
     data: dataProp = [],
     searchData: dataSearchResultsProp = [],
     search: dataSearchProp,
     searchField: searchFieldProp,
     isLoading: isLoadingProp,
-
     isShowList: isShowListProp,
     onShowList,
     // RenderDataItem,
@@ -53,6 +53,7 @@ const SearchData = forwardRef(function SearchData(
     onDeselect,
     onSearch,
     onSearchRequest,
+    onChange,
     ...props /// Pass the remaining props to the input text
   },
   ref
@@ -115,6 +116,14 @@ const SearchData = forwardRef(function SearchData(
   ///   Not using dataSearchResultsProp.length because at start it's empty.
   refIsUsingData.current = isUseDataProp || !onSearch;
   // console.log('refIsUsingData', nameProp, refIsUsingData.current);
+
+  useEffect(() => {
+    if (!valueProp) {
+      console.log('value is undefined');
+    } else {
+      console.log('value is', valueProp);
+    }
+  }, [valueProp]);
 
   /// If isUsingData fill list with data
   useEffect(() => {
@@ -241,7 +250,7 @@ const SearchData = forwardRef(function SearchData(
         : searchFieldProp !== undefined
         ? curentData[dataIdx][searchFieldProp]
         : '';
-    const selectedObj = curentData[dataIdx];
+    const selectedData = curentData[dataIdx];
 
     dispatch({
       type: ActionType.setInputText,
@@ -254,7 +263,27 @@ const SearchData = forwardRef(function SearchData(
     );
 
     if (onSelect) {
-      onSelect(dataIdx, selectedObj);
+      onSelect(dataIdx, selectedData);
+    }
+
+    handleChange(state.inputText, selectedData);
+  }
+
+  function handleChange(input, selectedData) {
+    if (onChange) {
+      onChange(
+        /// simulate ChangeEvent object
+        {
+          target: {
+            name: nameProp,
+            value: {
+              input,
+              data: selectedData,
+            }, // Custom value modification
+          },
+          type: 'change', // Mimics the ChangeEvent type
+        }
+      );
     }
   }
 
@@ -381,6 +410,8 @@ const SearchData = forwardRef(function SearchData(
         onDeselect,
         onSearch,
         onSearchRequest,
+        // onChange,
+        handleChange,
 
         //ref
         refInput,
@@ -419,6 +450,7 @@ const SearchData = forwardRef(function SearchData(
 
 SearchData.propTypes = {
   name: PropTypes.string, // prop to search if data.element is an object
+  value: PropTypes.string,
   placeholder: PropTypes.string,
   data: PropTypes.array,
   searchData: PropTypes.array,
@@ -439,6 +471,7 @@ SearchData.propTypes = {
   onDeselect: PropTypes.func,
   onSearch: PropTypes.func,
   onSearchRequest: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 export default SearchData;

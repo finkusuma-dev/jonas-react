@@ -14,6 +14,7 @@ import { useRef } from 'react';
 import FormRow from '../ui/FormRow';
 import Form from '../ui/Form';
 import Button from '../ui/Button';
+import { useForm } from 'react-hook-form';
 
 const StyledContainer = styled.div`
   background-color: var(--color-grey-50);
@@ -33,9 +34,18 @@ function TestingPage() {
 
   const refSearchData = useRef();
 
+  const { register, handleSubmit, setValue, formState, watch, reset, trigger } =
+    useForm();
+  const { errors } = formState;
+  console.log('errors', errors);
+
   const sortedGuests = guests.sort((a, b) =>
     a.email < b.email ? -1 : a.email > b.email ? 1 : 0
   );
+
+  function onSubmit(data) {
+    console.log('data', data);
+  }
 
   // if (isLoading) return <Spinner />;
   // console.log(
@@ -43,6 +53,9 @@ function TestingPage() {
   //   'guestsFound',
   //   guestsFound.map((guest) => guest.email)
   // );
+
+  const email2Value = watch('email2');
+  // console.log('email2', email2Value);
 
   return (
     <StyledContainer>
@@ -90,18 +103,19 @@ function TestingPage() {
           // </div>
         }
 
-        <Form>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           {/* <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}> */}
           {/* <span>Email</span> */}
           <FormRow label="Email 1">
             <SearchData
               key="search_data_guests"
-              name="static_data_guests"
+              name="email1"
               data={sortedGuests}
               searchField="email"
               placeholder="Search email"
               autoComplete
               isClearable
+              onChange={(e) => setValue('email1', e.target.value)}
               styles={{
                 inputText: {
                   border: '1px solid var(--color-grey-300)',
@@ -168,11 +182,11 @@ function TestingPage() {
             }}
           > */}
           {/* <span>Email</span> */}
-          <FormRow label="Email 2">
+          <FormRow label="Email 2" errorMsg={errors?.email2?.message}>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <SearchData
                 key="dynamic_data_guests"
-                name="dynamic_data_guests"
+                name="email2"
                 ref={refSearchData}
                 data={sortedGuests}
                 searchData={guestsFound}
@@ -193,6 +207,21 @@ function TestingPage() {
                 /* Props to be passed to input text  */
                 disabled={false}
                 /* --- */
+                {...register('email2', {
+                  required: 'Please insert email',
+                })}
+                value={email2Value}
+                onChange={(e) => {
+                  console.log('onChange', e);
+                  // if (e.target.value) {
+                  //   errors.email2.message = undefined;
+                  // }
+                  setValue('email2', e.target.value);
+
+                  /// trigger revalidation (reset the error of email2)
+                  trigger('email2');
+                }}
+                ///
                 onSelect={(idx, selected) =>
                   console.log('onSelect', idx, selected)
                 }
@@ -315,8 +344,16 @@ function TestingPage() {
             </div>
           </FormRow>
           <FormRow>
-            <Button className="formButton" variation="secondary" type="reset">
+            <Button
+              className="formButton"
+              variation="secondary"
+              type="reset"
+              onClick={() => reset()}
+            >
               Cancel
+            </Button>
+            <Button className="formButton" variation="primary">
+              Submit
             </Button>
           </FormRow>
 

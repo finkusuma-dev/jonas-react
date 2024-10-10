@@ -52,6 +52,8 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
     // dataProp,
     stylesProp,
     onDeselect,
+    // onChange,
+    handleChange: handleChangeProp,
     onSearch,
     onSearchRequest,
     isLoadingProp,
@@ -233,7 +235,10 @@ const SearchInput = forwardRef(function SearchInput(props, ref) {
   }
 
   function clearSelectedItemIdx() {
-    if (state.selectedItemIdx != null && onDeselect && onDeselect());
+    if (state.selectedItemIdx != null) {
+      if (onDeselect) onDeselect();
+      handleChangeProp(state.inputText, undefined);
+    }
 
     dispatch({
       type: ActionType.clearSelectedItemIdx,
